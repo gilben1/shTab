@@ -1,0 +1,1 @@
+// The background script that is always running

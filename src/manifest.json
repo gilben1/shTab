@@ -1,0 +1,35 @@
+{
+    "manifest_version": 2,
+
+    "name": "shTab",
+    "description": "A shell-like new tab page replacement",
+
+
+    "version": "0.1",
+    "developer": {
+        "name": "Nicholas Gilbert",
+        "url": "https://gitlab.com/gilben/shTab"
+    },
+
+    "background": {
+        "scripts": ["js/background.js"]
+    },
+
+    "browser_action": {
+        "browser_style": false,
+        "default_area": "navbar",
+        "default_title": "shTab"
+    },
+
+    "chrome_url_overrides" : {
+        "newtab": "html/tab.html"
+    },
+    "permissions": [
+        "cookies",
+        "history",
+        "menus",
+        "storage",
+        "tabs"
+    ]
+
+}
