@@ -49,8 +49,12 @@ function save() {
     updateOutput(`Saved links!\n`);
 }
 
+function clear() {
+    output.innerText = "";
+}
 
 var process = {
+    "clear": clear,
     "goto": goto,
     "list": list,
     "link": link,
