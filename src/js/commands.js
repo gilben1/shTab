@@ -1,12 +1,12 @@
 // All commands that can be run from the tab page
-
-const output = document.getElementById("output");
-
 // url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
 
 // Goes to @param dest
 function goto(dest) { // usage: goto [link]
+    if (dest == undefined) {
+        throw "No arguments!\n";
+    }
     console.log(`Goto activated, dest = ${dest}`);
     let url = dest.match(URL_REGEX);
     if (url != undefined) { // if goto was a url
@@ -22,12 +22,11 @@ function goto(dest) { // usage: goto [link]
     return true;
 }
 
-function list(garbage) { // list all commands
+function list() { // list all commands
     console.log("List activated");
+    updateOutput(`Current links:\n`);
     for (let key in dests) {
-        console.log(`${key} -> ${dests[key]}`);
-        output.innerText += `${key} -> ${dests[key]}\n`;
-        output.scrollTop = output.scrollHeight;
+        updateOutput(`${key} -> ${dests[key]}\n`);
     }
     return true;
 }
@@ -42,12 +41,12 @@ function link(toLink) { // usage: link [alias] [dest]
     let alias = toLinkSplit[0];
     let dest = toLinkSplit[1];
     dests[alias] = dest;
+    updateOutput(`Added link from ${alias} to ${dest}\n`)
 }
 
-function save(garbage) {
+function save() {
     browser.storage.local.set({dests});
-    output.innerText += `Saved links!`;
-    output.scrollTop = output.scrollHeight;
+    updateOutput(`Saved links!\n`);
 }
 
 

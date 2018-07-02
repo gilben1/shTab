@@ -4,6 +4,7 @@
 const body = document.querySelector('body');
 const prompt = document.querySelector('.prompt');
 const status = document.querySelector('.status');
+const output = document.getElementById("output");
 
 
 var promptContent = "";
@@ -43,7 +44,8 @@ body.onkeydown = function(evt) {
         promptContent = promptContent.slice(0, -1);
     }
     else {
-        promptContent += key ? key : keyNum;
+        //promptContent += key ? key : keyNum;
+        promptContent += key ? key : "";
     }
     prompt.innerHTML = `> ${promptContent}`;
 }
@@ -51,7 +53,16 @@ body.onkeydown = function(evt) {
 function processFirstWord(command) { // split string into command and rest
     let comm = command.split(' ')[0];
     let rest = command.substr(command.indexOf(' ') + 1);
+    if (command.indexOf(' ') == -1) { //if there never was a space, no arguments
+        rest = undefined;
+    }
     return {
         "command":  comm, 
         "rest":     rest};
+}
+
+function updateOutput(text) {
+    output.innerText += text;
+    output.scrollTop = output.scrollHeight;
+    console.log(text);
 }
