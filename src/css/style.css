@@ -1,0 +1,7 @@
+/* https://stackoverflow.com/questions/17242209/limiting-a-div-height-to-two-lines-of-text-inside-it */
+/* Limits a div to only a certain amount of text */
+div {
+    height: 9.9em;
+    line-height: 1.1em;
+    overflow: auto;
+}

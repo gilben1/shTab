@@ -32,9 +32,10 @@ body.onkeydown = function(evt) {
         try {
             process[processed.command](processed.rest)
         }
-        catch {
-            console.log("Invalid command!");
-            status.innerHTML = "Invalid command!";
+        catch(err){
+            console.log(`Invalid command! Message: ${err}`);
+            output.innerText += "Invalid command!\n";
+            output.scrollTop = output.scrollHeight;
         }
         promptContent = "";
     }
@@ -54,20 +55,3 @@ function processFirstWord(command) { // split string into command and rest
         "command":  comm, 
         "rest":     rest};
 }
-
-
-/*var foo = {
-    name: "bar",
-    length: 3
-};
-
-
-const thing = {
-    async load() {
-        let getItem = await browser.storage.local.get("foo");
-        console.log(getItem);
-        browser.storage.local.set({foo});
-    }
-};
-
-document.addEventListener('DOMContentLoaded', thing.load);*/
