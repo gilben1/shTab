@@ -4,18 +4,14 @@ var dests = {
 
 };
 
-/*var foo = {
-    name: "bar",
-    length: 3
-};
-
-
-const thing = {
+const loader = {
     async load() {
-        let getItem = await browser.storage.local.get("foo");
+        let getItem = await browser.storage.local.get("dests");
         console.log(getItem);
-        browser.storage.local.set({foo});
+        if (getItem.dests != undefined) {
+            dests = getItem.dests;
+        }
     }
 };
 
-document.addEventListener('DOMContentLoaded', thing.load);*/
+document.addEventListener('DOMContentLoaded', loader.load);

@@ -36,13 +36,24 @@ function list(garbage) { // list all commands
 // toLink is expected to be two words
 function link(toLink) { // usage: link [alias] [dest]
     let toLinkSplit = toLink.split(' ', 2);
+    if (toLinkSplit.length != 2) {
+        throw "Too few arguments!\n";
+    }
     let alias = toLinkSplit[0];
     let dest = toLinkSplit[1];
     dests[alias] = dest;
 }
 
+function save(garbage) {
+    browser.storage.local.set({dests});
+    output.innerText += `Saved links!`;
+    output.scrollTop = output.scrollHeight;
+}
+
+
 var process = {
     "goto": goto,
     "list": list,
-    "link": link
+    "link": link,
+    "save": save
 };
