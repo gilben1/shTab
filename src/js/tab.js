@@ -9,6 +9,7 @@ const output = document.getElementById("output");
 
 var promptContent = "";
 var shifted = false;
+var commandHistory = [];
 
 body.onkeydown = function(evt) {
     let keyNum = evt.keyCode;
@@ -28,20 +29,30 @@ body.onkeydown = function(evt) {
     }
 
     if (key == "enter") { // enter: process command
-        let processed = processFirstWord(promptContent);        
-        console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
-        try {
-            process[processed.command](processed.rest)
-        }
-        catch(err){
-            console.log(`Invalid command! Message: ${err}`);
-            output.innerText += "Invalid command!\n";
-            output.scrollTop = output.scrollHeight;
-        }
-        promptContent = "";
+        processCommand(promptContent);
     }
-    else if (key == "delete" || key == "back") {
+    else if (key == "delete" || key == "back") { // delete a character
         promptContent = promptContent.slice(0, -1);
+    }
+    else if (key == "up") {
+        let lastCommand = commandHistory.shift();
+        if (lastCommand != undefined) {
+            commandHistory.push(lastCommand);
+            promptContent = lastCommand.command;
+            if (lastCommand.rest != undefined) {
+                promptContent += ` ${lastCommand.rest}`;
+            }
+        }
+    }
+    else if (key == "down") {
+        let lastCommand = commandHistory.pop();
+        if (lastCommand != undefined) {
+            commandHistory.unshift(lastCommand);
+            promptContent = lastCommand.command;
+            if (lastCommand.rest != undefined) {
+                promptContent += ` ${lastCommand.rest}`;
+            }
+        }
     }
     else {
         //promptContent += key ? key : keyNum;
@@ -49,6 +60,26 @@ body.onkeydown = function(evt) {
     }
     prompt.innerHTML = `> ${promptContent}`;
 }
+
+function processCommand(command) {
+    let processed = processFirstWord(command);
+    let error = false;        
+    console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
+    try {
+        process[processed.command](processed.rest)
+    }
+    catch(err){
+        console.log(`Invalid command! Message: ${err}`);
+        output.innerText += "Invalid command!\n";
+        output.scrollTop = output.scrollHeight;
+        error = true;
+    }
+    if (!error) { // if the process was successful, add to command history
+        commandHistory.unshift(processed);
+    }
+    promptContent = "";
+}
+
 
 function processFirstWord(command) { // split string into command and rest
     let comm = command.split(' ')[0];

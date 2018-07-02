@@ -41,16 +41,29 @@ function link(toLink) { // usage: link [alias] [dest]
     let alias = toLinkSplit[0];
     let dest = toLinkSplit[1];
     dests[alias] = dest;
-    updateOutput(`Added link from ${alias} to ${dest}\n`)
+    updateOutput(`Added link from ${alias} to ${dest}.\n`)
 }
 
 function save() {
     browser.storage.local.set({dests});
-    updateOutput(`Saved links!\n`);
+    updateOutput(`Saved links.\n`);
 }
 
-function clear() {
-    output.innerText = "";
+function clear(args) {
+    if (args == undefined) {
+        output.innerText = "";
+    }
+    else if (args == "history") {
+        commandHistory = [];
+        updateOutput(`Cleared command history.\n`);
+    }
+    else if (args == "links") {
+        dests = {};
+        updateOutput(`Cleared links.\n`);
+    }
+    else {
+        throw `Unknown argument!`;
+    }
 }
 
 var process = {
