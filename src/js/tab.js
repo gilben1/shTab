@@ -67,7 +67,13 @@ function processCommand(command) {
     let error = false;        
     console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
     try {
-        process[processed.command](processed.rest)
+        //process[processed.command](processed.rest);
+        if (process[processed.command]) {
+            process[processed.command](processed.rest);
+        }
+        else if (process[process.aliases[processed.command]]) {
+            process[process.aliases[processed.command]](processed.rest);
+        }
     }
     catch(err){
         console.log(`Invalid command! Message: ${err}`);

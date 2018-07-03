@@ -54,12 +54,12 @@ function save() {
 function clear(args) {
     switch(args) {
         case "history":
-        commandHistory = [];
-        updateOutput(`Cleared command history.\n`);
+            commandHistory = [];
+            updateOutput(`Cleared command history.\n`);
             break;
         case "links":
-        dests = {};
-        updateOutput(`Cleared links.\n`);
+            dests = {};
+            updateOutput(`Cleared links.\n`);
             break;
         default: // treat undefined or invalid as simply clearing console
             output.innerText = "";
@@ -67,10 +67,27 @@ function clear(args) {
     }
 }
 
+function help(args) {
+    switch(args) {
+        default:
+            for (let key in process) {
+                updateOutput(`${key}\n`)
+            }
+            break;
+    }
+}
+
+
 var process = {
     "clear": clear,
     "goto": goto,
+    "help": help,
     "list": list,
     "link": link,
-    "save": save
+    "save": save,
+    aliases: {
+        "ls": "list",
+        "go": "goto",
+        ":w": "save"
+    }
 };
