@@ -52,19 +52,18 @@ function save() {
 }
 
 function clear(args) {
-    if (args == undefined) {
-        output.innerText = "";
-    }
-    else if (args == "history") {
+    switch(args) {
+        case "history":
         commandHistory = [];
         updateOutput(`Cleared command history.\n`);
-    }
-    else if (args == "links") {
+            break;
+        case "links":
         dests = {};
         updateOutput(`Cleared links.\n`);
-    }
-    else {
-        throw `Unknown argument!`;
+            break;
+        default: // treat undefined or invalid as simply clearing console
+            output.innerText = "";
+            break;
     }
 }
 
