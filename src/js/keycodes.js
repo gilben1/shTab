@@ -1,3 +1,4 @@
+// Copyright (c) 2018 Nicholas Gilbert
 // Map from keyCodes to output strings
 
 // Sourced and modified from https://github.com/wesbos/keycodes

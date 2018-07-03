@@ -1,3 +1,4 @@
+// Copyright (c) 2018 Nicholas Gilbert
 // The script that controls the tab functionality in tab.html
 
 // html object references

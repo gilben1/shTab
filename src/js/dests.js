@@ -1,3 +1,5 @@
+// Copyright (c) 2018 Nicholas Gilbert
+
 // Maps keys to destinations
 
 var dests = {

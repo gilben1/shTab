@@ -1,3 +1,5 @@
+// Copyright (c) 2018 Nicholas Gilbert
+
 // All commands that can be run from the tab page
 // url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
