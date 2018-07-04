@@ -69,58 +69,95 @@ function clear(args) {
 
 function help(args) {
     switch(args) {
-        default:
+        case undefined: // no arguments
             for (let key in process) {
                 updateOutput(`${key}\n`)
             }
+            for (let key in aliases) {
+                updateOutput(`${key} (${aliases[key]})\n`)
+            }
             break;
+        default:
+            if (process[args]) {
+                updateOutput(`Help for ${args}:\n`);
+                updateOutput(`${process[args].desc}\n`);
+                updateOutput(`usage: ${process[args].usage}\n`);
+            }
+            else if(process[aliases[args]]) {
+                updateOutput(`Help for ${args} (alias for ${aliases[args]}):\n`);
+                updateOutput(`${process[aliases[args]].desc}\n`);
+                updateOutput(`usage: ${process[aliases[args]].usage}\n`);
+            }
+            else {
+                throw "Invalid argument.\n";
+            }
+            break;
+
     }
 }
 
-
+// Each process has the following format:
+/*
+    {
+        func:
+        desc:
+        usage:
+    }
+    func is the function to jump to
+    desc is the description that gets printed by help
+        Since desc is multiline, it needs to be at the start of the line
+        Cannot start indented, otherwise the div will interpret the indent
+    usage is a separate printout by help
+*/
 var process = {
     "clear": {
         func:       clear,
-        desc:       "Clears the console, or whatever is passed to it\n\
-                    arguments:\n\
-                    \thistory: clears command history\n\
-                    \tlinks: clears set links for the session\n\
-                    \t(none): clears command prompt",     
+        desc:       
+"Clears the console, or whatever is passed to it\n\
+    arguments:\n\
+        history: clears command history\n\
+        links: clears set links for the session\n\
+        (none): clears command prompt",     
         usage:      "clear [history|links]"
     },
     "goto": {
         func:       goto,
-        desc:       "Opens a specified link or url\n\
-                    arguments:\n\
-                    \t<name>: the link to navigate to",
+        desc:       
+"Opens a specified link or url\n\
+    arguments:\n\
+        <name>: the link to navigate to",
         usage:      "goto <name>"
     },
     "help": {
         func:       help,
-        desc:       "Displays information about the possible commands to run\n\
-                    arguments:\n\
-                    \t<command>: display the help information for this command\n\
-                    \t(none): list all commands",
+        desc:       
+"Displays information about the possible commands to run\n\
+    arguments:\n\
+        <command>: display the help information for this command\n\
+        (none): list all commands",
         usage:      "help [<command>]"
     },
     "list": {
         func:       list,
-        desc:       "Lists the links that have been set\n\
-                    No arguments",
+        desc:       
+"Lists the links that have been set\n\
+    No arguments",
         usage:      "list"
     },
     "link": {
         func:       link,
-        desc:       "Links a name to a destination, used when running goto\n\
-                    arguments:\n\
-                    \t<alias>: name to set\n\
-                    \t<dest>: destination to go to\n",
+        desc:       
+"Links a name to a destination, used when running goto\n\
+    arguments:\n\
+        <alias>: name to set\n\
+        <dest>: destination to go to",
         usage:      "link <alias> <dest>"
     },
     "save": {
         func:       save,
-        desc:       "Stores the current links to local storage\n\
-                    No arguments",
+        desc:       
+"Stores the current links to local storage\n\
+    No arguments",
         usage:      "save"
     },
 };

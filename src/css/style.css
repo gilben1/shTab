@@ -5,4 +5,5 @@ div {
     height: 9.9em;
     line-height: 1.1em;
     overflow: auto;
+    white-space: pre;
 }
