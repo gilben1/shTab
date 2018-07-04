@@ -69,10 +69,10 @@ function processCommand(command) {
     try {
         //process[processed.command](processed.rest);
         if (process[processed.command]) {
-            process[processed.command](processed.rest);
+            process[processed.command].func(processed.rest);
         }
-        else if (process[process.aliases[processed.command]]) {
-            process[process.aliases[processed.command]](processed.rest);
+        else if (aliases[processed.command]) {
+            process[aliases[processed.command]].func(processed.rest);
         }
     }
     catch(err){

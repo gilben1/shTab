@@ -79,15 +79,54 @@ function help(args) {
 
 
 var process = {
-    "clear": clear,
-    "goto": goto,
-    "help": help,
-    "list": list,
-    "link": link,
-    "save": save,
-    aliases: {
-        "ls": "list",
-        "go": "goto",
-        ":w": "save"
-    }
+    "clear": {
+        func:       clear,
+        desc:       "Clears the console, or whatever is passed to it\n\
+                    arguments:\n\
+                    \thistory: clears command history\n\
+                    \tlinks: clears set links for the session\n\
+                    \t(none): clears command prompt",     
+        usage:      "clear [history|links]"
+    },
+    "goto": {
+        func:       goto,
+        desc:       "Opens a specified link or url\n\
+                    arguments:\n\
+                    \t<name>: the link to navigate to",
+        usage:      "goto <name>"
+    },
+    "help": {
+        func:       help,
+        desc:       "Displays information about the possible commands to run\n\
+                    arguments:\n\
+                    \t<command>: display the help information for this command\n\
+                    \t(none): list all commands",
+        usage:      "help [<command>]"
+    },
+    "list": {
+        func:       list,
+        desc:       "Lists the links that have been set\n\
+                    No arguments",
+        usage:      "list"
+    },
+    "link": {
+        func:       link,
+        desc:       "Links a name to a destination, used when running goto\n\
+                    arguments:\n\
+                    \t<alias>: name to set\n\
+                    \t<dest>: destination to go to\n",
+        usage:      "link <alias> <dest>"
+    },
+    "save": {
+        func:       save,
+        desc:       "Stores the current links to local storage\n\
+                    No arguments",
+        usage:      "save"
+    },
+};
+
+var aliases = {
+    "ls": "list",
+    "go": "goto",
+    ":w": "save"
 };
