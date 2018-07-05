@@ -165,5 +165,6 @@ var process = {
 var aliases = {
     "ls": "list",
     "go": "goto",
-    ":w": "save"
+    ":w": "save",
+    "man": "help"
 };
