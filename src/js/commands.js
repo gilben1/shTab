@@ -96,8 +96,15 @@ function help(args) {
     }
 }
 
-// Each process has the following format:
-/*
+// Resizes the output terminal to @size lines of text
+function resizeOutput(size) {
+    if (size == undefined || !isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
+        throw "Bad argument!\n";
+    }
+    output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
+}
+
+/* Each process has the following format:
     {
         func:
         desc:
@@ -137,13 +144,6 @@ var process = {
         (none): list all commands",
         usage:      "help [<command>]"
     },
-    "list": {
-        func:       list,
-        desc:       
-"Lists the links that have been set\n\
-    No arguments",
-        usage:      "list"
-    },
     "link": {
         func:       link,
         desc:       
@@ -152,6 +152,21 @@ var process = {
         <alias>: name to set\n\
         <dest>: destination to go to",
         usage:      "link <alias> <dest>"
+    },
+    "list": {
+        func:       list,
+        desc:       
+"Lists the links that have been set\n\
+    No arguments",
+        usage:      "list"
+    },
+    "resize": {
+        func:       resizeOutput,
+        desc:
+"Resizes the output to the passed value\n\
+    arguments:\n\
+        <value>: number of lines in the output",
+        usage:      "resize <value>"
     },
     "save": {
         func:       save,
