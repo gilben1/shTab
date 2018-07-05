@@ -7,3 +7,8 @@ div {
     overflow: auto;
     white-space: pre;
 }
+
+.prompt {
+    background-color: black;
+    color: white;
+}
