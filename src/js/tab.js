@@ -50,7 +50,6 @@ function processCommand(command) {
     let error = false;        
     console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
     try {
-        //process[processed.command](processed.rest);
         if (process[processed.command]) {
             process[processed.command].func(processed.rest);
         }
@@ -88,3 +87,8 @@ function updateOutput(text) {
     output.scrollTop = output.scrollHeight;
     console.log(text);
 }
+
+// function for determining if a value is a valid number using regex found from:
+// https://stackoverflow.com/questions/1303646/check-whether-variable-is-number-or-string-in-javascript
+
+function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); } 
