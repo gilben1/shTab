@@ -6,7 +6,7 @@ var dests = {
 
 };
 
-const loader = {
+const destsLoader = {
     async load() {
         let getItem = await browser.storage.local.get("dests");
         console.log(getItem);
@@ -16,4 +16,4 @@ const loader = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', loader.load);
+document.addEventListener('DOMContentLoaded', destsLoader.load);

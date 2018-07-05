@@ -102,6 +102,10 @@ function resizeOutput(size) {
         throw "Bad argument!\n";
     }
     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
+    let outputHeight = size;
+    browser.storage.local.set({outputHeight});
+    updateOutput(`Resized output to ${size} lines of text.\n`);
+
 }
 
 /* Each process has the following format:
