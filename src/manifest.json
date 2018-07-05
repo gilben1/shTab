@@ -5,7 +5,7 @@
     "description": "A shell-like new tab page replacement",
 
 
-    "version": "0.1",
+    "version": "0.2",
     "developer": {
         "name": "Nicholas Gilbert",
         "url": "https://gitlab.com/gilben/shTab"
