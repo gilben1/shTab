@@ -4,36 +4,19 @@
 // html object references
 const body = document.querySelector('body');
 const prompt = document.querySelector('.prompt');
-const status = document.querySelector('.status');
 const output = document.getElementById("output");
 
 
 var promptContent = "";
-var shifted = false;
 var commandHistory = [];
 
-body.onkeydown = function(evt) {
+
+prompt.addEventListener("keyup", function(evt){
     let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
 
-    status.innerHTML = "";
-    if (key == "shift") { //ignore shift, can't be added to line, used only for modifiers
-        shifted = !shifted;
-        return;
-    }
-
-    if (shifted == true) {
-        if(shiftedKeys[key]) {
-            key = shiftedKeys[key];
-        }
-        shifted = false;
-    }
-
     if (key == "enter") { // enter: process command
         processCommand(promptContent);
-    }
-    else if (key == "delete" || key == "back") { // delete a character
-        promptContent = promptContent.slice(0, -1);
     }
     else if (key == "up") {
         let lastCommand = commandHistory.shift();
@@ -43,6 +26,7 @@ body.onkeydown = function(evt) {
             if (lastCommand.rest != undefined) {
                 promptContent += ` ${lastCommand.rest}`;
             }
+            prompt.value = promptContent;
         }
     }
     else if (key == "down") {
@@ -53,14 +37,13 @@ body.onkeydown = function(evt) {
             if (lastCommand.rest != undefined) {
                 promptContent += ` ${lastCommand.rest}`;
             }
+            prompt.value = promptContent;
         }
     }
     else {
-        //promptContent += key ? key : keyNum;
-        promptContent += key ? key : "";
+        promptContent = prompt.value;
     }
-    prompt.innerHTML = `> ${promptContent}`;
-}
+});
 
 function processCommand(command) {
     let processed = processFirstWord(command);
@@ -85,6 +68,7 @@ function processCommand(command) {
         commandHistory.unshift(processed);
     }
     promptContent = "";
+    prompt.value = "";
 }
 
 
