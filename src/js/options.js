@@ -2,10 +2,24 @@
 
 const optionsLoader = {
     async load() {
-        let getItem = await browser.storage.local.get("outputHeight");
-        console.log(getItem);
-        if (getItem.outputHeight != undefined) {
-            output.style.setProperty('--output-height', (getItem.outputHeight * 1.1) + 'em'); 
+        // Loading output height from file
+        let getHeight = await browser.storage.local.get("outputHeight");
+        console.log(getHeight);
+        if (getHeight.outputHeight != undefined) {
+            output.style.setProperty('--output-height', (getHeight.outputHeight * 1.1) + 'em'); 
+        }
+
+        // Loading background and foreground color from file
+        let getBG = await browser.storage.local.get("bgColor");
+        console.log(getBG);
+        let getFG = await browser.storage.local.get("fgColor");
+        console.log(getFG);
+
+        if (getBG.bgColor != undefined) {
+            document.documentElement.style.setProperty('--bg-color', getBG.bgColor);
+        }
+        if (getFG.fgColor != undefined) {
+            document.documentElement.style.setProperty('--fg-color', getFG.fgColor);
         }
     }
 };

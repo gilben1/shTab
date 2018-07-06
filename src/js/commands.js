@@ -108,6 +108,34 @@ function resizeOutput(size) {
 
 }
 
+// Sets a color element to a specified value
+function setColor(args) {
+    let argsSplit = args.split(' ', 2);
+    if (argsSplit.length != 2) {
+        throw "Too few arguments!\n";
+    }
+    let target = argsSplit[0];
+    let color = argsSplit[1];
+    let name = '';
+    switch(target){
+        case "back":
+            name = '--bg-color';
+            let bgColor = color;
+            browser.storage.local.set({bgColor});
+            break;
+        case "text":
+            name = '--fg-color';
+            let fgColor = color;
+            browser.storage.local.set({fgColor});
+            break;
+        default:
+            throw "Bad element name!\n";
+            break;
+    }
+    document.documentElement.style.setProperty(name, color);
+}
+
+
 /* Each process has the following format:
     {
         func:
@@ -178,6 +206,16 @@ var process = {
 "Stores the current links to local storage\n\
     No arguments",
         usage:      "save"
+    },
+    "colo": {
+        func:       setColor,
+        desc:
+"Sets the color of the given element\n\
+    arguments:\n\
+        back: the background of every element\n\
+        text: the text of every element\n\
+        color: the color to set to",
+        usage:      "colo <back|text> <color>"
     },
 };
 

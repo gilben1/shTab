@@ -17,17 +17,17 @@ div.outputlog{
     line-height: 1.1em;
     overflow: auto;
     white-space: pre;
-    background-color: var(--bg-color);
-    color: var(--fg-color);
+    background-color: var(--bg-color, black);
+    color: var(--fg-color, white);
 }
 
 .prompt {
-    background-color: var(--bg-color);
-    color: var(--fg-color);
+    background-color: var(--bg-color, black);
+    color: var(--fg-color, white);
     width: 98.5%;
 }
 
 div.prefix {
-    background-color: var(--bg-color);
-    color: var(--fg-color);
+    background-color: var(--bg-color, black);
+    color: var(--fg-color, white);
 }
