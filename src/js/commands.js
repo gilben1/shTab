@@ -109,30 +109,39 @@ function resizeOutput(size) {
 }
 
 // Sets a color element to a specified value
-function setColor(args) {
-    let argsSplit = args.split(' ', 2);
-    if (argsSplit.length != 2) {
-        throw "Too few arguments!\n";
-    }
-    let target = argsSplit[0];
-    let color = argsSplit[1];
-    let name = '';
-    switch(target){
-        case "back":
-            name = '--bg-color';
-            let bgColor = color;
-            browser.storage.local.set({bgColor});
-            break;
-        case "text":
-            name = '--fg-color';
-            let fgColor = color;
-            browser.storage.local.set({fgColor});
+function colo(args) {
+
+    switch(args) {
+        case undefined: // No arguments => just print current values
+            updateOutput(`Current background color: ${document.documentElement.style.getPropertyValue('--bg-color')}\n`);
+            updateOutput(`Current foreground / text color: ${document.documentElement.style.getPropertyValue('--fg-color')}\n`);
             break;
         default:
-            throw "Bad element name!\n";
+            let argsSplit = args.split(' ', 2);
+            if (argsSplit.length != 2) {
+                throw "Too few arguments!\n";
+            }
+            let target = argsSplit[0];
+            let color = argsSplit[1];
+            if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
+                throw "Invalid color!\n";
+            }
+            switch(target){
+                case "back":
+                    let bgColor = color;
+                    browser.storage.local.set({bgColor});
+                    document.documentElement.style.setProperty('--bg-color', color);
+                    break;
+                case "text": case "fore":
+                    let fgColor = color;
+                    browser.storage.local.set({fgColor});
+                    document.documentElement.style.setProperty('--fg-color', color);
+                    break;
+                default:
+                    throw "Bad element name!\n";
+            }
             break;
     }
-    document.documentElement.style.setProperty(name, color);
 }
 
 
@@ -208,7 +217,7 @@ var process = {
         usage:      "save"
     },
     "colo": {
-        func:       setColor,
+        func:       colo,
         desc:
 "Sets the color of the given element\n\
     arguments:\n\
@@ -223,5 +232,6 @@ var aliases = {
     "ls": "list",
     "go": "goto",
     ":w": "save",
-    "man": "help"
+    "man": "help",
+    "color": "colo"
 };
