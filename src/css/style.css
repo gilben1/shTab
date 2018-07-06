@@ -2,19 +2,32 @@
 
 :root {
     --output-height: 9.9em;
+    --bg-color: black;
+    --fg-color: white;
 }
 
+body {
+    background-color: var(--bg-color);
+}
 
 /* https://stackoverflow.com/questions/17242209/limiting-a-div-height-to-two-lines-of-text-inside-it */
 /* Limits a div to only a certain amount of text */
-div {
+div.outputlog{
     height: var(--output-height);
     line-height: 1.1em;
     overflow: auto;
     white-space: pre;
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 }
 
 .prompt {
-    background-color: black;
-    color: white;
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    width: 98.5%;
+}
+
+div.prefix {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 }
