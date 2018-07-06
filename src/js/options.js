@@ -21,6 +21,10 @@ const optionsLoader = {
         if (getFG.fgColor != undefined) {
             document.documentElement.style.setProperty('--fg-color', getFG.fgColor);
         }
+
+        // Deletes the newtab page from history
+        // Modified from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/newtab.js
+        browser.history.deleteUrl({ url : browser.extension.getURL('../html/tab.html') });
     }
 };
 

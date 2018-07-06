@@ -12,7 +12,7 @@ function goto(dest) { // usage: goto [link]
     console.log(`Goto activated, dest = ${dest}`);
     let url = dest.match(URL_REGEX);
     if (url != undefined) { // if goto was a url
-        window.open(rest, "_self");
+        window.open(dest, "_self");
     }
     console.log(url);
 
