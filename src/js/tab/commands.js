@@ -102,7 +102,7 @@ function resizeOutput(size) {
         throw "Bad argument!\n";
     }
     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
-    let outputHeight = size;
+    outputHeight = size;
     browser.storage.local.set({outputHeight});
     updateOutput(`Resized output to ${size} lines of text.\n`);
 
@@ -165,6 +165,41 @@ function handleChanged(delta) {
   
 browser.downloads.onChanged.addListener(handleChanged); 
 
+function importOpts(args) {
+    let importElem = document.getElementById("importFile");
+    importElem.addEventListener("change", handleImport, false);
+    importElem.click();
+}
+
+var fr = new FileReader();
+
+function handleImport() {
+    var file = this.files[0];
+    console.log(file);
+    fr.readAsText(file);
+    fr.addEventListener("loadend", doneLoading, false);
+}
+
+function doneLoading() {
+    let importedOptions = JSON.parse(fr.result);
+    console.log(importedOptions);
+    if (importedOptions.bgColor != undefined) {
+        bgColor = importedOptions.bgColor;
+    }
+    if (importedOptions.fgColor != undefined) {
+        fgColor = importedOptions.fgColor;
+    }
+    outputHeight = importedOptions.outputHeight;
+    dests = Object.assign({}, dests, importedOptions.dests);
+    applyCurrentOptions();
+}
+
+function applyCurrentOptions() {
+    document.documentElement.style.setProperty('--bg-color', bgColor);
+    document.documentElement.style.setProperty('--fg-color', fgColor);
+    output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
+}
+
 /* Each process has the following format:
     {
         func:
@@ -202,7 +237,7 @@ var process = {
         func:       exportOpts,
         desc:
 "Exports current options and links to a .json file for later import\n\
-No arguments",
+    No arguments",
         usage:      "export"
     },
     "goto": {
@@ -221,6 +256,13 @@ No arguments",
         <command>: display the help information for this command\n\
         (none): list all commands",
         usage:      "help [<command>]"
+    },
+    "import": {
+        func:       importOpts,
+        desc:
+"Imports options and links from a selected .json file\n\
+    No arguments",
+        usage:      "import"
     },
     "link": {
         func:       link,
