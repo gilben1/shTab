@@ -151,7 +151,7 @@ function exportOpts(args) {
     objectURL = URL.createObjectURL(file);
     browser.downloads.download({
         url: objectURL,
-        filename: "output.json",
+        filename: "shTab_settings.json",
         conflictAction: 'uniquify'});
 }
 
