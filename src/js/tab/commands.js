@@ -147,7 +147,7 @@ function colo(args) {
 // Exports settings to a .json file
 var objectURL;
 function exportOpts(args) {
-    let file = new File([JSON.stringify({dests, outputHeight, fgColor, bgColor})], "output.json", {type: "text/plain;charset=utf-8"});
+    let file = new File([JSON.stringify({dests, outputHeight, fgColor, bgColor}, null, 4)], "output.json", {type: "text/plain;charset=utf-8"});
     objectURL = URL.createObjectURL(file);
     browser.downloads.download({
         url: objectURL,
