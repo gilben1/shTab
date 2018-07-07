@@ -22,7 +22,8 @@
         "history",
         "menus",
         "storage",
-        "tabs"
+        "tabs",
+        "downloads"
     ],
     "applications": {
         "gecko": {

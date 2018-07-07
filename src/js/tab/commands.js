@@ -113,8 +113,8 @@ function colo(args) {
 
     switch(args) {
         case undefined: // No arguments => just print current values
-            updateOutput(`Current background color: ${document.documentElement.style.getPropertyValue('--bg-color')}\n`);
-            updateOutput(`Current foreground / text color: ${document.documentElement.style.getPropertyValue('--fg-color')}\n`);
+            updateOutput(`Current background color: ${window.getComputedStyle(document.documentElement).getPropertyValue('--bg-color')}\n`);
+            updateOutput(`Current foreground / text color: ${window.getComputedStyle(document.documentElement).getPropertyValue('--fg-color')}\n`);
             break;
         default:
             let argsSplit = args.split(' ', 2);
@@ -144,6 +144,26 @@ function colo(args) {
     }
 }
 
+// Exports settings to a .json file
+var objectURL;
+function exportOpts(args) {
+    let file = new File([JSON.stringify({dests, outputHeight, fgColor, bgColor})], "output.json", {type: "text/plain;charset=utf-8"});
+    objectURL = URL.createObjectURL(file);
+    browser.downloads.download({
+        url: objectURL,
+        filename: "output.json",
+        conflictAction: 'uniquify'});
+}
+
+// Used to remove the object url after the file has finished downloading
+function handleChanged(delta) {
+    if (delta.state && delta.state.current === "complete") {
+      console.log(`Download ${delta.id} has completed.`);
+      URL.revokeObjectURL(objectURL);
+    }
+  }
+  
+browser.downloads.onChanged.addListener(handleChanged); 
 
 /* Each process has the following format:
     {
@@ -167,6 +187,23 @@ var process = {
         links: clears set links for the session\n\
         (none): clears command prompt",     
         usage:      "clear [history|links]"
+    },
+    "colo": {
+        func:       colo,
+        desc:
+"Sets the color of the given element\n\
+    arguments:\n\
+        back: the background of every element\n\
+        text: the text of every element\n\
+        color: the color to set to",
+        usage:      "colo <back|text> <color>"
+    },
+    "export": {
+        func:       exportOpts,
+        desc:
+"Exports current options and links to a .json file for later import\n\
+No arguments",
+        usage:      "export"
     },
     "goto": {
         func:       goto,
@@ -215,16 +252,6 @@ var process = {
 "Stores the current links to local storage\n\
     No arguments",
         usage:      "save"
-    },
-    "colo": {
-        func:       colo,
-        desc:
-"Sets the color of the given element\n\
-    arguments:\n\
-        back: the background of every element\n\
-        text: the text of every element\n\
-        color: the color to set to",
-        usage:      "colo <back|text> <color>"
     },
 };
 

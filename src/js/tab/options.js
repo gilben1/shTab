@@ -1,5 +1,10 @@
 // Copyright (c) 2018 Nicholas Gilbert
 
+
+var bgColor;
+var fgColor;
+var outputHeight;
+
 const optionsLoader = {
     async load() {
         // Loading output height from file
@@ -7,6 +12,10 @@ const optionsLoader = {
         console.log(getHeight);
         if (getHeight.outputHeight != undefined) {
             output.style.setProperty('--output-height', (getHeight.outputHeight * 1.1) + 'em'); 
+            outputHeight = getHeight.outputHeight;
+        }
+        else {
+            outputHeight = 9;
         }
 
         // Loading background and foreground color from file
@@ -17,9 +26,11 @@ const optionsLoader = {
 
         if (getBG.bgColor != undefined) {
             document.documentElement.style.setProperty('--bg-color', getBG.bgColor);
+            bgColor = getBG.bgColor;
         }
         if (getFG.fgColor != undefined) {
             document.documentElement.style.setProperty('--fg-color', getFG.fgColor);
+            fgColor = getFG.fgColor;
         }
 
         // Deletes the newtab page from history
