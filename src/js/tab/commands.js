@@ -113,8 +113,8 @@ function colo(args) {
 
     switch(args) {
         case undefined: // No arguments => just print current values
-            updateOutput(`Current background color: ${window.getComputedStyle(document.documentElement).getPropertyValue('--bg-color')}\n`);
-            updateOutput(`Current foreground / text color: ${window.getComputedStyle(document.documentElement).getPropertyValue('--fg-color')}\n`);
+            updateOutput(`Current background color: ${bgColor}\n`);
+            updateOutput(`Current foreground / text color: ${fgColor}\n`);
             break;
         default:
             let argsSplit = args.split(' ', 2);
@@ -128,18 +128,17 @@ function colo(args) {
             }
             switch(target){
                 case "back":
-                    let bgColor = color;
+                    bgColor = color;
                     browser.storage.local.set({bgColor});
-                    document.documentElement.style.setProperty('--bg-color', color);
                     break;
                 case "text": case "fore":
-                    let fgColor = color;
+                    fgColor = color;
                     browser.storage.local.set({fgColor});
-                    document.documentElement.style.setProperty('--fg-color', color);
                     break;
                 default:
                     throw "Bad element name!\n";
             }
+            applyCurrentOptions();
             break;
     }
 }
