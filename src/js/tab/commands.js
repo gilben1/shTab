@@ -47,8 +47,38 @@ function link(toLink) { // usage: link [alias] [dest]
 }
 
 function save(args) {
-    browser.storage.local.set({dests});
-    updateOutput(`Saved links.\n`);
+
+    switch(args) {
+        case undefined: // save everything
+            saveCurrentOptions();
+            updateOutput(`Saved all options to local storage\n`);
+            break;
+        case "links":
+            browser.storage.local.set({dests});
+            updateOutput(`Saved links to local storage.\n`);
+            break;
+        case "back":
+            browser.storage.local.set({bgColor});
+            updateOutput(`Saved background color to local storage\n`);
+            break;
+        case "text":
+        case "fore":
+            browser.storage.local.set({fgColor});
+            updateOutput(`Saved foreground color to local storage\n`);
+            break;
+        case "colo":
+        case "color":
+            browser.storage.local.set({fgColor});
+            browser.storage.local.set({bgColor});
+            updateOutput(`Saved color settings to local storage\n`);
+            break;
+        case "output":
+        case "size":
+        case "height":
+            browser.storage.local.set({outputHeight});
+            updateOutput(`Saved output size setting to local storage\n`);
+            break;
+    }
 }
 
 function clear(args) {
@@ -214,6 +244,13 @@ function applyCurrentOptions() {
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
 }
 
+function saveCurrentOptions() {
+    browser.storage.local.set({dests});
+    browser.storage.local.set({bgColor});
+    browser.storage.local.set({fgColor});
+    browser.storage.local.set({outputHeight});
+}
+
 /* Each process has the following format:
     {
         func:
@@ -305,9 +342,15 @@ var process = {
     "save": {
         func:       save,
         desc:       
-"Stores the current links to local storage\n\
-    No arguments",
-        usage:      "save"
+"Stores the passed option to local storage\n\
+    arguments:\n\
+        links: link to destination aliases\n\
+        back: background color\n\
+        text|fore: text / foreground color\n\
+        colo|color: both color settings\n\
+        output|size|height: output size setting\n\
+        (none): if blank, saves all settings",
+        usage:      "save [links|back|text|fore|colo|color|output|size|height]"
     },
 };
 
