@@ -46,7 +46,7 @@ function link(toLink) { // usage: link [alias] [dest]
     updateOutput(`Added link from ${alias} to ${dest}.\n`)
 }
 
-function save() {
+function save(args) {
     browser.storage.local.set({dests});
     updateOutput(`Saved links.\n`);
 }
@@ -152,46 +152,60 @@ function exportOpts(args) {
         url: objectURL,
         filename: "shTab_settings.json",
         conflictAction: 'uniquify'});
+
+    // Used to remove the object url after the file has finished downloading
+    function handleChanged(delta) {
+        if (delta.state && delta.state.current === "complete") {
+        console.log(`Download ${delta.id} has completed.`);
+        URL.revokeObjectURL(objectURL);
+        }
+    }
+    
+    browser.downloads.onChanged.addListener(handleChanged); 
 }
 
-// Used to remove the object url after the file has finished downloading
-function handleChanged(delta) {
-    if (delta.state && delta.state.current === "complete") {
-      console.log(`Download ${delta.id} has completed.`);
-      URL.revokeObjectURL(objectURL);
-    }
-  }
-  
-browser.downloads.onChanged.addListener(handleChanged); 
 
 function importOpts(args) {
     let importElem = document.getElementById("importFile");
     importElem.addEventListener("change", handleImport, false);
     importElem.click();
-}
 
-var fr = new FileReader();
+    var fr = new FileReader();
 
-function handleImport() {
-    var file = this.files[0];
-    console.log(file);
-    fr.readAsText(file);
-    fr.addEventListener("loadend", doneLoading, false);
-}
-
-function doneLoading() {
-    let importedOptions = JSON.parse(fr.result);
-    console.log(importedOptions);
-    if (importedOptions.bgColor != undefined) {
-        bgColor = importedOptions.bgColor;
+    function handleImport() {
+        var file = this.files[0];
+        console.log(file);
+        fr.readAsText(file);
+        fr.addEventListener("loadend", doneLoading, false);
     }
-    if (importedOptions.fgColor != undefined) {
-        fgColor = importedOptions.fgColor;
+
+    function doneLoading() {
+        let importedOptions = JSON.parse(fr.result);
+        console.log(importedOptions);
+        bgColor = importedOptions.bgColor ? importedOptions.bgColor : bgColor;
+        fgColor = importedOptions.fgColor ? importedOptions.fgColor : fgColor;
+        outputHeight = importedOptions.outputHeight ? importedOptions.outputHeight : outputHeight;
+        if (importedOptions.bgColor) {
+            updateOutput(`Updated background color to ${importedOptions.bgColor}\n`);
+        }
+        if (importedOptions.fgColor) {
+            updateOutput(`Updated foreground color to ${importedOptions.fgColor}\n`);
+        }
+        if (importedOptions.outputHeight) {
+            updateOutput(`Updated output height to ${importedOptions.outputHeight}\n`);
+        }
+
+        dests = Object.assign({}, dests, importedOptions.dests);
+
+        updateOutput(`Added the following links:\n`);
+        for (let key in importedOptions.dests) {
+            updateOutput(`    ${key} -> ${dests[key]}\n`);
+        }
+
+        applyCurrentOptions();
     }
-    outputHeight = importedOptions.outputHeight;
-    dests = Object.assign({}, dests, importedOptions.dests);
-    applyCurrentOptions();
 }
+
 
 function applyCurrentOptions() {
     document.documentElement.style.setProperty('--bg-color', bgColor);
