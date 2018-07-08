@@ -156,8 +156,9 @@ function exportOpts(args) {
     // Used to remove the object url after the file has finished downloading
     function handleChanged(delta) {
         if (delta.state && delta.state.current === "complete") {
-        console.log(`Download ${delta.id} has completed.`);
-        URL.revokeObjectURL(objectURL);
+            console.log(`Download ${delta.id} has completed.`);
+            URL.revokeObjectURL(objectURL);
+            updateOutput(`Current settings exported to file!\n`);
         }
     }
     
