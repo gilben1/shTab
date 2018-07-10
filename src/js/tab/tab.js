@@ -68,6 +68,9 @@ function processCommand(command) {
         else if (aliases[processed.command]) {
             process[aliases[processed.command]].func(processed.rest);
         }
+        else {
+            updateOutput(`"${processed.command}" is not a valid command.\n`);
+        }
     }
     catch(err){
         console.log(`Invalid command! Message: ${err}`);
