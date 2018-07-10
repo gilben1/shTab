@@ -20,7 +20,7 @@ prompt.addEventListener("keyup", function(evt){
     let key = keyCodes[evt.keyCode];
 
     if (key == "enter") { // enter: process command
-        processCommand(promptContent);
+        processPrompt(promptContent);
     }
     else if (key == "up") {
         let lastCommand = commandHistory.shift();
@@ -48,6 +48,14 @@ prompt.addEventListener("keyup", function(evt){
         promptContent = prompt.value;
     }
 });
+
+function processPrompt(prompt) {
+    let commands = prompt.split(/;\s*/);
+    console.log(commands);
+    commands.forEach(function(elem){
+        processCommand(elem);
+    });
+}
 
 function processCommand(command) {
     let processed = processFirstWord(command);
