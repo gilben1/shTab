@@ -359,5 +359,6 @@ var aliases = {
     "go": "goto",
     ":w": "save",
     "man": "help",
-    "color": "colo"
+    "color": "colo",
+    "add": "link"
 };
