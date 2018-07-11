@@ -237,6 +237,34 @@ function importOpts(args) {
     }
 }
 
+// alias <name>="<string>"
+function alias(args) {
+
+    switch(args) {
+        case undefined:
+            updateOutput(`Current aliases:\n`);
+            for (let key in aliases) {
+                updateOutput(`${key} -> ${aliases[key]}\n`);
+            }
+            break;
+        default:
+            if (/[a-z0-9]=".*"/i.test(args) == false) {
+                throw "Not right form for alias!\n";
+            }
+            let argsSplit = args.split('\"', 2);
+            argsSplit[0] = argsSplit[0].slice(0, -1);
+            console.log(argsSplit);
+            aliases[argsSplit[0]] = argsSplit[1];
+            updateOutput(`Added an alias from ${argsSplit[0]} to ${argsSplit[1]}.\n`);
+            break;
+    }
+
+
+
+
+}
+
+
 
 function applyCurrentOptions() {
     document.documentElement.style.setProperty('--bg-color', bgColor);
@@ -264,6 +292,16 @@ function saveCurrentOptions() {
     usage is a separate printout by help
 */
 var process = {
+    "alias": {
+        func:       alias,
+        desc:
+"Aliases a shorthand keyword to map to another command\n\
+    arguments:\n\
+        <name>: the name of the alias\n\
+        <string>: string you want to replace when <name> is entered\n\
+        (none): displays the current aliases",
+        usage:      "alias <name>=\"<string>\""
+    },
     "clear": {
         func:       clear,
         desc:       

@@ -49,12 +49,52 @@ prompt.addEventListener("keyup", function(evt){
     }
 });
 
-function processPrompt(prompt) {
-    let commands = prompt.split(/;\s*/);
+function processPrompt(promptString) {
+    let commands = promptString.split(/;\s*/);
+    console.log(commands);
+    try {
+        commands = joinMatchingQuotes(commands);
+    }
+    catch(err) {
+        updateOutput(`${err}\n`);
+        promptContent = "";
+        prompt.value = "";
+        return;
+    }
     console.log(commands);
     commands.forEach(function(elem){
         processCommand(elem);
     });
+}
+
+function joinMatchingQuotes(input) {
+    let output = [];
+    for (let i = 0; i < input.length; ++i) {
+        let countQuote = input[i].split('\"').length - 1;
+        if (countQuote > 0 && countQuote % 2 != 0) { // odd non-zero number of quotes in string
+            // look for a matching quote in subsequent strings
+            let built = input[i];
+            let foundQuotes = 0;
+            for (let j = i + 1; j < input.length; ++j) {
+                built = built + "; " + input[j];
+                let findQuote = input[j].split('\"').length - 1;
+                if (findQuote > 0) {
+                    foundQuotes++;
+                    i = j;
+                    console.log(i);
+                    break;
+                }
+            }
+            if (foundQuotes < 1) {
+                throw "Not enough quotes!\n";
+            }
+            output.push(built);
+        }
+        else {
+            output.push(input[i]);
+        }
+    }
+    return output;
 }
 
 function processCommand(command) {
@@ -84,6 +124,11 @@ function processCommand(command) {
     promptContent = "";
     prompt.value = "";
 }
+
+function expandAlias(alias) {
+
+}
+
 
 
 function processFirstWord(command) { // split string into command and rest
