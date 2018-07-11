@@ -354,7 +354,7 @@ var process = {
     },
 };
 
-var aliases = {
+var alts = {
     "ls": "list",
     "go": "goto",
     ":w": "save",

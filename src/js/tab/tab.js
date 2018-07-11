@@ -65,8 +65,8 @@ function processCommand(command) {
         if (process[processed.command]) {
             process[processed.command].func(processed.rest);
         }
-        else if (aliases[processed.command]) {
-            process[aliases[processed.command]].func(processed.rest);
+        else if (alts[processed.command]) {
+            process[alts[processed.command]].func(processed.rest);
         }
         else {
             updateOutput(`"${processed.command}" is not a valid command.\n`);
