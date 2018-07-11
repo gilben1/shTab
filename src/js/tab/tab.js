@@ -51,7 +51,6 @@ prompt.addEventListener("keyup", function(evt){
 
 function processPrompt(promptString) {
     let commands = promptString.split(/;\s*/);
-    console.log(commands);
     try {
         commands = joinMatchingQuotes(commands);
     }
@@ -61,7 +60,6 @@ function processPrompt(promptString) {
         prompt.value = "";
         return;
     }
-    console.log(commands);
     commands.forEach(function(elem){
         processCommand(elem);
     });
@@ -78,10 +76,9 @@ function joinMatchingQuotes(input) {
             for (let j = i + 1; j < input.length; ++j) {
                 built = built + "; " + input[j];
                 let findQuote = input[j].split('\"').length - 1;
-                if (findQuote > 0) {
+                if (findQuote % 2 != 0) {
                     foundQuotes++;
                     i = j;
-                    console.log(i);
                     break;
                 }
             }
