@@ -61,7 +61,9 @@ function processPrompt(promptString) {
         return;
     }
     commands.forEach(function(elem){
-        processCommand(elem);
+        let expanded = expandAlias(elem);
+        //processCommand(elem);
+        processCommand(expanded);
     });
 }
 
@@ -110,9 +112,10 @@ function processCommand(command) {
         }
     }
     catch(err){
-        console.log(`Invalid command! Message: ${err}`);
-        output.innerText += "Invalid command!\n";
-        output.scrollTop = output.scrollHeight;
+        updateOutput(`Invalid command! Message: ${err}\n`);
+        //console.log(`Invalid command! Message: ${err}`);
+        //output.innerText += "Invalid command!\n";
+        //output.scrollTop = output.scrollHeight;
         error = true;
     }
     if (!error) { // if the process was successful, add to command history
@@ -123,7 +126,8 @@ function processCommand(command) {
 }
 
 function expandAlias(alias) {
-
+    let expanded = aliases[alias] || alias;;
+    return expanded;
 }
 
 

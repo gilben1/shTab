@@ -20,8 +20,7 @@ function goto(dest) { // usage: goto [link]
     if (url != undefined) { // if there was a link
         window.open(url, "_self");
     }
-
-    return true;
+    throw "Bad destination!";
 }
 
 function list() { // list all commands
@@ -30,20 +29,29 @@ function list() { // list all commands
     for (let key in dests) {
         updateOutput(`${key} -> ${dests[key]}\n`);
     }
-    return true;
 }
 
 // Link an alias to a destination.
 // toLink is expected to be two words
 function link(toLink) { // usage: link [alias] [dest]
-    let toLinkSplit = toLink.split(' ', 2);
-    if (toLinkSplit.length != 2) {
-        throw "Too few arguments!\n";
+    switch(toLink) {
+        case undefined:
+            updateOutput(`Current links:\n`);
+            for (let key in dests) {
+                updateOutput(`${key} -> ${dests[key]}\n`);
+            }
+            break;
+        default:
+            let toLinkSplit = toLink.split(' ', 2);
+            if (toLinkSplit.length != 2) {
+                throw "Too few arguments!\n";
+            }
+            let alias = toLinkSplit[0];
+            let dest = toLinkSplit[1];
+            dests[alias] = dest;
+            updateOutput(`Added link from ${alias} to ${dest}.\n`)
+            break;
     }
-    let alias = toLinkSplit[0];
-    let dest = toLinkSplit[1];
-    dests[alias] = dest;
-    updateOutput(`Added link from ${alias} to ${dest}.\n`)
 }
 
 function save(args) {
@@ -248,20 +256,17 @@ function alias(args) {
             }
             break;
         default:
-            if (/[a-z0-9]=".*"/i.test(args) == false) {
+            if (/[a-z0-9]=".*"/i.test(args) == false) { // regex for WORD="WORD" form
                 throw "Not right form for alias!\n";
             }
             let argsSplit = args.split('\"', 2);
             argsSplit[0] = argsSplit[0].slice(0, -1);
             console.log(argsSplit);
             aliases[argsSplit[0]] = argsSplit[1];
+            browser.storage.local.set({aliases});
             updateOutput(`Added an alias from ${argsSplit[0]} to ${argsSplit[1]}.\n`);
             break;
     }
-
-
-
-
 }
 
 
@@ -277,6 +282,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({bgColor});
     browser.storage.local.set({fgColor});
     browser.storage.local.set({outputHeight});
+    browser.storage.local.set({aliases});
 }
 
 /* Each process has the following format:
@@ -319,7 +325,8 @@ var process = {
     arguments:\n\
         back: the background of every element\n\
         text: the text of every element\n\
-        color: the color to set to",
+        color: the color to set to\n\
+        (none): display current colors",
         usage:      "colo <back|text> <color>"
     },
     "export": {
@@ -359,8 +366,9 @@ var process = {
 "Links a name to a destination, used when running goto\n\
     arguments:\n\
         <alias>: name to set\n\
-        <dest>: destination to go to",
-        usage:      "link <alias> <dest>"
+        <dest>: destination to go to\n\
+        (none): list current destinations",
+        usage:      "link [<alias> <dest>]"
     },
     "list": {
         func:       list,
