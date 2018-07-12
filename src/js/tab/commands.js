@@ -4,7 +4,10 @@
 // url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
 
-// Goes to @param dest
+/**
+ * Opens dest through set links or as a direct url
+ * @param {string} dest 
+ */
 function goto(dest) { // usage: goto [link]
     if (dest == undefined) {
         throw "No arguments!\n";
@@ -23,6 +26,9 @@ function goto(dest) { // usage: goto [link]
     throw "Bad destination!";
 }
 
+/**
+ * Lists all dests to the output
+ */
 function list() { // list all commands
     console.log("List activated");
     updateOutput(`Current links:\n`);
@@ -31,8 +37,12 @@ function list() { // list all commands
     }
 }
 
-// Link an alias to a destination.
-// toLink is expected to be two words
+/**
+ * Links a name to a dest
+ * Given no parameters, displays all dests to the output
+ * toLink is expected as <name> <dest>
+ * @param {string} toLink 
+ */
 function link(toLink) { // usage: link [alias] [dest]
     switch(toLink) {
         case undefined:
@@ -54,6 +64,11 @@ function link(toLink) { // usage: link [alias] [dest]
     }
 }
 
+/**
+ * Saves options to local storage.
+ * Args defines what is saved to local storage
+ * @param {string} args 
+ */
 function save(args) {
 
     switch(args) {
@@ -89,6 +104,11 @@ function save(args) {
     }
 }
 
+/**
+ * Clears a variety of things based on argument
+ * No argument clears output
+ * @param {string} args 
+ */
 function clear(args) {
     switch(args) {
         case "history":
@@ -105,6 +125,11 @@ function clear(args) {
     }
 }
 
+/**
+ * Displays help information when given an command argument
+ * Lists all commands when given no argument 
+ * @param {string} args 
+ */
 function help(args) {
     switch(args) {
         case undefined: // no arguments
@@ -135,6 +160,11 @@ function help(args) {
 }
 
 // Resizes the output terminal to @size lines of text
+/**
+ * Sets the number of lines in the output to the passed size
+ * Displays number of lines in the output when passed nothing
+ * @param {number} size 
+ */
 function resizeOutput(size) {
     switch(size) {
         case undefined:
@@ -153,6 +183,11 @@ function resizeOutput(size) {
 }
 
 // Sets a color element to a specified value
+/**
+ * Sets the color for a passed element to either a CSS color value or hex value
+ * args expected as <elem> <color>
+ * @param {string} args 
+ */
 function colo(args) {
 
     switch(args) {
@@ -187,8 +222,12 @@ function colo(args) {
     }
 }
 
-// Exports settings to a .json file
 var objectURL;
+/**
+ * Exports current options to a .json file
+ * args currently aren't used
+ * @param {string} args 
+ */
 function exportOpts(args) {
     let file = new File([JSON.stringify({dests, outputHeight, fgColor, bgColor}, null, 4)], "output.json", {type: "text/plain;charset=utf-8"});
     objectURL = URL.createObjectURL(file);
@@ -198,6 +237,12 @@ function exportOpts(args) {
         conflictAction: 'uniquify'});
 
     // Used to remove the object url after the file has finished downloading
+    /**
+     * Handles the state change for the downloaded file
+     * Used to print output and remove object url when the file has finished
+     * downloading
+     * @param {*} delta 
+     */
     function handleChanged(delta) {
         if (delta.state && delta.state.current === "complete") {
             console.log(`Download ${delta.id} has completed.`);
@@ -209,14 +254,20 @@ function exportOpts(args) {
     browser.downloads.onChanged.addListener(handleChanged); 
 }
 
-
-function importOpts(args) {
+/**
+ * Imports settings from a .json file into the current settings
+ */
+function importOpts() {
     let importElem = document.getElementById("importFile");
     importElem.addEventListener("change", handleImport, false);
     importElem.click();
 
     var fr = new FileReader();
 
+    /**
+     * Used in the event listener to handle the click event for the importFile element
+     * To open the file dialog
+     */
     function handleImport() {
         var file = this.files[0];
         console.log(file);
@@ -224,6 +275,9 @@ function importOpts(args) {
         fr.addEventListener("loadend", doneLoading, false);
     }
 
+    /**
+     * Get triggered when the file gets done reading, so it can be parsed in JSON
+     */
     function doneLoading() {
         let importedOptions = JSON.parse(fr.result);
         console.log(importedOptions);
@@ -251,9 +305,13 @@ function importOpts(args) {
     }
 }
 
-// alias <name>="<string>"
+/**
+ * Sets an alias from a word to command(s)
+ * If empty, displays the aliases
+ * expected form of args: WORD="some words"
+ * @param {string} args 
+ */
 function alias(args) {
-
     switch(args) {
         case undefined:
             updateOutput(`Current aliases:\n`);
@@ -275,14 +333,18 @@ function alias(args) {
     }
 }
 
-
-
+/**
+ * Applies the current options to the CSS style
+ */
 function applyCurrentOptions() {
     document.documentElement.style.setProperty('--bg-color', bgColor);
     document.documentElement.style.setProperty('--fg-color', fgColor);
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
 }
 
+/**
+ * Saves the current options to local storage
+ */
 function saveCurrentOptions() {
     browser.storage.local.set({dests});
     browser.storage.local.set({bgColor});
@@ -303,6 +365,10 @@ function saveCurrentOptions() {
         Cannot start indented, otherwise the div will interpret the indent
     usage is a separate printout by help
 */
+
+/**
+ * Jump table for running commands based on strings
+ */
 var process = {
     "alias": {
         func:       alias,
@@ -406,6 +472,9 @@ var process = {
     },
 };
 
+/**
+ * Alternate names for commands, essentially a second level jump table
+ */
 var alts = {
     "ls": "list",
     "go": "goto",
