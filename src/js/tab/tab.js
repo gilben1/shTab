@@ -14,7 +14,6 @@ const output = document.getElementById("output");
 var promptContent = "";
 var commandHistory = [];
 
-
 prompt.addEventListener("keyup", function(evt){
     let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
@@ -49,6 +48,11 @@ prompt.addEventListener("keyup", function(evt){
     }
 });
 
+/**
+ * Processes the content of the prompt
+ * Includes allowing multiple commands separated by semi-colons
+ * @param {string} promptString 
+ */
 function processPrompt(promptString) {
     let commands = promptString.split(/;\s*/);
     try {
@@ -62,11 +66,15 @@ function processPrompt(promptString) {
     }
     commands.forEach(function(elem){
         let expanded = expandAlias(elem);
-        //processCommand(elem);
         processCommand(expanded);
     });
 }
 
+/**
+ * Join together elements in the passed array based on quotes
+ * Effectively, unsplits strings separated by semicolons if they're surrounded by quotes
+ * @param {string[]} input 
+ */
 function joinMatchingQuotes(input) {
     let output = [];
     for (let i = 0; i < input.length; ++i) {
@@ -96,6 +104,10 @@ function joinMatchingQuotes(input) {
     return output;
 }
 
+/**
+ * Run the command through the jump and alt tables
+ * @param {string} command 
+ */
 function processCommand(command) {
     let processed = processFirstWord(command);
     let error = false;        
@@ -113,9 +125,6 @@ function processCommand(command) {
     }
     catch(err){
         updateOutput(`Invalid command! Message: ${err}\n`);
-        //console.log(`Invalid command! Message: ${err}`);
-        //output.innerText += "Invalid command!\n";
-        //output.scrollTop = output.scrollHeight;
         error = true;
     }
     if (!error) { // if the process was successful, add to command history
@@ -125,13 +134,22 @@ function processCommand(command) {
     prompt.value = "";
 }
 
+/**
+ * Returns the expanded form of the passed alias
+ * @param {string} alias 
+ * @return {string} expanded alias command
+ */
 function expandAlias(alias) {
-    let expanded = aliases[alias] || alias;;
+    let expanded = aliases[alias] || alias;
     return expanded;
 }
 
-
-
+/**
+ * Takes a command and splits it into first word followed by
+ * rest of the arguments
+ * @param {string} command 
+ * @return {{"command": string, "rest": string}} Object with separated command and rest
+ */
 function processFirstWord(command) { // split string into command and rest
     let comm = command.split(' ')[0];
     let rest = command.substr(command.indexOf(' ') + 1);
@@ -143,6 +161,10 @@ function processFirstWord(command) { // split string into command and rest
         "rest":     rest};
 }
 
+/**
+ * Prints the passed text to the output and js console
+ * @param {string} text 
+ */
 function updateOutput(text) {
     output.innerText += text;
     output.scrollTop = output.scrollHeight;
@@ -152,11 +174,21 @@ function updateOutput(text) {
 // function for determining if a value is a valid number using regex found from:
 // https://stackoverflow.com/questions/1303646/check-whether-variable-is-number-or-string-in-javascript
 
+/**
+ * Returns whether the passed string is a number or not
+ * @param {string} n 
+ * @return {boolean} whether n is a number or not
+ */
 function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); } 
 
-// function for determining if the passed string is a color in either:
-// 3 digit or 6 digit hex form or
-// one of the 140 CSS named colors supported by all browsers
+/**
+ * 
+ * function for determining if the passed string is a color in either:
+ * 3 digit or 6 digit hex form or
+ * one of the 140 CSS named colors supported by all browsers
+ * @param {string} color 
+ * @return {boolean} whether color is a hex or CSS color
+ */
 function isColor(color) {
     let isHex = /(^#[0-9a-f]{6}$)|(^#[0-9a-f]{3}$)/i.test(color);
     console.log(`isHex: ${isHex}\n`);

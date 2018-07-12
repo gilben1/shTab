@@ -2,6 +2,9 @@
 // Map from keyCodes to output strings
 
 // Sourced and modified from https://github.com/wesbos/keycodes
+/**
+ * Dictionary of keycode numbers to human names
+ */
 const keyCodes = {
   8 : "back",
   13 : "enter",

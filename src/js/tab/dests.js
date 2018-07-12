@@ -2,11 +2,17 @@
 
 // Maps keys to destinations
 
+/**
+ * Dictonary from names to destinations
+ */
 var dests = {
 
 };
 
 const destsLoader = {
+    /**
+     * Loads destinations from local storage
+     */
     async load() {
         let getItem = await browser.storage.local.get("dests");
         console.log(getItem);

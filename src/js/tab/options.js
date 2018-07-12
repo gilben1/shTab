@@ -1,6 +1,5 @@
 // Copyright (c) 2018 Nicholas Gilbert
 
-
 var bgColor;
 var fgColor;
 var outputHeight;
@@ -14,6 +13,9 @@ const defaultOptions = {
 
 
 const optionsLoader = {
+    /**
+     * Loads options from file
+     */
     async load() {
         // Loading output height from file
         let getHeight = await browser.storage.local.get("outputHeight");
