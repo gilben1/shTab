@@ -136,14 +136,20 @@ function help(args) {
 
 // Resizes the output terminal to @size lines of text
 function resizeOutput(size) {
-    if (size == undefined || !isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
-        throw "Bad argument!\n";
+    switch(size) {
+        case undefined:
+            updateOutput(`Current output height: ${outputHeight} lines.\n`);
+            break;
+        default:
+            if (!isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
+                throw "Bad argument!\n";
+            }
+            output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
+            outputHeight = size;
+            browser.storage.local.set({outputHeight});
+            updateOutput(`Resized output to ${size} lines of text.\n`);
+            break;
     }
-    output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
-    outputHeight = size;
-    browser.storage.local.set({outputHeight});
-    updateOutput(`Resized output to ${size} lines of text.\n`);
-
 }
 
 // Sets a color element to a specified value
