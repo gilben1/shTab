@@ -262,7 +262,7 @@ function alias(args) {
             }
             break;
         default:
-            if (/[a-z0-9]=".*"/i.test(args) == false) { // regex for WORD="WORD" form
+            if (/^[a-z0-9\-\_]+=".*"/i.test(args) == false) { // regex for WORD="WORD" form
                 throw "Not right form for alias!\n";
             }
             let argsSplit = args.split('\"', 2);
