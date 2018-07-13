@@ -65,8 +65,9 @@ function processPrompt(promptString) {
         return;
     }
     commands.forEach(function(elem){
-        let expanded = expandAlias(elem);
-        processCommand(expanded);
+        //let expanded = expandAlias(elem);
+        //processCommand(expanded);
+        processCommand(elem);
     });
 }
 
@@ -113,14 +114,20 @@ function processCommand(command) {
     let error = false;        
     console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
     try {
+        let old = processed.command; // pre-expansion
+        processed.command = expandAlias(processed.command); // Expand alias if it exists
+
         if (process[processed.command]) {
             process[processed.command].func(processed.rest);
         }
         else if (alts[processed.command]) {
             process[alts[processed.command]].func(processed.rest);
         }
+        else if (processed.command != old){ // An alias expanded, try processing it
+            processPrompt(processed.command + " " + processed.rest);
+        }
         else {
-            updateOutput(`"${processed.command}" is not a valid command.\n`);
+            updateOutput(`"${processed.command}" is an invalid command.\n`);
         }
     }
     catch(err){
@@ -136,6 +143,7 @@ function processCommand(command) {
 
 /**
  * Returns the expanded form of the passed alias
+ * If there is no expansion, returns the original parameter
  * @param {string} alias 
  * @return {string} expanded alias command
  */
