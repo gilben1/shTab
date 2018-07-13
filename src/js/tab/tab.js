@@ -13,33 +13,31 @@ const output = document.getElementById("output");
 
 var promptContent = "";
 var commandHistory = [];
+var commandIndex = 0;
 
 prompt.addEventListener("keyup", function(evt){
     let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
 
     if (key == "enter") { // enter: process command
-        processPrompt(promptContent);
+        let promptCopy = promptContent;
+        if(processPrompt(promptContent) == true) {
+            commandHistory.unshift(promptCopy);
+        }
     }
     else if (key == "up") {
-        let lastCommand = commandHistory.shift();
+        let lastCommand = commandHistory[commandIndex];
         if (lastCommand != undefined) {
-            commandHistory.push(lastCommand);
-            promptContent = lastCommand.command;
-            if (lastCommand.rest != undefined) {
-                promptContent += ` ${lastCommand.rest}`;
-            }
+            commandIndex = (commandIndex + 1) % (commandHistory.length);
+            promptContent = lastCommand;
             prompt.value = promptContent;
         }
     }
     else if (key == "down") {
-        let lastCommand = commandHistory.pop();
+        let lastCommand = commandHistory[commandIndex];
         if (lastCommand != undefined) {
-            commandHistory.unshift(lastCommand);
-            promptContent = lastCommand.command;
-            if (lastCommand.rest != undefined) {
-                promptContent += ` ${lastCommand.rest}`;
-            }
+            commandIndex = (commandIndex - 1 < 0) ? commandHistory.length - 1 : commandIndex - 1;
+            promptContent = lastCommand;
             prompt.value = promptContent;
         }
     }
@@ -64,11 +62,12 @@ function processPrompt(promptString) {
         prompt.value = "";
         return;
     }
+    let success = true;
     commands.forEach(function(elem){
-        //let expanded = expandAlias(elem);
-        //processCommand(expanded);
-        processCommand(elem);
+        let status = processCommand(elem);
+        success = (success == false) ? false : status;
     });
+    return success;
 }
 
 /**
@@ -108,6 +107,7 @@ function joinMatchingQuotes(input) {
 /**
  * Run the command through the jump and alt tables
  * @param {string} command 
+ * @returns {boolean} Success or failure
  */
 function processCommand(command) {
     let processed = processFirstWord(command);
@@ -128,17 +128,20 @@ function processCommand(command) {
         }
         else {
             updateOutput(`"${processed.command}" is an invalid command.\n`);
+            promptContent = "";
+            prompt.value = "";
+            return false;
         }
     }
     catch(err){
         updateOutput(`Invalid command! Message: ${err}\n`);
-        error = true;
-    }
-    if (!error) { // if the process was successful, add to command history
-        commandHistory.unshift(processed);
+        promptContent = "";
+        prompt.value = "";
+        return false;
     }
     promptContent = "";
     prompt.value = "";
+    return true;
 }
 
 /**
