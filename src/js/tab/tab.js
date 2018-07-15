@@ -15,6 +15,9 @@ var promptContent = "";
 var commandHistory = [];
 var commandIndex = 0;
 
+var autoCompleteMatches = [];
+var autoIndex = 0;
+
 prompt.addEventListener("keyup", function(evt){
     let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
@@ -31,6 +34,7 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex + 1) % (commandHistory.length);
             promptContent = lastCommand;
             prompt.value = promptContent;
+            buildCompletion(promptContent);
         }
     }
     else if (key == "down") {
@@ -39,10 +43,29 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex - 1 < 0) ? commandHistory.length - 1 : commandIndex - 1;
             promptContent = lastCommand;
             prompt.value = promptContent;
+            buildCompletion(promptContent);
         }
+    }
+    else if (key == "right" && promptContent.length > 0) {
+        let autoComp = autoCompleteMatches[autoIndex];
+        if (autoComp != undefined) {
+            autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
+            promptContent = autoComp;
+            prompt.value = promptContent;
+        }
+    }
+    else if (key == "left" && promptContent.length > 0) {
+        let autoComp = autoCompleteMatches[autoIndex];
+        if (autoComp != undefined) {
+            autoIndex = (autoIndex - 1 < 0) ? autoCompleteMatches.length - 1 : autoIndex - 1;
+            promptContent = autoComp;
+            prompt.value = promptContent;
+        }
+
     }
     else {
         promptContent = prompt.value;
+        buildCompletion(promptContent);
     }
 });
 
@@ -171,6 +194,33 @@ function processFirstWord(command) { // split string into command and rest
         "command":  comm, 
         "rest":     rest};
 }
+
+/**
+ * Builds autocompletion based on the passed in string
+ * @param {string} input Input string to evaluate
+ * @returns {number} Number of matches created for autocompletion
+ */
+function buildCompletion(input){
+    autoCompleteMatches = [];
+    for (let key in process) {
+        if(key.indexOf(input) == 0) {
+            autoCompleteMatches.unshift(key);
+        }
+    }
+    for (let key in alts) {
+        if(key.indexOf(input) == 0) {
+            autoCompleteMatches.unshift(key);
+        }
+    }
+    for (let key in aliases) {
+        if (key.indexOf(input) == 0) {
+            autoCompleteMatches.unshift(key);
+        }
+    }
+    return autoCompleteMatches.length;
+}
+
+
 
 /**
  * Prints the passed text to the output and js console
