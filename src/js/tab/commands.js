@@ -163,21 +163,53 @@ function help(args) {
 /**
  * Sets the number of lines in the output to the passed size
  * Displays number of lines in the output when passed nothing
- * @param {number} size 
+ * @param {string} size 
  */
 function resizeOutput(size) {
     switch(size) {
         case undefined:
             updateOutput(`Current output height: ${outputHeight} lines.\n`);
+            updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
             break;
         default:
-            if (!isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
-                throw "Bad argument!\n";
+            let sizeSplit = size.split(' ', 2);
+            switch(sizeSplit.length) {
+                case 1: // defaults to main output
+                    if (!isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
+                        throw "Bad argument!\n";
+                    }
+                    output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
+                    outputHeight = size;
+                    browser.storage.local.set({outputHeight});
+                    updateOutput(`Resized output to ${size} lines of text.\n`);
+                    break;
+                case 2: // select based on middle argument
+                    let elem = sizeSplit[0];
+                    let trueSize = sizeSplit[1];
+                    if (!isNumber(trueSize) || trueSize < 0) { // Yell if argument is not a number or isn't there
+                        throw "Bad argument!\n";
+                    }
+                    switch (elem) {
+                        case "bottom":
+                        case "btm":
+                            btmOut.style.setProperty('--btm-height', (trueSize * 1.1) + 'em'); 
+                            btmHeight = size;
+                            browser.storage.local.set({btmHeight});
+                            updateOutput(`Resized bottom output to ${trueSize} lines of text.\n`);
+                            break;
+                        case "top":
+                        case "main":
+                            output.style.setProperty('--output-height', (trueSize * 1.1) + 'em'); 
+                            outputHeight = trueSize;
+                            browser.storage.local.set({outputHeight});
+                            updateOutput(`Resized output to ${trueSize} lines of text.\n`);
+                            break;
+                        default:
+                            updateOutput("Invalid element. Valid elements: top, main, bottom, btm.\n");
+                    }
+                    
+                    break;
             }
-            output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
-            outputHeight = size;
-            browser.storage.local.set({outputHeight});
-            updateOutput(`Resized output to ${size} lines of text.\n`);
             break;
     }
 }
@@ -456,8 +488,9 @@ var process = {
         desc:
 "Resizes the output to the passed value\n\
     arguments:\n\
-        <value>: number of lines in the output",
-        usage:      "resize <value>"
+        <value>: number of lines in the output\n\
+        <output>: output to modify. no value default to top",
+        usage:      "resize [<output>] <value>"
     },
     "save": {
         func:       save,
