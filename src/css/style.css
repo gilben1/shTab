@@ -2,6 +2,7 @@
 
 :root {
     --output-height: 9.9em;
+    --btm-height: 2.2em;
     --bg-color: black;
     --fg-color: white;
 }
@@ -19,6 +20,10 @@ div.outputlog{
     white-space: pre;
     background-color: var(--bg-color, black);
     color: var(--fg-color, white);
+}
+
+div.btmlog {
+    height: var(--btm-height);
 }
 
 .prompt {

@@ -340,6 +340,7 @@ function applyCurrentOptions() {
     document.documentElement.style.setProperty('--bg-color', bgColor);
     document.documentElement.style.setProperty('--fg-color', fgColor);
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
+    btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em');
 }
 
 /**
@@ -351,6 +352,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({fgColor});
     browser.storage.local.set({outputHeight});
     browser.storage.local.set({aliases});
+    browser.storage.local.set({btmHeight});
 }
 
 /* Each process has the following format:

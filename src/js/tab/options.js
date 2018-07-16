@@ -6,11 +6,13 @@ var dests = {};
 var bgColor;
 var fgColor;
 var outputHeight;
+var btmHeight;
 
 const defaultOptions = {
     bgColor: "black",
     fgColor: "white",
     outputHeight: 9,
+    btmHeight: 2
 };
 
 const optionsLoader = {
@@ -24,6 +26,7 @@ const optionsLoader = {
 
         // Assign the local variables to loaded value if it exists, or the defult otherwise
         outputHeight = getStorage.outputHeight ? getStorage.outputHeight : defaultOptions.outputHeight;
+        btmHeight = getStorage.btmHeight ? getStorage.btmHeight : defaultOptions.btmHeight;
         bgColor = getStorage.bgColor ? getStorage.bgColor : defaultOptions.bgColor;
         fgColor = getStorage.fgColor ? getStorage.fgColor : defaultOptions.fgColor;
 
