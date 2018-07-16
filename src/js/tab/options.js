@@ -1,5 +1,8 @@
 // Copyright (c) 2018 Nicholas Gilbert
 
+var aliases = {};
+var dests = {};
+
 var bgColor;
 var fgColor;
 var outputHeight;
@@ -7,30 +10,25 @@ var outputHeight;
 const defaultOptions = {
     bgColor: "black",
     fgColor: "white",
-    outputHeight: 9
+    outputHeight: 9,
 };
-
-
 
 const optionsLoader = {
     /**
      * Loads options from file
      */
     async load() {
-        // Loading output height from file
-        let getHeight = await browser.storage.local.get("outputHeight");
-        console.log(getHeight);
+        let getStorage = await browser.storage.local.get();
 
-        outputHeight = getHeight.outputHeight ? getHeight.outputHeight : defaultOptions.outputHeight;
+        console.log(getStorage);
 
-        // Loading background and foreground color from file
-        let getBG = await browser.storage.local.get("bgColor");
-        console.log(getBG);
-        bgColor = getBG.bgColor ? getBG.bgColor : defaultOptions.bgColor;
+        // Assign the local variables to loaded value if it exists, or the defult otherwise
+        outputHeight = getStorage.outputHeight ? getStorage.outputHeight : defaultOptions.outputHeight;
+        bgColor = getStorage.bgColor ? getStorage.bgColor : defaultOptions.bgColor;
+        fgColor = getStorage.fgColor ? getStorage.fgColor : defaultOptions.fgColor;
 
-        let getFG = await browser.storage.local.get("fgColor");
-        console.log(getFG);
-        fgColor = getFG.fgColor ? getFG.fgColor : defaultOptions.fgColor;
+        aliases = getStorage.aliases ? getStorage.aliases : aliases;
+        dests = getStorage.dests ? getStorage.dests : dests;
 
         applyCurrentOptions();
 
