@@ -12,7 +12,9 @@ const defaultOptions = {
     bgColor: "black",
     fgColor: "white",
     outputHeight: 9,
-    btmHeight: 2
+    btmHeight: 2,
+    aliases: {},
+    dests: {}
 };
 
 const optionsLoader = {
@@ -25,19 +27,28 @@ const optionsLoader = {
         console.log(getStorage);
 
         // Assign the local variables to loaded value if it exists, or the defult otherwise
-        outputHeight = getStorage.outputHeight ? getStorage.outputHeight : defaultOptions.outputHeight;
-        btmHeight = getStorage.btmHeight ? getStorage.btmHeight : defaultOptions.btmHeight;
-        bgColor = getStorage.bgColor ? getStorage.bgColor : defaultOptions.bgColor;
-        fgColor = getStorage.fgColor ? getStorage.fgColor : defaultOptions.fgColor;
+        outputHeight = grab("outputHeight");
+        btmHeight = grab("btmHeight");
+        bgColor = grab("bgColor");
+        fgColor = grab("fgColor");
 
-        aliases = getStorage.aliases ? getStorage.aliases : aliases;
-        dests = getStorage.dests ? getStorage.dests : dests;
+        aliases = grab("aliases");        
+        dests = grab("dests");
 
         applyCurrentOptions();
 
         // Deletes the newtab page from history
         // Modified from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/newtab.js
         browser.history.deleteUrl({ url : browser.extension.getURL('../html/tab.html') });
+
+        /**
+         * Returns either the loaded field or the default value for that field
+         * @param {string} field Field to retrieve
+         * @returns {string} Default or loaded value
+         */
+        function grab(field) {
+            return getStorage[field] ? getStorage[field] : defaultOptions[field];
+        }
     }
 };
 
