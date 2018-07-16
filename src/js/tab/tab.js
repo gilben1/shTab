@@ -9,13 +9,14 @@ const CSS_COLOR_NAMES = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure",
 const body = document.querySelector('body');
 const prompt = document.querySelector('.prompt');
 const output = document.getElementById("output");
-
+const btmOut = document.getElementById("btmOutput");
 
 var promptContent = "";
 var commandHistory = [];
 var commandIndex = 0;
 
 var autoCompleteMatches = [];
+let countMatches = 0;
 var autoIndex = 0;
 
 prompt.addEventListener("keyup", function(evt){
@@ -27,6 +28,7 @@ prompt.addEventListener("keyup", function(evt){
         if(processPrompt(promptContent) == true) {
             commandHistory.unshift(promptCopy);
         }
+        btmOut.innerText = "";
     }
     else if (key == "up") {
         let lastCommand = commandHistory[commandIndex];
@@ -34,7 +36,8 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex + 1) % (commandHistory.length);
             promptContent = lastCommand;
             prompt.value = promptContent;
-            buildCompletion(promptContent);
+            countMatches = buildCompletion(promptContent);
+            btmOut.innerText = "";
         }
     }
     else if (key == "down") {
@@ -43,29 +46,33 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex - 1 < 0) ? commandHistory.length - 1 : commandIndex - 1;
             promptContent = lastCommand;
             prompt.value = promptContent;
-            buildCompletion(promptContent);
+            countMatches = buildCompletion(promptContent);
+            btmOut.innerText = "";
         }
     }
-    else if (key == "right" && promptContent.length > 0) {
-        let autoComp = autoCompleteMatches[autoIndex];
-        if (autoComp != undefined) {
+    else if (key == "right" && promptContent.length > 0 && countMatches > 0) {
+        console.log(`Number of matches: ${countMatches}\n`);
+
+        if (countMatches == 1) { // only one, let's just complete it
+            let autoComp = autoCompleteMatches[autoIndex];
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
             promptContent = autoComp;
             prompt.value = promptContent;
         }
-    }
-    else if (key == "left" && promptContent.length > 0) {
-        let autoComp = autoCompleteMatches[autoIndex];
-        if (autoComp != undefined) {
-            autoIndex = (autoIndex - 1 < 0) ? autoCompleteMatches.length - 1 : autoIndex - 1;
-            promptContent = autoComp;
-            prompt.value = promptContent;
+        else {
+            let out = "";
+            for (let elem in autoCompleteMatches) {
+                out += (autoCompleteMatches[elem] + "   ");
+            }
+            out += "\n";
+            btmOut.innerText = "";
+            updateBtmOutput(out);
         }
-
     }
     else {
         promptContent = prompt.value;
-        buildCompletion(promptContent);
+        btmOut.innerText = "";
+        countMatches = buildCompletion(promptContent);
     }
 });
 
@@ -229,6 +236,13 @@ function buildCompletion(input){
 function updateOutput(text) {
     output.innerText += text;
     output.scrollTop = output.scrollHeight;
+    console.log(text);
+}
+
+
+function updateBtmOutput(text) {
+    btmOut.innerText += text;
+    btmOut.scrollTop = btmOut.scrollHeight;
     console.log(text);
 }
 
