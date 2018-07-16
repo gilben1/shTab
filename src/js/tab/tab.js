@@ -239,7 +239,10 @@ function updateOutput(text) {
     console.log(text);
 }
 
-
+/**
+ * Prints the passed text to the bottom output and js console
+ * @param {string} text 
+ */
 function updateBtmOutput(text) {
     btmOut.innerText += text;
     btmOut.scrollTop = btmOut.scrollHeight;
