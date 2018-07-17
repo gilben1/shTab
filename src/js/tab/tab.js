@@ -160,6 +160,7 @@ function processCommand(command) {
         }
         else if (processed.command != old){ // An alias expanded, try processing it
             let subcommands = [];
+            let success = true;
             if (processed.rest) {
                 subcommands = processPrompt(processed.command + " " + processed.rest);
             }
@@ -168,8 +169,9 @@ function processCommand(command) {
             }
             subcommands.forEach(function(elem){
                 let status = processCommand(elem);
-                //success = (success == false) ? false : status;
+                success = (success == false) ? false : status;
             });
+            return success;
         }
         else {
             updateOutput(`"${processed.command}" is an invalid command.\n`);
