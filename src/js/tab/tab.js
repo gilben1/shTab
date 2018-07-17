@@ -19,13 +19,20 @@ var autoCompleteMatches = [];
 let countMatches = 0;
 var autoIndex = 0;
 
+var commands = [];
+
 prompt.addEventListener("keyup", function(evt){
     let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
 
     if (key == "enter") { // enter: process command
         let promptCopy = promptContent;
-        if(processPrompt(promptContent) == true) {
+        let success = true;
+        commands.forEach(function(elem){
+            let status = processCommand(elem);
+            success = (success == false) ? false : status;
+        });
+        if (success) {
             commandHistory.unshift(promptCopy);
         }
         btmOut.innerText = "";
@@ -36,6 +43,7 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex + 1) % (commandHistory.length);
             promptContent = lastCommand;
             prompt.value = promptContent;
+            commands = processPrompt(promptContent);
             countMatches = buildCompletion(promptContent);
             btmOut.innerText = "";
         }
@@ -46,6 +54,7 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex - 1 < 0) ? commandHistory.length - 1 : commandIndex - 1;
             promptContent = lastCommand;
             prompt.value = promptContent;
+            commands = processPrompt(promptContent);
             countMatches = buildCompletion(promptContent);
             btmOut.innerText = "";
         }
@@ -58,6 +67,7 @@ prompt.addEventListener("keyup", function(evt){
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
             promptContent = autoComp;
             prompt.value = promptContent;
+            commands = processPrompt(promptContent);
         }
         else {
             let out = "";
@@ -72,6 +82,7 @@ prompt.addEventListener("keyup", function(evt){
     else {
         promptContent = prompt.value;
         btmOut.innerText = "";
+        commands = processPrompt(promptContent);
         countMatches = buildCompletion(promptContent);
     }
 });
@@ -82,22 +93,10 @@ prompt.addEventListener("keyup", function(evt){
  * @param {string} promptString 
  */
 function processPrompt(promptString) {
-    let commands = promptString.split(/;\s*/);
-    try {
-        commands = joinMatchingQuotes(commands);
-    }
-    catch(err) {
-        updateOutput(`${err}\n`);
-        promptContent = "";
-        prompt.value = "";
-        return;
-    }
-    let success = true;
-    commands.forEach(function(elem){
-        let status = processCommand(elem);
-        success = (success == false) ? false : status;
-    });
-    return success;
+    let comm = promptString.split(/;\s*/);
+    comm = joinMatchingQuotes(comm);
+    console.log(comm);
+    return comm;
 }
 
 /**
@@ -121,9 +120,6 @@ function joinMatchingQuotes(input) {
                     i = j;
                     break;
                 }
-            }
-            if (foundQuotes < 1) {
-                throw "Not enough quotes!\n";
             }
             output.push(built);
         }
@@ -154,7 +150,17 @@ function processCommand(command) {
             process[alts[processed.command]].func(processed.rest);
         }
         else if (processed.command != old){ // An alias expanded, try processing it
-            processPrompt(processed.command + " " + processed.rest);
+            let subcommands = [];
+            if (processed.rest) {
+                subcommands = processPrompt(processed.command + " " + processed.rest);
+            }
+            else {
+                subcommands = processPrompt(processed.command);
+            }
+            subcommands.forEach(function(elem){
+                let status = processCommand(elem);
+                //success = (success == false) ? false : status;
+            });
         }
         else {
             updateOutput(`"${processed.command}" is an invalid command.\n`);
