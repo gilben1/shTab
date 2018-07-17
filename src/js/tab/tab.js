@@ -70,6 +70,7 @@ prompt.addEventListener("keyup", function(evt){
             let autoComp = autoCompleteMatches[autoIndex];
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
             let replace = commands[commands.length - 1].split(' ');
+            console.log(replace);
             replace[replace.length - 1] = autoComp;
             commands[commands.length - 1] = replace.join(' ');
             promptContent = commands.join('; ');
@@ -255,6 +256,7 @@ function buildCompletion(input){
             }
             break;
         case "arg":
+            autoCompleteMatches = [];
             argCompletion(processed);
             break;
     }
@@ -268,7 +270,6 @@ function buildCompletion(input){
 function argCompletion(proc) {
     let match = process[proc.command] ? proc.command :
                         alts[proc.command] ? alts[proc.command] : undefined;
-    autoCompleteMatches = [];
     if (!match) {
         return;
     }
@@ -288,11 +289,13 @@ function argCompletion(proc) {
             }
             break;
         default:
+            console.log(proc.rest);
             for (let key in process[match].args) {
-                if (key.indexOf(proc.rest) == 0) {
+                if (process[match].args[key].indexOf(proc.rest) == 0) {
                     autoCompleteMatches.unshift(process[match].args[key]);
                 } 
             }
+            console.log(autoCompleteMatches);
             break;
     }
 }

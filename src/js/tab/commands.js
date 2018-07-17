@@ -412,7 +412,8 @@ var process = {
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
-        usage:      "alias <name>=\"<string>\""
+        usage:      "alias <name>=\"<string>\"",
+        args: []
     },
     "clear": {
         func:       clear,
