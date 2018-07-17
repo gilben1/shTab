@@ -43,8 +43,10 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex + 1) % (commandHistory.length);
             promptContent = lastCommand;
             prompt.value = promptContent;
+
             commands = processPrompt(promptContent);
-            countMatches = buildCompletion(promptContent);
+            countMatches = buildCompletion(commands[commands.length - 1]);
+            
             btmOut.innerText = "";
         }
     }
@@ -54,8 +56,10 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = (commandIndex - 1 < 0) ? commandHistory.length - 1 : commandIndex - 1;
             promptContent = lastCommand;
             prompt.value = promptContent;
+
             commands = processPrompt(promptContent);
-            countMatches = buildCompletion(promptContent);
+            countMatches = buildCompletion(commands[commands.length - 1]);
+            
             btmOut.innerText = "";
         }
     }
@@ -65,8 +69,11 @@ prompt.addEventListener("keyup", function(evt){
         if (countMatches == 1) { // only one, let's just complete it
             let autoComp = autoCompleteMatches[autoIndex];
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
-            promptContent = autoComp;
+            
+            commands[commands.length - 1] = autoComp;
+            promptContent = commands.join('; ');
             prompt.value = promptContent;
+            
             commands = processPrompt(promptContent);
         }
         else {
@@ -81,9 +88,11 @@ prompt.addEventListener("keyup", function(evt){
     }
     else {
         promptContent = prompt.value;
-        btmOut.innerText = "";
+        
         commands = processPrompt(promptContent);
-        countMatches = buildCompletion(promptContent);
+        countMatches = buildCompletion(commands[commands.length - 1]);
+
+        btmOut.innerText = "";
     }
 });
 
