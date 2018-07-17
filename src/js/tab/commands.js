@@ -422,7 +422,8 @@ var process = {
         history: clears command history\n\
         links: clears set links for the session\n\
         (none): clears command prompt",     
-        usage:      "clear [history|links]"
+        usage:      "clear [history|links]",
+        args:       ["history", "links"]
     },
     "colo": {
         func:       colo,
@@ -433,14 +434,16 @@ var process = {
         text: the text of every element\n\
         color: the color to set to\n\
         (none): display current colors",
-        usage:      "colo <back|text> <color>"
+        usage:      "colo <back|text> <color>",
+        args:       ["back", "text"]
     },
     "export": {
         func:       exportOpts,
         desc:
 "Exports current options and links to a .json file for later import\n\
     No arguments",
-        usage:      "export"
+        usage:      "export",
+        args: []
     },
     "goto": {
         func:       goto,
@@ -448,7 +451,8 @@ var process = {
 "Opens a specified link or url\n\
     arguments:\n\
         <name>: the link to navigate to",
-        usage:      "goto <name>"
+        usage:      "goto <name>",
+        args: []
     },
     "help": {
         func:       help,
@@ -457,14 +461,16 @@ var process = {
     arguments:\n\
         <command>: display the help information for this command\n\
         (none): list all commands",
-        usage:      "help [<command>]"
+        usage:      "help [<command>]",
+        args: []
     },
     "import": {
         func:       importOpts,
         desc:
 "Imports options and links from a selected .json file\n\
     No arguments",
-        usage:      "import"
+        usage:      "import",
+        args: []
     },
     "link": {
         func:       link,
@@ -474,14 +480,16 @@ var process = {
         <alias>: name to set\n\
         <dest>: destination to go to\n\
         (none): list current destinations",
-        usage:      "link [<alias> <dest>]"
+        usage:      "link [<alias> <dest>]",
+        args: []
     },
     "list": {
         func:       list,
         desc:       
 "Lists the links that have been set\n\
     No arguments",
-        usage:      "list"
+        usage:      "list",
+        args: []
     },
     "resize": {
         func:       resizeOutput,
@@ -490,7 +498,8 @@ var process = {
     arguments:\n\
         <value>: number of lines in the output\n\
         <output>: output to modify. no value default to top",
-        usage:      "resize [<output>] <value>"
+        usage:      "resize [<output>] <value>",
+        args: []
     },
     "save": {
         func:       save,
@@ -503,7 +512,8 @@ var process = {
         colo|color: both color settings\n\
         output|size|height: output size setting\n\
         (none): if blank, saves all settings",
-        usage:      "save [links|back|text|fore|colo|color|output|size|height]"
+        usage:      "save [links|back|text|fore|colo|color|output|size|height]",
+        args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"]
     },
 };
 

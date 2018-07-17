@@ -69,8 +69,9 @@ prompt.addEventListener("keyup", function(evt){
         if (countMatches == 1) { // only one, let's just complete it
             let autoComp = autoCompleteMatches[autoIndex];
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
-            
-            commands[commands.length - 1] = autoComp;
+            let replace = commands[commands.length - 1].split(' ');
+            replace[replace.length - 1] = autoComp;
+            commands[commands.length - 1] = replace.join(' ');
             promptContent = commands.join('; ');
             prompt.value = promptContent;
             
@@ -221,30 +222,80 @@ function processFirstWord(command) { // split string into command and rest
 
 /**
  * Builds autocompletion based on the passed in string
- * @param {string} input Input string to evaluate
+ * @param {string} input Input string to evaluate, is generally a command
  * @returns {number} Number of matches created for autocompletion
  */
 function buildCompletion(input){
-    autoCompleteMatches = [];
-    for (let key in process) {
-        if(key.indexOf(input) == 0) {
-            autoCompleteMatches.unshift(key);
-        }
+    let processed = processFirstWord(input);
+    let mode = "";
+    if (processed.rest == undefined) { // if we are trying to complete based on command
+        mode = "command";
     }
-    for (let key in alts) {
-        if(key.indexOf(input) == 0) {
-            autoCompleteMatches.unshift(key);
-        }
+    else {
+        mode = "arg";
     }
-    for (let key in aliases) {
-        if (key.indexOf(input) == 0) {
-            autoCompleteMatches.unshift(key);
-        }
+
+    switch(mode) {
+        case "command":
+            autoCompleteMatches = [];
+            for (let key in process) {
+                if(key.indexOf(input) == 0) {
+                    autoCompleteMatches.unshift(key);
+                }
+            }
+            for (let key in alts) {
+                if(key.indexOf(input) == 0) {
+                    autoCompleteMatches.unshift(key);
+                }
+            }
+            for (let key in aliases) {
+                if (key.indexOf(input) == 0) {
+                    autoCompleteMatches.unshift(key);
+                }
+            }
+            break;
+        case "arg":
+            argCompletion(processed);
+            break;
     }
     return autoCompleteMatches.length;
 }
 
-
+/**
+ * Completes arguments based on the command
+ * @param {{"command": string, "rest": string}} proc 
+ */
+function argCompletion(proc) {
+    let match = process[proc.command] ? proc.command :
+                        alts[proc.command] ? alts[proc.command] : undefined;
+    autoCompleteMatches = [];
+    if (!match) {
+        return;
+    }
+    switch(match) {
+        case "help": // help searches based on existing commands
+            for (let key in process) {
+                if (key.indexOf(proc.rest) == 0) {
+                    autoCompleteMatches.unshift(key);
+                } 
+            }
+            break;
+        case "goto": // goto searches based on existing links
+            for (let key in dests) {
+                if (key.indexOf(proc.rest) == 0) {
+                    autoCompleteMatches.unshift(key);
+                } 
+            }
+            break;
+        default:
+            for (let key in process[match].args) {
+                if (key.indexOf(proc.rest) == 0) {
+                    autoCompleteMatches.unshift(process[match].args[key]);
+                } 
+            }
+            break;
+    }
+}
 
 /**
  * Prints the passed text to the output and js console
