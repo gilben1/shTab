@@ -370,6 +370,12 @@ function alias(args) {
  * @param {string} text 
  */
 function echo(text) {
+    /*let args = text.split(' ');
+    let optlist = [];
+    console.log(args);
+    optlist = getopt.gnu_getopt(args, 'a:bc');
+    console.log(optlist);*/
+
     updateOutput(text + "\n");
 }
 
