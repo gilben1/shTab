@@ -366,6 +366,16 @@ function alias(args) {
 }
 
 /**
+ * Echoes the input to the output
+ * @param {string} text 
+ */
+function echo(text) {
+    updateOutput(text + "\n");
+}
+
+
+
+/**
  * Applies the current options to the CSS style
  */
 function applyCurrentOptions() {
@@ -413,7 +423,7 @@ var process = {
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
         usage:      "alias <name>=\"<string>\"",
-        args: []
+        args:       []
     },
     "clear": {
         func:       clear,
@@ -437,6 +447,15 @@ var process = {
         (none): display current colors",
         usage:      "colo <back|text> <color>",
         args:       ["back", "text"]
+    },
+    "echo": {
+        func:       echo,
+        desc:
+"Echoes the inputted string into the output buffer\n\
+    arguments:\n\
+        <string>: what to output",
+        usage:      "echo <string>",
+        args: []
     },
     "export": {
         func:       exportOpts,
