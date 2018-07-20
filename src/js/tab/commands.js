@@ -41,26 +41,62 @@ function list() { // list all commands
  * Links a name to a dest
  * Given no parameters, displays all dests to the output
  * toLink is expected as <name> <dest>
- * @param {string} toLink 
+ * @param {string} args
  */
-function link(toLink) { // usage: link [alias] [dest]
-    switch(toLink) {
-        case undefined:
-            updateOutput(`Current links:\n`);
-            for (let key in dests) {
-                updateOutput(`${key} -> ${dests[key]}\n`);
+function link(args) { // usage: link [alias] [dest]
+    let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:");
+
+    let flags = opts[0];
+    let toLink = opts[1].join(' ');
+    
+    let mode = "add";
+    let display = false;
+    let name = "";
+
+    for (let flag in flags) {
+        let option = flags[flag];
+        switch(option[0]) {
+            case "-l":
+            case "-d":
+                display = true;
+                break;
+            case "-r":
+                mode = "remove";
+                name = option[1];
+                break;
+            case undefined:
+                break;
+        }
+    }
+
+    switch(mode) {
+        case "remove":
+            if (dests[name]) {
+                updateOutput(`Removed ${name} -> ${dests[name]} as a destination.\n`);
+                delete dests[name];
+            }
+            else {
+                updateOutput(`Destination ${name} doen't exist.\n`);
             }
             break;
-        default:
-            let toLinkSplit = toLink.split(' ', 2);
-            if (toLinkSplit.length != 2) {
-                throw "Too few arguments!\n";
+        case "add":
+            if (toLink != "") {
+                let toLinkSplit = toLink.split(' ', 2);
+                if (toLinkSplit.length != 2) {
+                    throw "Too few arguments!\n";
+                }
+                let alias = toLinkSplit[0];
+                let dest = toLinkSplit[1];
+                dests[alias] = dest;
+                updateOutput(`Added link from ${alias} to ${dest}.\n`)
             }
-            let alias = toLinkSplit[0];
-            let dest = toLinkSplit[1];
-            dests[alias] = dest;
-            updateOutput(`Added link from ${alias} to ${dest}.\n`)
             break;
+    }
+    if (display) {
+        updateOutput(`Current links:\n`);
+        for (let key in dests) {
+            updateOutput(`${key} -> ${dests[key]}\n`);
+        }
     }
 }
 
@@ -370,12 +406,6 @@ function alias(args) {
  * @param {string} text 
  */
 function echo(text) {
-    /*let args = text.split(' ');
-    let optlist = [];
-    console.log(args);
-    optlist = getopt.gnu_getopt(args, 'a:bc');
-    console.log(optlist);*/
-
     updateOutput(text + "\n");
 }
 
@@ -502,11 +532,14 @@ var process = {
         func:       link,
         desc:       
 "Links a name to a destination, used when running goto\n\
+    flags:\n\
+        -r <del>: remove <del> as a name to a destination\n\
+        -dl: display the current destinations\n\
     arguments:\n\
-        <alias>: name to set\n\
-        <dest>: destination to go to\n\
-        (none): list current destinations",
-        usage:      "link [<alias> <dest>]",
+        <name>: name to set\n\
+        <dest>: destination to go to",
+        usage:      "link [-d] [-l] [-r <del>] [<name> <dest>]",
+        flags: ["-d", "-r", "-l"],
         args: []
     },
     "list": {
