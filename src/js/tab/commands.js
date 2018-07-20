@@ -9,7 +9,7 @@ const URL_REGEX = /^https?:\/\//i;
  * @param {string} args
  */
 function goto(args) { // usage: goto [link]
-    let opts = getopt.getopt(args ? args.split(' ') : [], "n");
+    let opts = getopt.getopt(args ? args.split(' ') : [], "n", ["new"]);
 
     let flags = opts[0];
     let dest = opts[1].join(' ');
@@ -59,7 +59,7 @@ function list() { // list all commands
  * @param {string} args
  */
 function link(args) { // usage: link [alias] [dest]
-    let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:");
+    let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:", ["display", "list", "remove="]);
 
     let flags = opts[0];
     let toLink = opts[1].join(' ');
