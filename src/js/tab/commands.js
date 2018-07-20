@@ -6,24 +6,40 @@ const URL_REGEX = /^https?:\/\//i;
 
 /**
  * Opens dest through set links or as a direct url
- * @param {string} dest 
+ * @param {string} args
  */
-function goto(dest) { // usage: goto [link]
+function goto(args) { // usage: goto [link]
+    let opts = getopt.getopt(args ? args.split(' ') : [], "n");
+
+    let flags = opts[0];
+    let dest = opts[1].join(' ');
+
+    let target = "_self";
+
+    for (let f in flags) {
+        let option = flags[f];
+        switch(option[0]) {
+            case "-n":
+                target = "_blank";
+                break;
+        }
+    }
+    console.log(target);
+
     if (dest == undefined) {
         throw "No arguments!\n";
     }
     console.log(`Goto activated, dest = ${dest}`);
     let url = dest.match(URL_REGEX);
     if (url != undefined) { // if goto was a url
-        window.open(dest, "_self");
+        window.open(dest, target);
     }
     console.log(url);
 
     url = dests[dest];
     if (url != undefined) { // if there was a link
-        window.open(url, "_self");
+        window.open(url, target);
     }
-    throw "Bad destination!";
 }
 
 /**
@@ -505,9 +521,13 @@ var process = {
         func:       goto,
         desc:       
 "Opens a specified link or url\n\
+    flags:\n\
+        -n: opens link in new tab / window (dependant on browser settings)\n\
+        (none): opens link in current tab\
     arguments:\n\
         <name>: the link to navigate to",
         usage:      "goto <name>",
+        flags: ["-n"],
         args: []
     },
     "help": {
