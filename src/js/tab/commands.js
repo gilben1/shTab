@@ -24,7 +24,6 @@ function goto(args) { // usage: goto [link]
                 break;
         }
     }
-    console.log(target);
 
     if (dest == undefined) {
         throw "No arguments!\n";
@@ -217,52 +216,38 @@ function help(args) {
  * Displays number of lines in the output when passed nothing
  * @param {string} size 
  */
-function resizeOutput(size) {
-    switch(size) {
-        case undefined:
-            updateOutput(`Current output height: ${outputHeight} lines.\n`);
-            updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
-            break;
-        default:
-            let sizeSplit = size.split(' ', 2);
-            switch(sizeSplit.length) {
-                case 1: // defaults to main output
-                    if (!isNumber(size) || size < 0) { // Yell if argument is not a number or isn't there
-                        throw "Bad argument!\n";
-                    }
-                    output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
-                    outputHeight = size;
-                    browser.storage.local.set({outputHeight});
-                    updateOutput(`Resized output to ${size} lines of text.\n`);
-                    break;
-                case 2: // select based on middle argument
-                    let elem = sizeSplit[0];
-                    let trueSize = sizeSplit[1];
-                    if (!isNumber(trueSize) || trueSize < 0) { // Yell if argument is not a number or isn't there
-                        throw "Bad argument!\n";
-                    }
-                    switch (elem) {
-                        case "bottom":
-                        case "btm":
-                            btmOut.style.setProperty('--btm-height', (trueSize * 1.1) + 'em'); 
-                            btmHeight = size;
-                            browser.storage.local.set({btmHeight});
-                            updateOutput(`Resized bottom output to ${trueSize} lines of text.\n`);
-                            break;
-                        case "top":
-                        case "main":
-                            output.style.setProperty('--output-height', (trueSize * 1.1) + 'em'); 
-                            outputHeight = trueSize;
-                            browser.storage.local.set({outputHeight});
-                            updateOutput(`Resized output to ${trueSize} lines of text.\n`);
-                            break;
-                        default:
-                            updateOutput("Invalid element. Valid elements: top, main, bottom, btm.\n");
-                    }
-                    
-                    break;
+function resizeOutput(args) {
+    let opts = getopt.getopt(args ? args.split(' ') : [], "t:b:d", ["top=", "bottom=", "display"]);
+
+    let flags = opts[0];
+
+    for (let f in flags) {
+        let option = flags[f];
+        switch(option[0]) {
+            case "-b":
+            case "--bottom": {
+                let size = option[1];
+                btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
+                btmHeight = size;
+                browser.storage.local.set({btmHeight});
+                updateOutput(`Resized bottom output to ${size} lines of text.\n`);
+                break;
             }
-            break;
+            case "-d":
+            case "--display":
+                updateOutput(`Current output height: ${outputHeight} lines.\n`);
+                updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
+                break;
+            case "-t":
+            case "--top":{
+                let size = option[1];
+                output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
+                outputHeight = size;
+                browser.storage.local.set({outputHeight});
+                updateOutput(`Resized output to ${size} lines of text.\n`);
+                break;
+            }
+        }
     }
 }
 
@@ -574,10 +559,12 @@ var process = {
         func:       resizeOutput,
         desc:
 "Resizes the output to the passed value\n\
-    arguments:\n\
-        <value>: number of lines in the output\n\
-        <output>: output to modify. no value default to top",
-        usage:      "resize [<output>] <value>",
+    flags:\n\
+        -t|--top <value>: sets top output height to <value>\n \
+        -b|--bottom <value>: sets bottom output height to <value>\n\
+        -d|--display: outputs the current height for both outputs",
+        usage:      "resize [-d] [-b|--bottom <value>] [-t|--top <value>]",
+        flags: ["-d", "-b", "--bottom", "-t", "--top"],
         args: []
     },
     "save": {
