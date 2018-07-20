@@ -40,7 +40,7 @@ function list() { // list all commands
 /**
  * Links a name to a dest
  * Given no parameters, displays all dests to the output
- * toLink is expected as <name> <dest>
+ * args is expected as <name> <dest>
  * @param {string} args
  */
 function link(args) { // usage: link [alias] [dest]
@@ -172,8 +172,8 @@ function help(args) {
             for (let key in process) {
                 updateOutput(`${key}\n`)
             }
-            for (let key in aliases) {
-                updateOutput(`${key} (${aliases[key]})\n`)
+            for (let key in alts) {
+                updateOutput(`${key} (${alts[key]})\n`)
             }
             break;
         default:
@@ -182,10 +182,10 @@ function help(args) {
                 updateOutput(`${process[args].desc}\n`);
                 updateOutput(`usage: ${process[args].usage}\n`);
             }
-            else if(process[aliases[args]]) {
-                updateOutput(`Help for ${args} (alias for ${aliases[args]}):\n`);
-                updateOutput(`${process[aliases[args]].desc}\n`);
-                updateOutput(`usage: ${process[aliases[args]].usage}\n`);
+            else if(process[alts[args]]) {
+                updateOutput(`Help for ${args} (alias for ${alts[args]}):\n`);
+                updateOutput(`${process[alts[args]].desc}\n`);
+                updateOutput(`usage: ${process[alts[args]].usage}\n`);
             }
             else {
                 throw "Invalid argument.\n";
