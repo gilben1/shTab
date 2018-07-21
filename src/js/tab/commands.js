@@ -11,8 +11,8 @@ const URL_REGEX = /^https?:\/\//i;
 function goto(args) { // usage: goto [link]
     let opts = getopt.getopt(args ? args.split(' ') : [], "n", ["new"]);
 
-    let flags = opts[0];
-    let dest = opts[1].join(' ');
+    let flags = opts.opts;
+    let dest = opts.args.join(' ');
 
     let target = "_self";
 
@@ -61,8 +61,8 @@ function list() { // list all commands
 function link(args) { // usage: link [alias] [dest]
     let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:", ["display", "list", "remove="]);
 
-    let flags = opts[0];
-    let toLink = opts[1].join(' ');
+    let flags = opts.opts;
+    let toLink = opts.args.join(' ');
     
     let mode = "add";
     let display = false;
@@ -223,7 +223,7 @@ function help(args) {
 function resizeOutput(args) {
     let opts = getopt.getopt(args ? args.split(' ') : [], "t:b:d", ["top=", "bottom=", "display"]);
 
-    let flags = opts[0];
+    let flags = opts.opts;
 
     for (let f in flags) {
         let option = flags[f];

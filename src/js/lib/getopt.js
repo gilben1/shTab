@@ -45,7 +45,9 @@ var getopt = (function() {
       }
     }
 
-    return [opts, args];
+    return {
+      "opts": opts, 
+      "args": args};
   }
 
   function gnu_getopt(args, shortopts, longopts) {
