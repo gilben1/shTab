@@ -122,36 +122,40 @@ function link(args) { // usage: link [alias] [dest]
  */
 function save(args) {
 
-    switch(args) {
-        case undefined: // save everything
-            saveCurrentOptions();
-            updateOutput(`Saved all options to local storage\n`);
-            break;
-        case "links":
-            browser.storage.local.set({dests});
-            updateOutput(`Saved links to local storage.\n`);
-            break;
-        case "back":
-            browser.storage.local.set({bgColor});
-            updateOutput(`Saved background color to local storage\n`);
-            break;
-        case "text":
-        case "fore":
-            browser.storage.local.set({fgColor});
-            updateOutput(`Saved foreground color to local storage\n`);
-            break;
-        case "colo":
-        case "color":
-            browser.storage.local.set({fgColor});
-            browser.storage.local.set({bgColor});
-            updateOutput(`Saved color settings to local storage\n`);
-            break;
-        case "output":
-        case "size":
-        case "height":
-            browser.storage.local.set({outputHeight});
-            updateOutput(`Saved output size setting to local storage\n`);
-            break;
+    let toSave = args.split(' ');
+    for (let index in toSave) {
+        switch(toSave[index]) {
+            case undefined: // save everything
+                saveCurrentOptions();
+                updateOutput(`Saved all options to local storage\n`);
+                break;
+            case "links":
+                browser.storage.local.set({dests});
+                updateOutput(`Saved links to local storage.\n`);
+                break;
+            case "back":
+                browser.storage.local.set({bgColor});
+                updateOutput(`Saved background color to local storage\n`);
+                break;
+            case "text":
+            case "fore":
+                browser.storage.local.set({fgColor});
+                updateOutput(`Saved foreground color to local storage\n`);
+                break;
+            case "colo":
+            case "color":
+                browser.storage.local.set({fgColor});
+                browser.storage.local.set({bgColor});
+                updateOutput(`Saved color settings to local storage\n`);
+                break;
+            case "output":
+            case "size":
+            case "height":
+                browser.storage.local.set({outputHeight});
+                updateOutput(`Saved output size setting to local storage\n`);
+                break;
+        }
+
     }
 }
 
