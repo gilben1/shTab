@@ -273,52 +273,47 @@ function argCompletion(proc) {
     if (!match) {
         return;
     }
+    // The last word of the rest is what we're trying to complete
+    let compareSplit = proc.rest.split(' ');
+    let compare = compareSplit[compareSplit.length - 1];
+
+    for (let key in process[match].args) { // match based on command's arguments
+        if (process[match].args[key].indexOf(compare) == 0) {
+            autoCompleteMatches.unshift(process[match].args[key]);
+        } 
+    }
+
+    for (let key in process[match].flags) { // match based on command's flags
+        console.log(process[match].flags[key]);
+        if (process[match].flags[key].indexOf(compare) == 0) {
+            autoCompleteMatches.unshift(process[match].flags[key]);
+        }
+    }
+
+    // Special commands that use arguments based on other information
     switch(match) {
         case "help": // help searches based on existing commands
             for (let key in process) {
-                if (key.indexOf(proc.rest) == 0) {
+                if (key.indexOf(compare) == 0) {
+                    autoCompleteMatches.unshift(key);
+                } 
+            }
+            for (let key in alts) {
+                if (key.indexOf(compare) == 0) {
                     autoCompleteMatches.unshift(key);
                 } 
             }
             break;
         case "goto": // goto searches based on existing links
             for (let key in dests) {
-                if (key.indexOf(proc.rest) == 0) {
+                if (key.indexOf(compare) == 0) {
                     autoCompleteMatches.unshift(key);
                 } 
             }
             break;
-        default:
-            console.log(proc.rest);
-            for (let key in process[match].args) {
-                if (process[match].args[key].indexOf(proc.rest) == 0) {
-                    autoCompleteMatches.unshift(process[match].args[key]);
-                } 
-            }
-            console.log(autoCompleteMatches);
-            break;
     }
+
 }
-
-
-/**
- * Completes flags based on the command
- * @param {{"command": string, "rest": string}} proc 
- */
-function flagCompletion(proc) {
-    let match = process[proc.command] ? proc.command :
-                        alts[proc.command] ? alts[proc.command] : undefined;
-    if (!match) {
-        return;
-    }
-    for (let key in process[match].flags){
-        if (process[match].flags[key].indexOf(input) == 0) {
-            autoCompleteMatches.unshift(process[match].flags[key]);
-        }
-    }
-}
-
-
 
 /**
  * Prints the passed text to the output and js console

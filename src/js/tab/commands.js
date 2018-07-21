@@ -19,7 +19,7 @@ function goto(args) { // usage: goto [link]
     for (let f in flags) {
         let option = flags[f];
         switch(option[0]) {
-            case "-n":
+            case "-n": case "--new":
                 target = "_blank";
                 break;
         }
@@ -71,11 +71,11 @@ function link(args) { // usage: link [alias] [dest]
     for (let flag in flags) {
         let option = flags[flag];
         switch(option[0]) {
-            case "-l":
-            case "-d":
+            case "-l": case "--list":
+            case "-d": case "--display":
                 display = true;
                 break;
-            case "-r":
+            case "-r": case "--remove":
                 mode = "remove";
                 name = option[1];
                 break;
@@ -224,8 +224,7 @@ function resizeOutput(args) {
     for (let f in flags) {
         let option = flags[f];
         switch(option[0]) {
-            case "-b":
-            case "--bottom": {
+            case "-b": case "--bottom": {
                 let size = option[1];
                 btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
                 btmHeight = size;
@@ -233,13 +232,11 @@ function resizeOutput(args) {
                 updateOutput(`Resized bottom output to ${size} lines of text.\n`);
                 break;
             }
-            case "-d":
-            case "--display":
+            case "-d": case "--display":
                 updateOutput(`Current output height: ${outputHeight} lines.\n`);
                 updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
                 break;
-            case "-t":
-            case "--top":{
+            case "-t": case "--top":{
                 let size = option[1];
                 output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
                 outputHeight = size;
@@ -452,7 +449,7 @@ function saveCurrentOptions() {
  */
 var process = {
     "alias": {
-        func:       alias,
+        func: alias,
         desc:
 "Aliases a shorthand keyword to map to another command\n\
     arguments:\n\
@@ -461,7 +458,7 @@ var process = {
         (none): displays the current aliases",
         usage:      "alias <name>=\"<string>\"",
         flags: [],
-        args:       []
+        args: []
     },
     "clear": {
         func:       clear,
@@ -512,12 +509,12 @@ var process = {
         desc:       
 "Opens a specified link or url\n\
     flags:\n\
-        -n: opens link in new tab / window (dependant on browser settings)\n\
+        -n | --new: opens link in new tab / window (dependant on browser settings)\n\
         (none): opens link in current tab\
     arguments:\n\
         <name>: the link to navigate to",
-        usage:      "goto <name>",
-        flags: ["-n"],
+        usage:      "goto [-n|--new] <name>",
+        flags: ["-n", "--new"],
         args: []
     },
     "help": {
@@ -545,13 +542,13 @@ var process = {
         desc:       
 "Links a name to a destination, used when running goto\n\
     flags:\n\
-        -r <del>: remove <del> as a name to a destination\n\
-        -dl: display the current destinations\n\
+        -r | --remove <del>: remove <del> as a name to a destination\n\
+        -dl | --display | --list: display the current destinations\n\
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
-        usage:      "link [-d] [-l] [-r <del>] [<name> <dest>]",
-        flags: ["-d", "-r", "-l"],
+        usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
+        flags: ["-d", "-r", "-l", "--display", "--list", "--remove"],
         args: []
     },
     "list": {
@@ -572,7 +569,7 @@ var process = {
         -b|--bottom <value>: sets bottom output height to <value>\n\
         -d|--display: outputs the current height for both outputs",
         usage:      "resize [-d] [-b|--bottom <value>] [-t|--top <value>]",
-        flags: ["-d", "-b", "--bottom", "-t", "--top"],
+        flags: ["-d", "--display", "-b", "--bottom", "-t", "--top"],
         args: []
     },
     "save": {
