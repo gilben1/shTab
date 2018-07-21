@@ -300,6 +300,26 @@ function argCompletion(proc) {
     }
 }
 
+
+/**
+ * Completes flags based on the command
+ * @param {{"command": string, "rest": string}} proc 
+ */
+function flagCompletion(proc) {
+    let match = process[proc.command] ? proc.command :
+                        alts[proc.command] ? alts[proc.command] : undefined;
+    if (!match) {
+        return;
+    }
+    for (let key in process[match].flags){
+        if (process[match].flags[key].indexOf(input) == 0) {
+            autoCompleteMatches.unshift(process[match].flags[key]);
+        }
+    }
+}
+
+
+
 /**
  * Prints the passed text to the output and js console
  * @param {string} text 

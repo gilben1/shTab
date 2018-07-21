@@ -460,6 +460,7 @@ var process = {
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
         usage:      "alias <name>=\"<string>\"",
+        flags: [],
         args:       []
     },
     "clear": {
@@ -471,6 +472,7 @@ var process = {
         links: clears set links for the session\n\
         (none): clears command prompt",     
         usage:      "clear [history|links]",
+        flags: [],
         args:       ["history", "links"]
     },
     "colo": {
@@ -483,6 +485,7 @@ var process = {
         color: the color to set to\n\
         (none): display current colors",
         usage:      "colo <back|text> <color>",
+        flags: [],
         args:       ["back", "text"]
     },
     "echo": {
@@ -492,6 +495,7 @@ var process = {
     arguments:\n\
         <string>: what to output",
         usage:      "echo <string>",
+        flags: [],
         args: []
     },
     "export": {
@@ -500,6 +504,7 @@ var process = {
 "Exports current options and links to a .json file for later import\n\
     No arguments",
         usage:      "export",
+        flags: [],
         args: []
     },
     "goto": {
@@ -523,6 +528,7 @@ var process = {
         <command>: display the help information for this command\n\
         (none): list all commands",
         usage:      "help [<command>]",
+        flags: [],
         args: []
     },
     "import": {
@@ -531,6 +537,7 @@ var process = {
 "Imports options and links from a selected .json file\n\
     No arguments",
         usage:      "import",
+        flags: [],
         args: []
     },
     "link": {
@@ -553,6 +560,7 @@ var process = {
 "Lists the links that have been set\n\
     No arguments",
         usage:      "list",
+        flags: [],
         args: []
     },
     "resize": {
@@ -579,6 +587,7 @@ var process = {
         output|size|height: output size setting\n\
         (none): if blank, saves all settings",
         usage:      "save [links|back|text|fore|colo|color|output|size|height]",
+        flags: [],
         args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"]
     },
 };
