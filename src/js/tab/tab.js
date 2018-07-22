@@ -276,6 +276,7 @@ function argCompletion(proc) {
     // The last word of the rest is what we're trying to complete
     let compareSplit = proc.rest.split(' ');
     let compare = compareSplit[compareSplit.length - 1];
+    let last = compareSplit.length > 1 ? compareSplit[compareSplit.length - 2] : compareSplit[compareSplit.length - 1];
 
     for (let key in process[match].args) { // match based on command's arguments
         if (process[match].args[key].indexOf(compare) == 0) {
@@ -283,10 +284,12 @@ function argCompletion(proc) {
         } 
     }
 
-    for (let key in process[match].flags) { // match based on command's flags
-        console.log(process[match].flags[key]);
-        if (process[match].flags[key].indexOf(compare) == 0) {
-            autoCompleteMatches.unshift(process[match].flags[key]);
+    if (last == "" || last.match(/^-/)) {
+        for (let key in process[match].flags) { // match based on command's flags
+            console.log(process[match].flags[key]);
+            if (process[match].flags[key].indexOf(compare) == 0) {
+                autoCompleteMatches.unshift(process[match].flags[key]);
+            }
         }
     }
 

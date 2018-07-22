@@ -121,7 +121,6 @@ function link(args) { // usage: link [alias] [dest]
  * @param {string} args 
  */
 function save(args) {
-
     let toSave = args.split(' ');
     for (let index in toSave) {
         switch(toSave[index]) {
