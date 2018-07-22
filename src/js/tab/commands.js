@@ -503,7 +503,7 @@ var process = {
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
-        usage:      "alias <name>=\"<string>\"",
+        usage:      "alias [-d|-l|--display|--list] [-r|--remove <del>] <name>=\"<string>\"",
         flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
         args: []
     },
@@ -523,14 +523,13 @@ var process = {
         func:       colo,
         desc:
 "Sets the color of the given element\n\
-    arguments:\n\
-        back: the background of every element\n\
-        text: the text of every element\n\
-        color: the color to set to\n\
-        (none): display current colors",
-        usage:      "colo <back|text> <color>",
-        flags: [],
-        args:       ["back", "text"]
+    flags:\n\
+        -b|--background <color>: sets the background color to <color>\n\
+        -d|--display: displays the current color settings\n\
+        -f|--foreground <color>: sets the foreground color to <color>",
+        usage:      "colo [-b|--background <color>] [-d|--display] [-f|--foreground <color>]",
+        flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
+        args: []
     },
     "echo": {
         func:       echo,
@@ -615,7 +614,7 @@ var process = {
         -t|--top <value>: sets top output height to <value>\n \
         -b|--bottom <value>: sets bottom output height to <value>\n\
         -d|--display: outputs the current height for both outputs",
-        usage:      "resize [-d] [-b|--bottom <value>] [-t|--top <value>]",
+        usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
         flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
         args: []
     },
@@ -630,7 +629,7 @@ var process = {
         colo|color: both color settings\n\
         output|size|height: output size setting\n\
         (none): if blank, saves all settings",
-        usage:      "save [links|back|text|fore|colo|color|output|size|height]",
+        usage:      "save [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
         flags: [],
         args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"]
     },
