@@ -85,15 +85,6 @@ function link(args) { // usage: link [alias] [dest]
     }
 
     switch(mode) {
-        case "remove":
-            if (dests[name]) {
-                updateOutput(`Removed ${name} -> ${dests[name]} as a destination.\n`);
-                delete dests[name];
-            }
-            else {
-                updateOutput(`Destination ${name} doen't exist.\n`);
-            }
-            break;
         case "add":
             if (toLink != "") {
                 let toLinkSplit = toLink.split(' ', 2);
@@ -104,6 +95,15 @@ function link(args) { // usage: link [alias] [dest]
                 let dest = toLinkSplit[1];
                 dests[alias] = dest;
                 updateOutput(`Added link from ${alias} to ${dest}.\n`)
+            }
+            break;
+        case "remove":
+            if (dests[name]) {
+                updateOutput(`Removed ${name} -> ${dests[name]} as a destination.\n`);
+                delete dests[name];
+            }
+            else {
+                updateOutput(`Destination ${name} doen't exist.\n`);
             }
             break;
     }
@@ -382,24 +382,60 @@ function importOpts() {
  * @param {string} args 
  */
 function alias(args) {
-    switch(args) {
-        case undefined:
-            updateOutput(`Current aliases:\n`);
-            for (let key in aliases) {
-                updateOutput(`${key} -> ${aliases[key]}\n`);
+    let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:", ["display", "list", "remove="]);
+
+    let flags = opts.opts;
+    let toAlias = opts.args.join(' ');
+    
+    let mode = "add";
+    let display = false;
+    let name = "";
+
+    for (let flag in flags) {
+        let option = flags[flag];
+        switch(option[0]) {
+            case "-l": case "--list":
+            case "-d": case "--display":
+                display = true;
+                break;
+            case "-r": case "--remove":
+                mode = "remove";
+                name = option[1];
+                break;
+            case undefined:
+                break;
+        }
+    }
+
+    switch(mode) {
+        case "add":
+            if (toAlias != "") {
+                if (/^[a-z0-9\-\_]+=".*"/i.test(toAlias) == false) { // regex for WORD="WORD" form
+                    throw "Not right form for alias!\n";
+                }
+                let aliasSplit = toAlias.split('\"', 2);
+                aliasSplit[0] = aliasSplit[0].slice(0, -1);
+                console.log(aliasSplit);
+                aliases[aliasSplit[0]] = aliasSplit[1];
+                browser.storage.local.set({aliases});
+                updateOutput(`Added an alias from ${aliasSplit[0]} to ${aliasSplit[1]}.\n`);
             }
             break;
-        default:
-            if (/^[a-z0-9\-\_]+=".*"/i.test(args) == false) { // regex for WORD="WORD" form
-                throw "Not right form for alias!\n";
+        case "remove":
+            if (aliases[name]) {
+                updateOutput(`Removed ${name} -> ${aliases[name]} as an alias.\n`);
+                delete aliases[name];
             }
-            let argsSplit = args.split('\"', 2);
-            argsSplit[0] = argsSplit[0].slice(0, -1);
-            console.log(argsSplit);
-            aliases[argsSplit[0]] = argsSplit[1];
-            browser.storage.local.set({aliases});
-            updateOutput(`Added an alias from ${argsSplit[0]} to ${argsSplit[1]}.\n`);
+            else {
+                updateOutput(`Alias ${name} doen't exist.\n`);
+            }
             break;
+    }
+    if (display) {
+        updateOutput(`Current aliases:\n`);
+        for (let key in aliases) {
+            updateOutput(`${key} -> ${aliases[key]}\n`);
+        }
     }
 }
 
@@ -456,12 +492,15 @@ var process = {
         func: alias,
         desc:
 "Aliases a shorthand keyword to map to another command\n\
+    flags:\n\
+        -r | --remove <del>: remove <del> as an alias\n\
+        -dl | --display | --list: display the current alias\n\
     arguments:\n\
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
         usage:      "alias <name>=\"<string>\"",
-        flags: [],
+        flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
         args: []
     },
     "clear": {
@@ -552,7 +591,7 @@ var process = {
         <name>: name to set\n\
         <dest>: destination to go to",
         usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
-        flags: ["-d", "-r", "-l", "--display", "--list", "--remove"],
+        flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
         args: []
     },
     "list": {
@@ -573,7 +612,7 @@ var process = {
         -b|--bottom <value>: sets bottom output height to <value>\n\
         -d|--display: outputs the current height for both outputs",
         usage:      "resize [-d] [-b|--bottom <value>] [-t|--top <value>]",
-        flags: ["-d", "--display", "-b", "--bottom", "-t", "--top"],
+        flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
         args: []
     },
     "save": {
