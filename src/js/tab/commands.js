@@ -418,7 +418,6 @@ function alias(args) {
                 }
                 let aliasSplit = toAlias.split('\"', 2);
                 aliasSplit[0] = aliasSplit[0].slice(0, -1);
-                console.log(aliasSplit);
                 aliases[aliasSplit[0]] = aliasSplit[1];
                 browser.storage.local.set({aliases});
                 updateOutput(`Added an alias from ${aliasSplit[0]} to ${aliasSplit[1]}.\n`);

@@ -64,13 +64,10 @@ prompt.addEventListener("keyup", function(evt){
         }
     }
     else if (key == "right" && promptContent.length > 0 && countMatches > 0) {
-        console.log(`Number of matches: ${countMatches}\n`);
-
         if (countMatches == 1) { // only one, let's just complete it
             let autoComp = autoCompleteMatches[autoIndex];
             autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
             let replace = commands[commands.length - 1].split(' ');
-            console.log(replace);
             replace[replace.length - 1] = autoComp;
             commands[commands.length - 1] = replace.join(' ');
             promptContent = commands.join('; ');
@@ -106,7 +103,6 @@ prompt.addEventListener("keyup", function(evt){
 function processPrompt(promptString) {
     let comm = promptString.split(/;\s*/);
     comm = joinMatchingQuotes(comm);
-    console.log(comm);
     return comm;
 }
 
@@ -277,17 +273,12 @@ function argCompletion(proc) {
     let compareSplit = proc.rest.split(' ');
     let opt = getopt.getopt(compareSplit, process[match].optstring.short, process[match].optstring.long);
     let compare = compareSplit[compareSplit.length - 1];
-    console.log("===OPT===");
-    console.log(opt);
 
     for (let key in process[match].args) { // match based on command's arguments
         if (process[match].args[key].indexOf(compare) == 0) {
             autoCompleteMatches.unshift(process[match].args[key]);
         } 
     }
-
-    let argJoin = opt.args.join(' ');
-    //console.log(argJoin);
 
     if (canFlag(compare)) {
         for (let key in process[match].flags) { // match based on command's flags
