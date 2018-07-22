@@ -504,6 +504,10 @@ var process = {
         (none): displays the current aliases",
         usage:      "alias [-d|-l|--display|--list] [-r|--remove <del>] <name>=\"<string>\"",
         flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
+        optstring: {
+            short: "dlr:",
+            long: [ "--display", "--list", "--remove=" ]
+        },
         args: []
     },
     "clear": {
@@ -516,6 +520,10 @@ var process = {
         (none): clears command prompt",     
         usage:      "clear [history|links]",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args:       ["history", "links"]
     },
     "colo": {
@@ -528,6 +536,10 @@ var process = {
         -f|--foreground <color>: sets the foreground color to <color>",
         usage:      "colo [-b|--background <color>] [-d|--display] [-f|--foreground <color>]",
         flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
+        optstring: {
+            short: "b:df:",
+            long: ["--background=", "--display", "--foreground="]
+        },
         args: []
     },
     "echo": {
@@ -538,6 +550,10 @@ var process = {
         <string>: what to output",
         usage:      "echo <string>",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: []
     },
     "export": {
@@ -547,6 +563,10 @@ var process = {
     No arguments",
         usage:      "export",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: []
     },
     "goto": {
@@ -560,6 +580,10 @@ var process = {
         <name>: the link to navigate to",
         usage:      "goto [-n|--new] <name>",
         flags: ["-n", "--new"],
+        optstring: {
+            short: "n",
+            long: ["--new"]
+        },
         args: []
     },
     "help": {
@@ -571,6 +595,10 @@ var process = {
         (none): list all commands",
         usage:      "help [<command>]",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: []
     },
     "import": {
@@ -580,6 +608,10 @@ var process = {
     No arguments",
         usage:      "import",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: []
     },
     "link": {
@@ -594,6 +626,10 @@ var process = {
         <dest>: destination to go to",
         usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
         flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
+        optstring: {
+            short: "dlr:",
+            long: ["--display", "--list", "--remove="]
+        },
         args: []
     },
     "list": {
@@ -603,6 +639,10 @@ var process = {
     No arguments",
         usage:      "list",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: []
     },
     "resize": {
@@ -615,6 +655,10 @@ var process = {
         -d|--display: outputs the current height for both outputs",
         usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
         flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
+        optstring: {
+            short: "b:dt:",
+            long: ["--bottom=", "--display", "--top="]
+        },
         args: []
     },
     "save": {
@@ -630,6 +674,10 @@ var process = {
         (none): if blank, saves all settings",
         usage:      "save [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
         flags: [],
+        optstring: {
+            short: "",
+            long: []
+        },
         args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"]
     },
 };

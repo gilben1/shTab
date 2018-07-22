@@ -127,7 +127,7 @@ var getopt = (function() {
     } else if (optarg !== null) {
       throw new Error('option --' + opt + ' must not have an argument');
     }
-    opts.push(['--' + opt, optarg || '']);
+    opts.push(['--' + opt, optarg || undefined]);
     return [opts, args];
   }
 
@@ -180,7 +180,7 @@ var getopt = (function() {
         optarg = optstring;
         optstring = '';
       } else {
-        optarg = '';
+        optarg = undefined;
       }
       opts.push(['-' + opt, optarg]);
     }

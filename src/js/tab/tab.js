@@ -275,8 +275,10 @@ function argCompletion(proc) {
     }
     // The last word of the rest is what we're trying to complete
     let compareSplit = proc.rest.split(' ');
+    let opt = getopt.getopt(compareSplit, process[match].optstring.short, process[match].optstring.long);
     let compare = compareSplit[compareSplit.length - 1];
-    let last = compareSplit.length > 1 ? compareSplit[compareSplit.length - 2] : compareSplit[compareSplit.length - 1];
+    console.log("===OPT===");
+    console.log(opt);
 
     for (let key in process[match].args) { // match based on command's arguments
         if (process[match].args[key].indexOf(compare) == 0) {
@@ -284,13 +286,31 @@ function argCompletion(proc) {
         } 
     }
 
-    if (last == "" || last.match(/^-/)) {
+    let argJoin = opt.args.join(' ');
+    //console.log(argJoin);
+
+    if (canFlag(compare)) {
         for (let key in process[match].flags) { // match based on command's flags
-            console.log(process[match].flags[key]);
             if (process[match].flags[key].indexOf(compare) == 0) {
                 autoCompleteMatches.unshift(process[match].flags[key]);
             }
         }
+    }
+
+    /**
+     * returns true if the conditions are correct for flag completion 
+     * @param {string} compare 
+     */
+    function canFlag(compare) {
+        if (opt.args[0] && opt.args[0] != "") {
+            return false;
+        }
+        for (let index in opt.opts) {
+            if (compare == opt.opts[index][1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Special commands that use arguments based on other information
