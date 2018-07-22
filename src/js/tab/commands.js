@@ -259,36 +259,40 @@ function resizeOutput(args) {
  * @param {string} args 
  */
 function colo(args) {
+    let opts = getopt.getopt(args ? args.split(' ') : [], "b:df:", ["background=", "display","foreground="]);
 
-    switch(args) {
-        case undefined: // No arguments => just print current values
-            updateOutput(`Current background color: ${bgColor}\n`);
-            updateOutput(`Current foreground / text color: ${fgColor}\n`);
-            break;
-        default:
-            let argsSplit = args.split(' ', 2);
-            if (argsSplit.length != 2) {
-                throw "Too few arguments!\n";
+    let flags = opts.opts;
+
+    for (let f in flags) {
+        let option = flags[f];
+        switch(option[0]) {
+            case "-b": case "--background": {
+                let color = option[1];
+                if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
+                    throw "Invalid color!\n";
+                }
+                bgColor = color;
+                browser.storage.local.set({bgColor});
+                document.documentElement.style.setProperty('--bg-color', bgColor);
+                updateOutput(`Set background color to ${color}\n`);
+                break;
             }
-            let target = argsSplit[0];
-            let color = argsSplit[1];
-            if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
-                throw "Invalid color!\n";
+            case "-d": case "--display":
+                updateOutput(`Current background color: ${bgColor}\n`);
+                updateOutput(`Current foreground / text color: ${fgColor}\n`);
+                break;
+            case "-f": case "--foreground":{
+                let color = option[1];
+                if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
+                    throw "Invalid color!\n";
+                }
+                fgColor = color;
+                browser.storage.local.set({fgColor});
+                document.documentElement.style.setProperty('--fg-color', fgColor);
+                updateOutput(`Set foreground color to ${color}\n`);
+                break;
             }
-            switch(target){
-                case "back":
-                    bgColor = color;
-                    browser.storage.local.set({bgColor});
-                    break;
-                case "text": case "fore":
-                    fgColor = color;
-                    browser.storage.local.set({fgColor});
-                    break;
-                default:
-                    throw "Bad element name!\n";
-            }
-            applyCurrentOptions();
-            break;
+        }
     }
 }
 
