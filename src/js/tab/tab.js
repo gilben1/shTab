@@ -271,7 +271,13 @@ function argCompletion(proc) {
     }
     // The last word of the rest is what we're trying to complete
     let compareSplit = proc.rest.split(' ');
-    let opt = getopt.getopt(compareSplit, process[match].optstring.short, process[match].optstring.long);
+    let opt = {};
+    try {
+        opt = getopt.getopt(compareSplit, process[match].optstring.short, process[match].optstring.long);
+    }
+    catch(err) {
+        opt = undefined;
+    }
     let compare = compareSplit[compareSplit.length - 1];
 
     for (let key in process[match].args) { // match based on command's arguments
@@ -280,7 +286,7 @@ function argCompletion(proc) {
         } 
     }
 
-    if (canFlag(compare)) {
+    if (opt == undefined || canFlag(compare)) {
         for (let key in process[match].flags) { // match based on command's flags
             if (process[match].flags[key].indexOf(compare) == 0) {
                 autoCompleteMatches.unshift(process[match].flags[key]);
@@ -293,7 +299,7 @@ function argCompletion(proc) {
      * @param {string} compare 
      */
     function canFlag(compare) {
-        if (opt.args[0] && opt.args[0] != "") {
+        if (opt.args[0] && opt.args[0] != "" && !opt.args[0].match(/^-/)) {
             return false;
         }
         for (let index in opt.opts) {

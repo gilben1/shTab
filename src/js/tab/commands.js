@@ -505,7 +505,7 @@ var process = {
         flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
         optstring: {
             short: "dlr:",
-            long: [ "--display", "--list", "--remove=" ]
+            long: [ "display", "list", "remove=" ]
         },
         args: []
     },
@@ -537,7 +537,7 @@ var process = {
         flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
         optstring: {
             short: "b:df:",
-            long: ["--background=", "--display", "--foreground="]
+            long: ["background=", "display", "foreground="]
         },
         args: []
     },
@@ -581,7 +581,7 @@ var process = {
         flags: ["-n", "--new"],
         optstring: {
             short: "n",
-            long: ["--new"]
+            long: ["new"]
         },
         args: []
     },
@@ -627,7 +627,7 @@ var process = {
         flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
         optstring: {
             short: "dlr:",
-            long: ["--display", "--list", "--remove="]
+            long: ["display", "list", "remove="]
         },
         args: []
     },
@@ -656,7 +656,7 @@ var process = {
         flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
         optstring: {
             short: "b:dt:",
-            long: ["--bottom=", "--display", "--top="]
+            long: ["bottom=", "display", "top="]
         },
         args: []
     },

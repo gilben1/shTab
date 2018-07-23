@@ -121,13 +121,15 @@ var getopt = (function() {
         if (args.length === 0) {
           throw new Error('option --' + opt + ' requires argument');
         }
-        optarg = args[0];
+        optarg = args[0] || '';
         args = args.slice(1);
       }
     } else if (optarg !== null) {
       throw new Error('option --' + opt + ' must not have an argument');
+    } else {
+      optarg = undefined;
     }
-    opts.push(['--' + opt, optarg || undefined]);
+    opts.push(['--' + opt, optarg]);
     return [opts, args];
   }
 
