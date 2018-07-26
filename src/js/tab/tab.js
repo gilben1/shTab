@@ -27,14 +27,10 @@ prompt.addEventListener("keyup", function(evt){
 
     if (key == "enter") { // enter: process command
         let promptCopy = promptContent;
-        let success = true;
         commands.forEach(function(elem){
-            let status = processCommand(elem);
-            success = (success == false) ? false : status;
+            processCommand(elem);
         });
-        if (success) {
-            commandHistory.unshift(promptCopy);
-        }
+        commandHistory.push(promptCopy);
         btmOut.innerText = "";
     }
     else if (key == "up") {

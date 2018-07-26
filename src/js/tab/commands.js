@@ -352,6 +352,26 @@ const help = {
     args: []
 }
 
+const history = {
+    func:
+    function history(args) {
+        updateOutput(`Command History:\n`);
+        for(let index in commandHistory) {
+            updateOutput(`${index}: ${commandHistory[index]}\n`);
+        }
+    },
+    desc:
+"Displays the current history of entered commands\n\
+    No arguments or flags",
+    usage: "history",
+    flags: [],
+    opstring: {
+        short: "",
+        long: []
+    },
+    args: []
+}
+
 const importOpts = {
     /**
      * Imports settings from a .json file into the current settings
@@ -705,6 +725,7 @@ var process = {
     "export": exportOpts,
     "goto": goto,
     "help": help,
+    "history": history,
     "import": importOpts,
     "link": link,
     "list": list,
