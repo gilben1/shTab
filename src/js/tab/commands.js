@@ -3,6 +3,32 @@
 // All commands that can be run from the tab page
 // url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
+
+const about = { 
+    /**
+     * Displays information about the extension
+     * 
+     * @param {string} args 
+     */
+    func:
+    function about (args) {
+        let manifest = browser.runtime.getManifest();
+        updateOutput(`${manifest.name} v ${manifest.version}\n`);
+        updateOutput(`${manifest.description}\n\n`);
+        updateOutput(`Developed by ${manifest.developer.name} (${manifest.developer.url})\n`);
+    },
+    desc:       
+"Displays information about shTab\n\
+    no flags or arguments",
+    usage:      "about",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: []
+}
+
 const alias = {
     /**
      * Sets an alias from a word to command(s)
@@ -742,6 +768,7 @@ const save = {
  * Jump table for running commands based on strings
  */
 var process = {
+    "about": about,
     "alias": alias,
     "clear": clear,
     "colo": colo,
@@ -758,6 +785,19 @@ var process = {
     "save": save
 };
 
+
+/**
+ * Alternate names for commands, essentially a second level jump table
+ */
+var alts = {
+    "ls": "list",
+    "go": "goto",
+    ":w": "save",
+    "man": "help",
+    "color": "colo",
+    "add": "link",
+    "info": "about"
+};
 /**
  * Applies the current options to the CSS style
  */
@@ -811,15 +851,4 @@ function helpMarkdown() {
     console.log(output);
 }
 
-
-/**
- * Alternate names for commands, essentially a second level jump table
- */
-var alts = {
-    "ls": "list",
-    "go": "goto",
-    ":w": "save",
-    "man": "help",
-    "color": "colo",
-    "add": "link"
-};
+    
