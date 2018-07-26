@@ -850,5 +850,3 @@ function helpMarkdown() {
     }
     console.log(output);
 }
-
-    
