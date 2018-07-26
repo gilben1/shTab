@@ -171,7 +171,7 @@ const save = {
      */
     func:
     function save(args) {
-        let toSave = args.split(' ');
+        let toSave = args ? args.split(' ') : [undefined];
         for (let index in toSave) {
             switch(toSave[index]) {
                 case undefined: // save everything
@@ -637,7 +637,63 @@ const echo = {
     args: []
 }
 
+const reset = {
+    /**
+     * Resets various elements and options to default values
+     */
+    func:
+    function reset(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], "adsy", ["aliases", "dests", "save", "yes"]);
+        let flags = opts.opts;
 
+        let confirm = false;
+        let save = false;
+        let wipeAlias = false;
+        let wipeDest = false;
+
+        for (let flag in flags) {
+            let option = flags[flag];
+            switch(option[0]) {
+                case "-a": case "--aliases":
+                    wipeAlias = true;
+                    break;
+                case "-d": case "--dests":
+                    wipeDest = true;
+                case "-s": case "--save":
+                    save = true;
+                    break;
+                case "-y": case "--yes":
+                    confirm = true;
+                    break;
+            }
+        }
+        if (confirm == false) {
+            updateOutput(`Needs -y or --yes to confirm reset.\n`);
+            return;
+        }
+        updateOutput(`Resetting options to default.\n`);
+        setToDefaultOptions(wipeAlias, wipeDest);
+        applyCurrentOptions();
+        if (save == true) {
+            updateOutput(`Saving defaults to local storage.\n`);
+            saveCurrentOptions();
+        }
+    },
+    desc:
+"Resets all options to default\n\
+    flags:\n\
+        -y|--yes: confirms to reset\n\
+        -s|--save: saves changes to local storage\n\
+        -d|--dests: resets destinations to empty\n\
+        -a|--aliases: resets aliases to empty",
+    usage:      "reset -y|--y [-a|--aliases][-d|--dests][--s|--save]",
+    flags: ["-a", "--aliases", "-d", "--dests", "-s", "--save", "-y", "--yes"],
+    optstring: {
+        short: "adsy",
+        long: ["aliases", "dests", "save", "yes"]
+    },
+    args: []
+}
 
 /**
  * Applies the current options to the CSS style
@@ -653,12 +709,28 @@ function applyCurrentOptions() {
  * Saves the current options to local storage
  */
 function saveCurrentOptions() {
-    browser.storage.local.set({dests});
     browser.storage.local.set({bgColor});
     browser.storage.local.set({fgColor});
     browser.storage.local.set({outputHeight});
-    browser.storage.local.set({aliases});
     browser.storage.local.set({btmHeight});
+    browser.storage.local.set({aliases});
+    browser.storage.local.set({dests});
+}
+
+/**
+ * Sets the current options back to defaults
+ */
+function setToDefaultOptions(wipeAlias, wipeDest) {
+    bgColor = defaultOptions.bgColor;
+    fgColor = defaultOptions.fgColor;
+    outputHeight = defaultOptions.outputHeight;
+    btmHeight = defaultOptions.btmHeight;
+    if (wipeAlias == true) {
+        aliases = {};
+    }
+    if (wipeDest == true) {
+        dests = {};
+    }
 }
 
 /**
@@ -690,6 +762,7 @@ var process = {
     "import": importOpts,
     "link": link,
     "list": list,
+    "reset": reset,
     "resize": resize,
     "save": save
 };
