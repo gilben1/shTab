@@ -30,6 +30,7 @@ prompt.addEventListener("keyup", function(evt){
             processCommand(elem);
         });
         commandHistory.push(promptCopy);
+        removeBangs();
         if (saveHistory == true) {
             browser.storage.local.set({commandHistory});
         }
@@ -146,6 +147,9 @@ function processCommand(command) {
     console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
     try {
         let old = processed.command; // pre-expansion
+        if (processed.command[0] == '!') {
+            processed.command = expandHistory(processed.command);
+        }
         processed.command = expandAlias(processed.command); // Expand alias if it exists
 
         if (process[processed.command]) {
@@ -154,7 +158,7 @@ function processCommand(command) {
         else if (alts[processed.command]) {
             process[alts[processed.command]].func(processed.rest);
         }
-        else if (processed.command != old){ // An alias expanded, try processing it
+        else if (processed.command != old){ // An alias expanded to multiple commands, try processing it
             let subcommands = [];
             let success = true;
             if (processed.rest) {
@@ -177,7 +181,7 @@ function processCommand(command) {
         }
     }
     catch(err){
-        updateOutput(`Invalid command! Message: ${err}\n`);
+        updateOutput(`Command error! Message: ${err}\n`);
         promptContent = "";
         prompt.value = "";
         return false;
@@ -197,6 +201,38 @@ function expandAlias(alias) {
     let expanded = aliases[alias] || alias;
     return expanded;
 }
+
+/**
+ * Expands commands beginning with ! to most recent match
+ * in history, or the original command
+ * @param {string} command 
+ * @returns {string} result of history expansion
+ */
+function expandHistory(command) {
+    commandHistory.reverse();
+    command = command.substr(1);
+    for (let index in commandHistory) {
+        if(commandHistory[index].indexOf(command) == 0) {
+            let ret = commandHistory[index];
+            commandHistory.reverse();
+            return ret;
+        }
+    }
+    commandHistory.reverse();
+    return "!" + command;
+}
+
+/**
+ * Removes history that starts with ! to match bash
+ */
+function removeBangs() {
+    for (let index in commandHistory) {
+        if (commandHistory[index][0] == '!') {
+            commandHistory.splice(index, 1);
+        }
+    }
+}
+
 
 /**
  * Takes a command and splits it into first word followed by

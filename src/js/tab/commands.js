@@ -400,15 +400,16 @@ const history = {
                         let commandHistory = [];
                         browser.storage.local.set({commandHistory});
                     }
-                    break;
+                    return;
             }
         }
 
-
         updateOutput(`Command History:\n`);
-        for(let index in commandHistory) {
+        for(var index in commandHistory) {
             updateOutput(`${index}: ${commandHistory[index]}\n`);
         }
+        let fakeIndex = parseInt(index) + 1;
+        updateOutput(`${fakeIndex}: ${promptContent}\n`);
     },
     desc:
 "Displays the current history of entered commands\n\
