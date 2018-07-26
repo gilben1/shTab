@@ -8,11 +8,16 @@ var fgColor;
 var outputHeight;
 var btmHeight;
 
+var commandHistory = [];
+var saveHistory;
+
 const defaultOptions = {
     bgColor: "black",
     fgColor: "white",
     outputHeight: 9,
     btmHeight: 2,
+    commandHistory: [],
+    saveHistory: true,
     aliases: {},
     dests: {}
 };
@@ -31,6 +36,9 @@ const optionsLoader = {
         btmHeight = grab("btmHeight");
         bgColor = grab("bgColor");
         fgColor = grab("fgColor");
+
+        commandHistory = grab("commandHistory");
+        saveHistory = grab("saveHistory");
 
         aliases = grab("aliases");        
         dests = grab("dests");

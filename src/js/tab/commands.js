@@ -355,6 +355,30 @@ const help = {
 const history = {
     func:
     function history(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], "s:", ["save="]);
+        let flags = opts.opts;
+
+        for(let flag in flags) {
+            let option = flags[flag];
+            switch(option[0]) {
+                case "-s": case "--save":
+                    if (/(t(rue)?)|(y(es)?)/i.test(option[1])) {
+                        updateOutput(`Local history set to save to local storage (Persistent history)\n`);
+                        saveHistory = true;
+                        browser.storage.local.set({saveHistory});
+                    }
+                    else {
+                        updateOutput(`Local history set to not save to local storage (Volatile history)\n`);
+                        saveHistory = false;
+                        browser.storage.local.set({saveHistory});
+                        let commandHistory = [];
+                        browser.storage.local.set({commandHistory});
+                    }
+                    break;
+            }
+        }
+
+
         updateOutput(`Command History:\n`);
         for(let index in commandHistory) {
             updateOutput(`${index}: ${commandHistory[index]}\n`);
@@ -364,10 +388,10 @@ const history = {
 "Displays the current history of entered commands\n\
     No arguments or flags",
     usage: "history",
-    flags: [],
-    opstring: {
-        short: "",
-        long: []
+    flags: ["-s", "--save"],
+    optstring: {
+        short: "s",
+        long: ["save="]
     },
     args: []
 }

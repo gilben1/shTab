@@ -12,7 +12,6 @@ const output = document.getElementById("output");
 const btmOut = document.getElementById("btmOutput");
 
 var promptContent = "";
-var commandHistory = [];
 var commandIndex = 0;
 
 var autoCompleteMatches = [];
@@ -31,6 +30,9 @@ prompt.addEventListener("keyup", function(evt){
             processCommand(elem);
         });
         commandHistory.push(promptCopy);
+        if (saveHistory == true) {
+            browser.storage.local.set({commandHistory});
+        }
         btmOut.innerText = "";
     }
     else if (key == "up") {
