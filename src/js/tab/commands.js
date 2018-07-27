@@ -5,6 +5,16 @@
 const URL_REGEX = /^https?:\/\//i;
 
 const about = { 
+    desc:       
+"Displays information about shTab\n\
+    no flags or arguments",
+    usage:      "about",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
     /**
      * Displays information about the extension
      * 
@@ -16,20 +26,26 @@ const about = {
         updateOutput(`${manifest.name} v ${manifest.version}\n`);
         updateOutput(`${manifest.description}\n\n`);
         updateOutput(`Developed by ${manifest.developer.name} (${manifest.developer.url})\n`);
-    },
-    desc:       
-"Displays information about shTab\n\
-    no flags or arguments",
-    usage:      "about",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: []
+    }
 }
 
 const alias = {
+    desc:
+"Aliases a shorthand keyword to map to another command\n\
+    flags:\n\
+        -r | --remove <del>: remove <del> as an alias\n\
+        -dl | --display | --list: display the current alias\n\
+    arguments:\n\
+        <name>: the name of the alias\n\
+        <string>: string you want to replace when <name> is entered\n\
+        (none): displays the current aliases",
+    usage:      "alias [-d|-l|--display|--list] [-r|--remove <del>] <name>=\"<string>\"",
+    flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
+    optstring: {
+        short: "dlr:",
+        long: [ "display", "list", "remove=" ]
+    },
+    args: [],
     /**
      * Sets an alias from a word to command(s)
      * If empty, displays the aliases
@@ -38,7 +54,7 @@ const alias = {
      */
     func:
     function alias(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:", ["display", "list", "remove="]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
 
         let flags = opts.opts;
         let toAlias = opts.args.join(' ');
@@ -92,26 +108,23 @@ const alias = {
                 updateOutput(`${key} -> ${aliases[key]}\n`);
             }
         }
-    },
-    desc:
-"Aliases a shorthand keyword to map to another command\n\
-    flags:\n\
-        -r | --remove <del>: remove <del> as an alias\n\
-        -dl | --display | --list: display the current alias\n\
-    arguments:\n\
-        <name>: the name of the alias\n\
-        <string>: string you want to replace when <name> is entered\n\
-        (none): displays the current aliases",
-    usage:      "alias [-d|-l|--display|--list] [-r|--remove <del>] <name>=\"<string>\"",
-    flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
-    optstring: {
-        short: "dlr:",
-        long: [ "display", "list", "remove=" ]
-    },
-    args: []
+    }
 }
 
 const clear = {
+    desc:       
+"Clears the console, or whatever is passed to it\n\
+    arguments:\n\
+        history: clears command history\n\
+        links: clears set links for the session\n\
+        (none): clears command prompt",     
+    usage:      "clear [history|links]",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args:       ["history", "links"],
     /**
      * Clears a variety of things based on argument
      * No argument clears output
@@ -132,23 +145,23 @@ const clear = {
                 output.innerText = "";
                 break;
         }
-    },
-    desc:       
-"Clears the console, or whatever is passed to it\n\
-    arguments:\n\
-        history: clears command history\n\
-        links: clears set links for the session\n\
-        (none): clears command prompt",     
-    usage:      "clear [history|links]",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args:       ["history", "links"]
+    }
 }
 
 const colo = {
+    desc:
+"Sets the color of the given element\n\
+    flags:\n\
+        -b|--background <color>: sets the background color to <color>\n\
+        -d|--display: displays the current color settings\n\
+        -f|--foreground <color>: sets the foreground color to <color>",
+    usage:      "colo [-b|--background <color>] [-d|--display] [-f|--foreground <color>]",
+    flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
+    optstring: {
+        short: "b:df:",
+        long: ["background=", "display", "foreground="]
+    },
+    args: [],
     // Sets a color element to a specified value
     /**
      * Sets the color for a passed element to either a CSS color value or hex value
@@ -157,7 +170,7 @@ const colo = {
      */
     func:
     function colo(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], "b:df:", ["background=", "display","foreground="]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
 
         let flags = opts.opts;
 
@@ -193,30 +206,9 @@ const colo = {
             }
         }
     },
-    desc:
-"Sets the color of the given element\n\
-    flags:\n\
-        -b|--background <color>: sets the background color to <color>\n\
-        -d|--display: displays the current color settings\n\
-        -f|--foreground <color>: sets the foreground color to <color>",
-    usage:      "colo [-b|--background <color>] [-d|--display] [-f|--foreground <color>]",
-    flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
-    optstring: {
-        short: "b:df:",
-        long: ["background=", "display", "foreground="]
-    },
-    args: []
 }
 
 const echo = {
-    /**
-     * Echoes the input to the output
-     * @param {string} text 
-     */
-    func:
-    function echo(text) {
-        updateOutput(text + "\n");
-    },
     desc:
 "Echoes the inputted string into the output buffer\n\
     arguments:\n\
@@ -227,11 +219,29 @@ const echo = {
         short: "",
         long: []
     },
-    args: []
+    args: [],
+    /**
+     * Echoes the input to the output
+     * @param {string} text 
+     */
+    func:
+    function echo(text) {
+        updateOutput(text + "\n");
+    }
 }
 
 var objectURL;
 const exportOpts = {
+    desc:
+"Exports current options and links to a .json file for later import\n\
+    No arguments",
+    usage:      "export",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
     /**
      * Exports current options to a .json file
      * args currently aren't used
@@ -262,27 +272,31 @@ const exportOpts = {
         }
         
         browser.downloads.onChanged.addListener(handleChanged); 
-    },
-    desc:
-"Exports current options and links to a .json file for later import\n\
-    No arguments",
-    usage:      "export",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: []
+    }
 }
 
 const goto = {
+    desc:       
+"Opens a specified link or url\n\
+    flags:\n\
+        -n | --new: opens link in new tab / window (dependant on browser settings)\n\
+        (none): opens link in current tab\
+    arguments:\n\
+        <name>: the link to navigate to",
+    usage:      "goto [-n|--new] <name>",
+    flags: ["-n", "--new"],
+    optstring: {
+        short: "n",
+        long: ["new"]
+    },
+    args: [],
     /**
      * Opens dest through set links or as a direct url
      * @param {string} args
      */
     func:       
     function goto(args) { // usage: goto [link]
-        let opts = getopt.getopt(args ? args.split(' ') : [], "n", ["new"]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
 
         let flags = opts.opts;
         let dest = opts.args.join(' ');
@@ -312,24 +326,22 @@ const goto = {
         if (url != undefined) { // if there was a link
             window.open(url, target);
         }
-    },
-        desc:       
-"Opens a specified link or url\n\
-    flags:\n\
-        -n | --new: opens link in new tab / window (dependant on browser settings)\n\
-        (none): opens link in current tab\
-    arguments:\n\
-        <name>: the link to navigate to",
-        usage:      "goto [-n|--new] <name>",
-        flags: ["-n", "--new"],
-        optstring: {
-            short: "n",
-            long: ["new"]
-        },
-        args: []
+    }
 }
 
 const help = {
+    desc:       
+"Displays information about the possible commands to run\n\
+    arguments:\n\
+        <command>: display the help information for this command\n\
+        (none): list all commands",
+    usage:      "help [<command>]",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
     /**
      * Displays help information when given an command argument
      * Lists all commands when given no argument 
@@ -363,32 +375,29 @@ const help = {
                 break;
 
         }
-    },
-    desc:       
-"Displays information about the possible commands to run\n\
-    arguments:\n\
-        <command>: display the help information for this command\n\
-        (none): list all commands",
-    usage:      "help [<command>]",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: []
+    }
 }
 
 const history = {
+    desc:
+"Displays the current history of entered commands\n\
+    No arguments or flags",
+    usage: "history",
+    flags: ["-s", "--save"],
+    optstring: {
+        short: "s",
+        long: ["save="]
+    },
+    args: [],
     func:
     function history(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], "s:", ["save="]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
         let flags = opts.opts;
 
-        for(let flag in flags) {
-            let option = flags[flag];
-            switch(option[0]) {
+        for(let flag of flags) {
+            switch(flag[0]) {
                 case "-s": case "--save":
-                    if (/(t(rue)?)|(y(es)?)/i.test(option[1])) {
+                    if (/(t(rue)?)|(y(es)?)/i.test(flag[1])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
                         saveHistory = true;
                         browser.storage.local.set({saveHistory});
@@ -410,20 +419,20 @@ const history = {
         }
         let fakeIndex = parseInt(index) + 1;
         updateOutput(`${fakeIndex}: ${promptContent}\n`);
-    },
-    desc:
-"Displays the current history of entered commands\n\
-    No arguments or flags",
-    usage: "history",
-    flags: ["-s", "--save"],
-    optstring: {
-        short: "s",
-        long: ["save="]
-    },
-    args: []
+    }
 }
 
 const importOpts = {
+    desc:
+"Imports options and links from a selected .json file\n\
+    No arguments",
+    usage:      "import",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
     /**
      * Imports settings from a .json file into the current settings
      */
@@ -474,20 +483,25 @@ const importOpts = {
 
             applyCurrentOptions();
         }
-    },
-    desc:
-"Imports options and links from a selected .json file\n\
-    No arguments",
-    usage:      "import",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: []
+    }
 }
 
 const link = {
+    desc:       
+"Links a name to a destination, used when running goto\n\
+    flags:\n\
+        -r | --remove <del>: remove <del> as a name to a destination\n\
+        -dl | --display | --list: display the current destinations\n\
+    arguments:\n\
+        <name>: name to set\n\
+        <dest>: destination to go to",
+    usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
+    flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
+    optstring: {
+        short: "dlr:",
+        long: ["display", "list", "remove="]
+    },
+    args: [],
     /**
      * Links a name to a dest
      * Given no parameters, displays all dests to the output
@@ -496,7 +510,7 @@ const link = {
      */
     func:
     function link(args) { // usage: link [alias] [dest]
-        let opts = getopt.getopt(args ? args.split(' ') : [], "dlr:", ["display", "list", "remove="]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
 
         let flags = opts.opts;
         let toLink = opts.args.join(' ');
@@ -550,25 +564,20 @@ const link = {
                 updateOutput(`${key} -> ${dests[key]}\n`);
             }
         }
-    },
-    desc:       
-"Links a name to a destination, used when running goto\n\
-    flags:\n\
-        -r | --remove <del>: remove <del> as a name to a destination\n\
-        -dl | --display | --list: display the current destinations\n\
-    arguments:\n\
-        <name>: name to set\n\
-        <dest>: destination to go to",
-    usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
-    flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
-    optstring: {
-        short: "dlr:",
-        long: ["display", "list", "remove="]
-    },
-    args: []
+    }
 }
 
 const list = {
+    desc:       
+"Lists the links that have been set\n\
+    No arguments",
+    usage:      "list",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
     /**
      * Lists all dests to the output
      */
@@ -579,26 +588,30 @@ const list = {
         for (let key in dests) {
             updateOutput(`${key} -> ${dests[key]}\n`);
         }
-    },
-        desc:       
-"Lists the links that have been set\n\
-    No arguments",
-        usage:      "list",
-        flags: [],
-        optstring: {
-            short: "",
-            long: []
-        },
-        args: []
+    }
 }
 
 const reset = {
+    desc:
+"Resets all options to default\n\
+    flags:\n\
+        -y|--yes: confirms to reset\n\
+        -s|--save: saves changes to local storage\n\
+        -d|--dests: resets destinations to empty\n\
+        -a|--aliases: resets aliases to empty",
+    usage:      "reset -y|--y [-a|--aliases][-d|--dests][--s|--save]",
+    flags: ["-a", "--aliases", "-d", "--dests", "-s", "--save", "-y", "--yes"],
+    optstring: {
+        short: "adsy",
+        long: ["aliases", "dests", "save", "yes"]
+    },
+    args: [],
     /**
      * Resets various elements and options to default values
      */
     func:
     function reset(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], "adsy", ["aliases", "dests", "save", "yes"]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
         let flags = opts.opts;
 
         let confirm = false;
@@ -633,24 +646,23 @@ const reset = {
             updateOutput(`Saving defaults to local storage.\n`);
             saveCurrentOptions();
         }
-    },
-    desc:
-"Resets all options to default\n\
-    flags:\n\
-        -y|--yes: confirms to reset\n\
-        -s|--save: saves changes to local storage\n\
-        -d|--dests: resets destinations to empty\n\
-        -a|--aliases: resets aliases to empty",
-    usage:      "reset -y|--y [-a|--aliases][-d|--dests][--s|--save]",
-    flags: ["-a", "--aliases", "-d", "--dests", "-s", "--save", "-y", "--yes"],
-    optstring: {
-        short: "adsy",
-        long: ["aliases", "dests", "save", "yes"]
-    },
-    args: []
+    }
 }
 
 const resize = {
+    desc:
+"Resizes the output to the passed value\n\
+    flags:\n\
+        -t|--top <value>: sets top output height to <value>\n \
+        -b|--bottom <value>: sets bottom output height to <value>\n\
+        -d|--display: outputs the current height for both outputs",
+    usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
+    flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
+    optstring: {
+        short: "b:dt:",
+        long: ["bottom=", "display", "top="]
+    },
+    args: [],
     // Resizes the output terminal to @size lines of text
     /**
      * Sets the number of lines in the output to the passed size
@@ -659,7 +671,7 @@ const resize = {
      */
     func:
     function resizeOutput(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], "t:b:d", ["top=", "bottom=", "display"]);
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
 
         let flags = opts.opts;
 
@@ -688,23 +700,26 @@ const resize = {
                 }
             }
         }
-    },
-    desc:
-"Resizes the output to the passed value\n\
-    flags:\n\
-        -t|--top <value>: sets top output height to <value>\n \
-        -b|--bottom <value>: sets bottom output height to <value>\n\
-        -d|--display: outputs the current height for both outputs",
-    usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
-    flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
-    optstring: {
-        short: "b:dt:",
-        long: ["bottom=", "display", "top="]
-    },
-    args: []
+    }
 }
 
 const save = {
+    desc:       
+"Stores the passed option to local storage\n\
+    arguments:\n\
+        links: link to destination aliases\n\
+        back: background color\n\
+        text|fore: text / foreground color\n\
+        colo|color: both color settings\n\
+        output|size|height: output size setting\n\
+        (none): if blank, saves all settings",
+    usage:      "save [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
     /**
      * Saves options to local storage.
      * Args defines what is saved to local storage
@@ -746,23 +761,7 @@ const save = {
                     break;
             }
         }
-    },
-    desc:       
-"Stores the passed option to local storage\n\
-    arguments:\n\
-        links: link to destination aliases\n\
-        back: background color\n\
-        text|fore: text / foreground color\n\
-        colo|color: both color settings\n\
-        output|size|height: output size setting\n\
-        (none): if blank, saves all settings",
-    usage:      "save [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"]
+    }
 }
 
 /**

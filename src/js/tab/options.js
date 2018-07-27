@@ -38,6 +38,7 @@ const optionsLoader = {
         fgColor = grab("fgColor");
 
         commandHistory = grab("commandHistory");
+        commandIndex = commandHistory.length - 1;
         saveHistory = grab("saveHistory");
 
         aliases = grab("aliases");        

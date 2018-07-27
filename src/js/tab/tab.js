@@ -12,6 +12,7 @@ const output = document.getElementById("output");
 const btmOut = document.getElementById("btmOutput");
 
 var promptContent = "";
+
 var commandIndex = 0;
 
 var autoCompleteMatches = [];
@@ -30,6 +31,7 @@ prompt.addEventListener("keyup", function(evt){
             processCommand(elem);
         });
         commandHistory.push(promptCopy);
+        commandIndex = commandHistory.length - 1;
         removeBangs();
         if (saveHistory == true) {
             browser.storage.local.set({commandHistory});
@@ -152,10 +154,10 @@ function processCommand(command) {
         }
         processed.command = expandAlias(processed.command); // Expand alias if it exists
 
-        if (process[processed.command]) {
+        if (process[processed.command]) { // try and process as a command
             process[processed.command].func(processed.rest);
         }
-        else if (alts[processed.command]) {
+        else if (alts[processed.command]) { // try and process as an alt
             process[alts[processed.command]].func(processed.rest);
         }
         else if (processed.command != old){ // An alias expanded to multiple commands, try processing it
@@ -175,19 +177,16 @@ function processCommand(command) {
         }
         else {
             updateOutput(`"${processed.command}" is an invalid command.\n`);
-            promptContent = "";
-            prompt.value = "";
+            promptContent = prompt.value = "";
             return false;
         }
     }
     catch(err){
         updateOutput(`Command error! Message: ${err}\n`);
-        promptContent = "";
-        prompt.value = "";
+        promptContent = prompt.value = "";
         return false;
     }
-    promptContent = "";
-    prompt.value = "";
+    promptContent = prompt.value = "";
     return true;
 }
 
@@ -211,9 +210,9 @@ function expandAlias(alias) {
 function expandHistory(command) {
     commandHistory.reverse();
     command = command.substr(1);
-    for (let index in commandHistory) {
-        if(commandHistory[index].indexOf(command) == 0) {
-            let ret = commandHistory[index];
+    for (let his of commandHistory) {
+        if(his.indexOf(command) == 0) {
+            let ret = his;
             commandHistory.reverse();
             return ret;
         }
