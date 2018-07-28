@@ -50,7 +50,7 @@ Current Keybinds (may be changeable in the future):
 Some work-in-progress documentation is found on the wiki [here](https://gitlab.com/gilben/shTab/wikis/home).
 
 ## License
-This software is licensed under the Mozilla Public License 2.0 (MPL-2.0).
+This software is licensed under the [Mozilla Public License 2.0 (MPL-2.0).](./LICENSE)
 
 ## Release Notes
 
@@ -58,6 +58,6 @@ Release notes for each version are in available in the [Tags](https://gitlab.com
 
 ## Contact
 
-nickgilbert2@gmail.com / gnick@pdx.edu
+<nickgilbert2@gmail.com> / <gnick@pdx.edu>
 
 Join me on freenode at #shTab.
