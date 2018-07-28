@@ -75,18 +75,19 @@ prompt.addEventListener("keyup", function(evt){
             let replace = commands[commands.length - 1].split(' ');
             replace[replace.length - 1] = autoComp;
             commands[commands.length - 1] = replace.join(' ');
-            promptContent = commands.join('; ');
-            prompt.value = promptContent;
+            promptContent = prompt.value = commands.join('; ');
             
             commands = processPrompt(promptContent);
         }
         else {
             let out = "";
+            autoCompleteMatches.reverse();
             for (let elem in autoCompleteMatches) {
                 out += (autoCompleteMatches[elem] + "   ");
             }
             out += "\n";
             btmOut.innerText = "";
+            autoCompleteMatches.reverse();
             updateBtmOutput(out);
         }
     }

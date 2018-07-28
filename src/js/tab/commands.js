@@ -627,6 +627,7 @@ const reset = {
                     break;
                 case "-d": case "--dests":
                     wipeDest = true;
+                    break;
                 case "-s": case "--save":
                     save = true;
                     break;
@@ -764,6 +765,45 @@ const save = {
     }
 }
 
+const type = { 
+    desc:       
+"Displays what sort of thing a passed name is\n\
+    arguments:\n\
+        <name>: name to process",
+    usage:      "type <name>",
+    flags: [],
+    optstring: {
+        short: "",
+        long: []
+    },
+    args: [],
+    /**
+     * Description for type
+     * 
+     * @param {string} args 
+     */
+    func:
+    function type(args) {
+        if (!args) {
+            return;
+        }
+        if(process[args]) {
+            updateOutput(`${args} is a command.\n`);
+        }
+        else if (alts[args]) {
+            updateOutput(`${args} is a an alternative name for command ${alts[args]}.\n`);
+        }
+        else if (aliases[args]) {
+            updateOutput(`${args} is an alias for ${aliases[args]}.\n`);
+        }
+        else if (dests[args]) {
+            updateOutput(`${args} is a destination name for ${dests[args]}.\n`);
+        }
+        else {
+            updateOutput(`${args} is not anything right now.\n`);
+        }
+    }
+}
 /**
  * Jump table for running commands based on strings
  */
@@ -782,7 +822,8 @@ var process = {
     "list": list,
     "reset": reset,
     "resize": resize,
-    "save": save
+    "save": save,
+    "type": type
 };
 
 
@@ -850,3 +891,5 @@ function helpMarkdown() {
     }
     console.log(output);
 }
+    
+
