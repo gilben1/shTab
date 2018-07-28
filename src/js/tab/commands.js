@@ -63,8 +63,7 @@ const alias = {
         let display = false;
         let name = "";
 
-        for (let flag in flags) {
-            let option = flags[flag];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-l": case "--list":
                 case "-d": case "--display":
@@ -174,8 +173,7 @@ const colo = {
 
         let flags = opts.opts;
 
-        for (let f in flags) {
-            let option = flags[f];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-b": case "--background": {
                     let color = option[1];
@@ -303,8 +301,7 @@ const goto = {
 
         let target = "_self";
 
-        for (let f in flags) {
-            let option = flags[f];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-n": case "--new":
                     target = "_blank";
@@ -394,10 +391,10 @@ const history = {
         let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
         let flags = opts.opts;
 
-        for(let flag of flags) {
-            switch(flag[0]) {
+        for(let option of flags) {
+            switch(option[0]) {
                 case "-s": case "--save":
-                    if (/(t(rue)?)|(y(es)?)/i.test(flag[1])) {
+                    if (/(t(rue)?)|(y(es)?)/i.test(option[1])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
                         saveHistory = true;
                         browser.storage.local.set({saveHistory});
@@ -519,8 +516,7 @@ const link = {
         let display = false;
         let name = "";
 
-        for (let flag in flags) {
-            let option = flags[flag];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-l": case "--list":
                 case "-d": case "--display":
@@ -619,8 +615,7 @@ const reset = {
         let wipeAlias = false;
         let wipeDest = false;
 
-        for (let flag in flags) {
-            let option = flags[flag];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-a": case "--aliases":
                     wipeAlias = true;
@@ -676,8 +671,7 @@ const resize = {
 
         let flags = opts.opts;
 
-        for (let f in flags) {
-            let option = flags[f];
+        for (let option of flags) {
             switch(option[0]) {
                 case "-b": case "--bottom": {
                     let size = option[1];
@@ -729,8 +723,8 @@ const save = {
     func:
     function save(args) {
         let toSave = args ? args.split(' ') : [undefined];
-        for (let index in toSave) {
-            switch(toSave[index]) {
+        for (let output of toSave) {
+            switch(output) {
                 case undefined: // save everything
                     saveCurrentOptions();
                     updateOutput(`Saved all options to local storage\n`);

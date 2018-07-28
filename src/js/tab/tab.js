@@ -82,8 +82,8 @@ prompt.addEventListener("keyup", function(evt){
         else {
             let out = "";
             autoCompleteMatches.reverse();
-            for (let elem in autoCompleteMatches) {
-                out += (autoCompleteMatches[elem] + "   ");
+            for (let match of autoCompleteMatches) {
+                out += (match + "   ");
             }
             out += "\n";
             btmOut.innerText = "";
@@ -340,8 +340,8 @@ function argCompletion(proc) {
         if (opt.args[0] && opt.args[0] != "" && !opt.args[0].match(/^-/)) {
             return false;
         }
-        for (let index in opt.opts) {
-            if (compare == opt.opts[index][1]) {
+        for (let option of opt.opts) {
+            if (compare == option[1]) {
                 return false;
             }
         }
