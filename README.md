@@ -12,7 +12,8 @@ The following Bash-like features are implemented:
 - [x] Aliases   
     Alias command for creating and viewing aliases
 - [x] History    
-    `Up` and `Down` will populate the prompt with previously run commands
+    `Up` and `Down` will populate the prompt with previously run commands     
+    ! history completion like in bash.
 - [x] Tab-completion    
     `Right` will show possible commands, flags, arguments based on current input
 - [x] Argument Flags    
@@ -48,6 +49,10 @@ Current Keybinds (may be changeable in the future):
 
 
 Some work-in-progress documentation is found on the wiki [here](https://gitlab.com/gilben/shTab/wikis/home).
+
+## Contributing to the Project
+
+Follow the instructions and forms shown in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 This software is licensed under the [Mozilla Public License 2.0 (MPL-2.0).](./LICENSE)
