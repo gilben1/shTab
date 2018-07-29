@@ -859,16 +859,23 @@ function saveCurrentOptions() {
  * Sets the current options back to defaults
  */
 function setToDefaultOptions(wipeAlias, wipeDest) {
-    bgColor = defaultOptions.bgColor;
-    fgColor = defaultOptions.fgColor;
-    outputHeight = defaultOptions.outputHeight;
-    btmHeight = defaultOptions.btmHeight;
+
+    for (let option in defaultOptions) {
+        setDefault(option);
+    }
+
     if (wipeAlias == true) {
         aliases = {};
     }
     if (wipeDest == true) {
         dests = {};
     }
+
+    function setDefault(name) {
+        window[name] = defaultOptions[name];
+        console.log(`${name} set back to ${defaultOptions[name]}\n`);
+    }
+
 }
 
 /**
