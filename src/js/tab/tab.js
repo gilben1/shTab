@@ -187,7 +187,7 @@ function processCommand(command) {
         }
     }
     catch(err){
-        updateOutput(`Command error! Message: ${err}\n`);
+        updateOutput(`!! ${err}\n`);
         promptContent = prompt.value = "";
         return false;
     }
