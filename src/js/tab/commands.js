@@ -1,8 +1,6 @@
 // Copyright (c) 2018 Nicholas Gilbert
 
 // All commands that can be run from the tab page
-// url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
-const URL_REGEX = /^https?:\/\//i;
 
 const about = { 
     desc:       
@@ -273,12 +271,15 @@ const exportOpts = {
     }
 }
 
+// url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
+const URL_REGEX = /^https?:\/\//i;
+
 const goto = {
     desc:       
 "Opens a specified link or url\n\
     flags:\n\
         -n | --new: opens link in new tab / window (dependant on browser settings)\n\
-        (none): opens link in current tab\
+        (none): opens link in current tab\n\
     arguments:\n\
         <name>: the link to navigate to",
     usage:      "goto [-n|--new] <name>",
@@ -299,6 +300,14 @@ const goto = {
         let flags = opts.opts;
         let dest = opts.args.join(' ');
 
+        // Grab the subpages separated by /
+        let extra = dest.split('/');
+        extra.shift();
+        extra = extra.join('/');
+
+        // Trim off the subpages
+        let shortdest = dest.split('/', 1);
+
         let target = "_self";
 
         for (let option of flags) {
@@ -309,19 +318,26 @@ const goto = {
             }
         }
 
-        if (dest == undefined) {
+        if (shortdest == undefined) {
             throw "No arguments!\n";
         }
-        console.log(`Goto activated, dest = ${dest}`);
-        let url = dest.match(URL_REGEX);
-        if (url != undefined) { // if goto was a url
-            window.open(dest, target);
-        }
-        console.log(url);
 
-        url = dests[dest];
-        if (url != undefined) { // if there was a link
+        if (!dests[shortdest]) {
+            if (dest.match(URL_REGEX)) {
+                window.open(dest, target);
+                return;
+            }
+            else {
+                throw `${dest} is not a valid destination!\n`;
+            }
+        }
+
+        let url = dests[shortdest] + '/' + extra;
+        if(url.match(URL_REGEX)) {
             window.open(url, target);
+        }
+        else {
+            window.open('https://' + url, target);
         }
     }
 }
@@ -859,7 +875,6 @@ function saveCurrentOptions() {
  * Sets the current options back to defaults
  */
 function setToDefaultOptions(wipeAlias, wipeDest) {
-
     for (let option in defaultOptions) {
         setDefault(option);
     }
@@ -875,7 +890,6 @@ function setToDefaultOptions(wipeAlias, wipeDest) {
         window[name] = defaultOptions[name];
         console.log(`${name} set back to ${defaultOptions[name]}\n`);
     }
-
 }
 
 /**
