@@ -10,6 +10,7 @@ var btmHeight;
 
 var commandHistory = [];
 var saveHistory;
+var addHttps;
 
 const defaultOptions = {
     bgColor: "black",
@@ -18,6 +19,7 @@ const defaultOptions = {
     btmHeight: 2,
     commandHistory: [],
     saveHistory: true,
+    addHttps: true,
     aliases: {},
     dests: {}
 };
@@ -40,6 +42,8 @@ const optionsLoader = {
         commandHistory = grab("commandHistory");
         commandIndex = commandHistory.length;
         saveHistory = grab("saveHistory");
+
+        addHttps = grab("addHttps");
 
         aliases = grab("aliases");        
         dests = grab("dests");

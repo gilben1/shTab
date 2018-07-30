@@ -333,7 +333,7 @@ const goto = {
         }
 
         let url = dests[shortdest] + '/' + extra;
-        if(url.match(URL_REGEX)) {
+        if(url.match(URL_REGEX) || addHttps == false) {
             window.open(url, target);
         }
         else {
@@ -505,13 +505,14 @@ const link = {
     flags:\n\
         -r | --remove <del>: remove <del> as a name to a destination\n\
         -dl | --display | --list: display the current destinations\n\
+        -h: Prepend link destination with https://\n\
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
-    usage:      "link [-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
-    flags: ["-d", "--display",  "-l", "--list", "-r", "--remove"],
+    usage:      "link [-h][-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
+    flags: ["-d", "--display", "-h", "-l", "--list", "-r", "--remove"],
     optstring: {
-        short: "dlr:",
+        short: "dhlr:",
         long: ["display", "list", "remove="]
     },
     args: [],
@@ -530,6 +531,7 @@ const link = {
         
         let mode = "add";
         let display = false;
+        let prepend = false;
         let name = "";
 
         for (let option of flags) {
@@ -537,6 +539,9 @@ const link = {
                 case "-l": case "--list":
                 case "-d": case "--display":
                     display = true;
+                    break;
+                case "-h":
+                    prepend = true;
                     break;
                 case "-r": case "--remove":
                     mode = "remove";
@@ -556,7 +561,11 @@ const link = {
                     }
                     let alias = toLinkSplit[0];
                     let dest = toLinkSplit[1];
+                    if (prepend == true) {
+                        dest = "https://" + dest;
+                    }
                     dests[alias] = dest;
+                    browser.storage.local.set({dests});
                     updateOutput(`Added link from ${alias} to ${dest}.\n`)
                 }
                 break;
