@@ -492,9 +492,16 @@ const importOpts = {
         function doneLoading() {
             let importedOptions = JSON.parse(fr.result);
             console.log(importedOptions);
-            bgColor = importedOptions.bgColor ? importedOptions.bgColor : bgColor;
-            fgColor = importedOptions.fgColor ? importedOptions.fgColor : fgColor;
-            outputHeight = importedOptions.outputHeight ? importedOptions.outputHeight : outputHeight;
+
+            bgColor = grab("bgColor");
+            fgColor = grab("fgColor");
+            outputHeight = grab("outputHeight");
+            btmHeight = grab("btmHeight");
+            saveHistory = grab("saveHistory");
+
+            dests = Object.assign({}, dests, importedOptions.dests);
+            aliases = Object.assign({}, aliases, importedOptions.aliases);
+
             if (importedOptions.bgColor) {
                 updateOutput(`Updated background color to ${importedOptions.bgColor}\n`);
             }
@@ -504,15 +511,36 @@ const importOpts = {
             if (importedOptions.outputHeight) {
                 updateOutput(`Updated output height to ${importedOptions.outputHeight}\n`);
             }
+            if (importedOptions.btmHeight) {
+                updateOutput(`Updated bottom height to ${importedOptions.btmHeight}\n`);
+            }
+            if (importedOptions.savedHistory) {
+                updateOutput(`Updated saved history setting to ${importedOptions.savedHistory}\n`);
+            }
 
-            dests = Object.assign({}, dests, importedOptions.dests);
+            if (importedOptions.dests) {
+                updateOutput(`Added the following links:\n`);
+                for (let key in importedOptions.dests) {
+                    updateOutput(`    ${key} -> ${dests[key]}\n`);
+                }
+            }
 
-            updateOutput(`Added the following links:\n`);
-            for (let key in importedOptions.dests) {
-                updateOutput(`    ${key} -> ${dests[key]}\n`);
+            if (importedOptions.aliases) {
+                updateOutput(`Added the following aliases:\n`);
+                for (let key in importedOptions.aliases) {
+                    updateOutput(`    ${key} -> ${aliases[key]}\n`);
+                }
             }
 
             applyCurrentOptions();
+            /**
+             * Returns either the loaded field or the default value for that field
+             * @param {string} field Field to retrieve
+             * @returns {string} Default or loaded value
+             */
+            function grab(field) {
+                return importedOptions[field] ? importedOptions[field] : window[field];
+            }
         }
     }
 }
