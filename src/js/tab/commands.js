@@ -95,7 +95,7 @@ const alias = {
                     delete aliases[name];
                 }
                 else {
-                    updateOutput(`Alias ${name} doen't exist.\n`);
+                    throw `Alias ${name} doen't exist.\n`;
                 }
                 break;
         }
@@ -200,6 +200,9 @@ const colo = {
                     break;
                 }
             }
+        }
+        if (flags.length == 0) {
+            throw `Usage: ${this.usage}\n`;
         }
     },
 }
@@ -331,8 +334,11 @@ const goto = {
                 window.open(dest, target);
                 return;
             }
-            else {
+            else if (dest){
                 throw `${dest} is not a valid destination!\n`;
+            }
+            else {
+                throw `Usage: ${this.usage}\n`;
             }
         }
 
@@ -575,11 +581,11 @@ const link = {
                 break;
             case "remove":
                 if (dests[name]) {
-                    updateOutput(`Removed ${name} -> ${dests[name]} as a destination.\n`);
+                    updateOutput(`Removed ${name} -> ${dests[name]} as a destination. Still saved in local storage.\n`);
                     delete dests[name];
                 }
                 else {
-                    updateOutput(`Destination ${name} doen't exist.\n`);
+                    throw `Destination ${name} doen't exist.\n`;
                 }
                 break;
         }
@@ -608,7 +614,6 @@ const list = {
      */
     func:
     function list() { // list all commands
-        console.log("List activated");
         updateOutput(`Current links:\n`);
         for (let key in dests) {
             updateOutput(`${key} -> ${dests[key]}\n`);
@@ -714,6 +719,9 @@ const resize = {
                 }
             }
         }
+        if (flags.length == 0) {
+            throw `Usage: ${this.usage}\n`;
+        }
     }
 }
 
@@ -798,7 +806,7 @@ const type = {
     func:
     function type(args) {
         if (!args) {
-            return;
+            throw `Usage: ${this.usage}\n`;
         }
         if(process[args]) {
             updateOutput(`${args} is a command.\n`);
