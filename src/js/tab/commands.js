@@ -279,13 +279,13 @@ const goto = {
 "Opens a specified link or url\n\
     flags:\n\
         -n | --new: opens link in new tab / window (dependant on browser settings)\n\
-        (none): opens link in current tab\n\
+        -h: prepends destination with https:// if it doesn't already contain https://\n\
     arguments:\n\
         <name>: the link to navigate to",
-    usage:      "goto [-n|--new] <name>",
-    flags: ["-n", "--new"],
+    usage:      "goto [-h][-n|--new] <name>",
+    flags: ["-h", "-n", "--new"],
     optstring: {
-        short: "n",
+        short: "hn",
         long: ["new"]
     },
     args: [],
@@ -309,9 +309,13 @@ const goto = {
         let shortdest = dest.split('/', 1);
 
         let target = "_self";
+        let prepend = false;
 
         for (let option of flags) {
             switch(option[0]) {
+                case "-h":
+                    prepend = true;
+                    break;
                 case "-n": case "--new":
                     target = "_blank";
                     break;
@@ -333,7 +337,7 @@ const goto = {
         }
 
         let url = dests[shortdest] + '/' + extra;
-        if(url.match(URL_REGEX) || addHttps == false) {
+        if(url.match(URL_REGEX) || prepend == false) {
             window.open(url, target);
         }
         else {
