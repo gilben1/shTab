@@ -621,14 +621,12 @@ const reset = {
 "Resets all options to default\n\
     flags:\n\
         -y|--yes: confirms to reset\n\
-        -s|--save: saves changes to local storage\n\
-        -d|--dests: resets destinations to empty\n\
-        -a|--aliases: resets aliases to empty",
-    usage:      "reset -y|--y [-a|--aliases][-d|--dests][--s|--save]",
-    flags: ["-a", "--aliases", "-d", "--dests", "-s", "--save", "-y", "--yes"],
+        -s|--save: saves changes to local storage",
+    usage:      "reset -y|--y [--s|--save]",
+    flags: ["-s", "--save", "-y", "--yes"],
     optstring: {
-        short: "adsy",
-        long: ["aliases", "dests", "save", "yes"]
+        short: "sy",
+        long: ["save", "yes"]
     },
     args: [],
     /**
@@ -641,17 +639,9 @@ const reset = {
 
         let confirm = false;
         let save = false;
-        let wipeAlias = false;
-        let wipeDest = false;
 
         for (let option of flags) {
             switch(option[0]) {
-                case "-a": case "--aliases":
-                    wipeAlias = true;
-                    break;
-                case "-d": case "--dests":
-                    wipeDest = true;
-                    break;
                 case "-s": case "--save":
                     save = true;
                     break;
@@ -661,12 +651,12 @@ const reset = {
             }
         }
         if (confirm == false) {
-            updateOutput(`Needs -y or --yes to confirm reset.\n`);
-            return;
+            throw `Needs -y or --yes to confirm reset.\n`;
         }
         updateOutput(`Resetting options to default.\n`);
-        setToDefaultOptions(wipeAlias, wipeDest);
+        setToDefaultOptions();
         applyCurrentOptions();
+
         if (save == true) {
             updateOutput(`Saving defaults to local storage.\n`);
             saveCurrentOptions();
@@ -887,16 +877,9 @@ function saveCurrentOptions() {
 /**
  * Sets the current options back to defaults
  */
-function setToDefaultOptions(wipeAlias, wipeDest) {
+function setToDefaultOptions() {
     for (let option in defaultOptions) {
         setDefault(option);
-    }
-
-    if (wipeAlias == true) {
-        aliases = {};
-    }
-    if (wipeDest == true) {
-        dests = {};
     }
 
     function setDefault(name) {

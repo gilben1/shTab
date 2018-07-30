@@ -18,8 +18,18 @@ const defaultOptions = {
     btmHeight: 2,
     commandHistory: [],
     saveHistory: true,
-    aliases: {},
-    dests: {}
+    aliases: {
+        "issue": "go -n issue",
+        "new-issue": "go -n nissue",
+        "repo": "go -n repo",
+        "wiki": "go -n wiki"
+    },
+    dests: {
+        "issue": "https://gitlab.com/gilben/shTab/issues/",
+        "nissue": "https://gitlab.com/gilben/shTab/issues/new",
+        "repo": "https://gitlab.com/gilben/shTab/",
+        "wiki": "https://gitlab.com/gilben/shTab/wikis/home"
+    }
 };
 
 const optionsLoader = {
@@ -41,8 +51,8 @@ const optionsLoader = {
         commandIndex = commandHistory.length;
         saveHistory = grab("saveHistory");
 
-        aliases = grab("aliases");        
-        dests = grab("dests");
+        aliases = Object.assign({}, defaultOptions.aliases, grab("aliases"));        
+        dests = Object.assign({}, defaultOptions.dests, grab("dests"));
 
         applyCurrentOptions();
 
