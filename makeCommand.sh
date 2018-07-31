@@ -56,8 +56,7 @@ const $command = {
 
         let flags = opts.opts;
 
-        for (let f in flags) {
-            let option = flags[f];
+        for (let option of flags) {
             switch(option[0]) {$switchblock
             }
         }
