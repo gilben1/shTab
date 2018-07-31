@@ -107,7 +107,9 @@ const alias = {
         }
         if (display) {
             updateOutput(`Current aliases:\n`);
-            for (let key in aliases) {
+            let keys = Object.keys(aliases);
+            keys.sort();
+            for (let key of keys) {
                 updateOutput(`${key} -> ${aliases[key]}\n`);
             }
         }
@@ -704,7 +706,7 @@ const link = {
         
         let mode = "add";
         let display = false;
-        let count = true;
+        let count = false;
         let prepend = false;
         let name = "";
 
@@ -766,29 +768,6 @@ const link = {
         }
         if (count) {
             updateOutput(`${Object.keys(dests).length} links.\n`);
-        }
-    }
-}
-
-const list = {
-    desc:       
-"Lists the links that have been set\n\
-    No arguments",
-    usage:      "list",
-    flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
-    args: [],
-    /**
-     * Lists all dests to the output
-     */
-    func:
-    function list() { // list all commands
-        updateOutput(`Current links:\n`);
-        for (let key in dests) {
-            updateOutput(`${key} -> ${dests[key]}\n`);
         }
     }
 }
@@ -1013,7 +992,6 @@ var process = {
     "history": history,
     "import": importOpts,
     "link": link,
-    "list": list,
     "reset": reset,
     "resize": resize,
     "save": save,
@@ -1025,7 +1003,6 @@ var process = {
  * Alternate names for commands, essentially a second level jump table
  */
 var alts = {
-    "ls": "list",
     "go": "goto",
     ":w": "save",
     "man": "help",

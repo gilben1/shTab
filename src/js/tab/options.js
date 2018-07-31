@@ -22,7 +22,9 @@ const defaultOptions = {
         "issue": "go -n issue",
         "new-issue": "go -n nissue",
         "repo": "go -n repo",
-        "wiki": "go -n wiki"
+        "wiki": "go -n wiki",
+        "list": "link -d",
+        "ls": "link -d"
     },
     dests: {
         "issue": "https://gitlab.com/gilben/shTab/issues/",
