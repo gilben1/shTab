@@ -119,12 +119,13 @@ const bookim = {
 "Imports bookmarks as destinations.\n\
     flags:\n\
         -a|--all: Import all bookmarks as link / destinations \n\
-        -n|--name <name>: Import a single bookmark by name",
-    usage:      "bookim [-a|--all][-n|--name <name>]",
-    flags: ["-a", "--all", "-n", "--name"],
+        -n|--name <name>: Import a single bookmark by name\n\
+        -s|--short <num>: Imports bookmarks by <num> word only instead of full string",
+    usage:      "bookim [-a|--all][-s|--short <num>][-n|--name <name>]",
+    flags: ["-a", "--all", "-n", "--name", "-s", "--short"],
     optstring: {
-        short: "an:",
-        long: ["all", "name="]
+        short: "an:s:",
+        long: ["all", "name=", "short="]
     },
     args: [],
     /**
@@ -139,6 +140,8 @@ const bookim = {
         let flags = opts.opts;
 
         let everything = false;
+        let short = false;
+        let length = 1;
         let names = [];
 
         for (let option of flags) {
@@ -148,6 +151,10 @@ const bookim = {
                     break;
                 case "-n": case "--name":
                     names.push(option[1]);
+                    break;
+                case "-s": case "--short":
+                    short = true;
+                    length = parseInt(option[1]);
                     break;
             }
         }
@@ -169,7 +176,14 @@ const bookim = {
              */
             function importNode(bookNode) {
                 if(bookNode.url && bookNode.title) { // If the node is a url, add a link based on name and url
-                    let name = bookNode.title.replace(/ /g, "_");
+                    let name = "";
+                    if (short == true) { // If we're shortening, grab only the first word
+                        name = bookNode.title.split(' ', length).join('_');
+                    }
+                    else { // Otherwise, replace spaces with underscores
+                        name = bookNode.title.replace(/ /g, "_");
+                    }
+                    name = name.replace(/\//g, "_");
                     link.func(`${name} ${bookNode.url}`);
                 }
                 else if (bookNode.children && bookNode.title != "Bookmarks Menu") { // otherwise, if it's a folder with children, traverse down
