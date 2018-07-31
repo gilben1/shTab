@@ -21,9 +21,15 @@ const about = {
     func:
     function about (args) {
         let manifest = browser.runtime.getManifest();
-        updateOutput(`${manifest.name} v ${manifest.version}\n`);
-        updateOutput(`${manifest.description}\n\n`);
-        updateOutput(`Developed by ${manifest.developer.name} (${manifest.developer.url})\n`);
+        let browserInfo = browser.runtime.getBrowserInfo();
+        browserInfo.then(gotBrowserInfo);
+
+        function gotBrowserInfo(info) {
+            updateOutput(`Browser info: ${info.vendor} ${info.name} v. ${info.version} (${info.buildID}).\n`);
+            updateOutput(`${manifest.name} v. ${manifest.version}\n`);
+            updateOutput(`${manifest.description}\n\n`);
+            updateOutput(`Developed by ${manifest.developer.name} (${manifest.developer.url})\n`);
+        }
     }
 }
 
