@@ -114,6 +114,112 @@ const alias = {
     }
 }
 
+const bookim = { 
+    desc:       
+"Imports bookmarks as destinations.\n\
+    flags:\n\
+        -a|--all: Import all bookmarks as link / destinations \n\
+        -n|--name <name>: Import a single bookmark by name",
+    usage:      "bookim [-a|--all][-n|--name <name>]",
+    flags: ["-a", "--all", "-n", "--name"],
+    optstring: {
+        short: "an:",
+        long: ["all", "name="]
+    },
+    args: [],
+    /**
+     * Description for bookim
+     * 
+     * @param {string} args 
+     */
+    func:
+    function bookim(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+
+        let flags = opts.opts;
+
+        let everything = false;
+        let names = [];
+
+        for (let option of flags) {
+            switch(option[0]) {
+                case "-a": case "--all":
+                    everything = true;
+                    break;
+                case "-n": case "--name":
+                    names.push(option[1]);
+                    break;
+            }
+        }
+        if (everything == true) {
+            let importTree = browser.bookmarks.getTree();
+            importTree.then(onAccept, onReject);
+
+            /**
+             * On accept, process the bookmarks
+             * @param {bookmarkNode} bookmarks 
+             */
+            function onAccept(bookmarks) {
+                importNode(bookmarks[0]);
+            }
+
+            /**
+             * Try and add the current bookmark node as a link
+             * @param {bookmarkNode} bookNode 
+             */
+            function importNode(bookNode) {
+                if(bookNode.url && bookNode.title) { // If the node is a url, add a link based on name and url
+                    let name = bookNode.title.replace(/ /g, "_");
+                    link.func(`${name} ${bookNode.url}`);
+                }
+                else if (bookNode.children && bookNode.title != "Bookmarks Menu") { // otherwise, if it's a folder with children, traverse down
+                    for (let child of bookNode.children) {
+                        importNode(child);
+                    }
+                }
+            }
+
+            /**
+             * Throw an error message when the tree rejects
+             * @param {string} error 
+             */
+            function onReject(error) {
+                throw `${error}\n`;
+            }
+        }
+        else if (flags.length > 0) {
+            let importMark = browser.bookmarks.search({});
+            importMark.then(onAccept, onReject);
+
+            /**
+             * Search the names for a matching bookmark
+             */
+            function onAccept(bookmark) {
+                for (let name of names) {
+                    let split = name.split('=');
+                    let find = split[0];
+                    let actual = split[1] || split[0];
+                    for (let mark of bookmark) {
+                        if (find == mark.title && mark.title) {
+                            link.func(`${actual} ${mark.url}`);
+                        }
+                    }
+                }
+            }
+            
+            /**
+             * Throw an error at the user
+             */
+            function onReject(error) {
+                throw `${error}\n`;
+            }
+        }
+        if (flags.length == 0) {
+            throw `Usage: ${this.usage}.\n`;
+        }
+    }
+}
+
 const clear = {
     desc:       
 "Clears the console, or whatever is passed to it\n\
@@ -873,6 +979,7 @@ const type = {
 var process = {
     "about": about,
     "alias": alias,
+    "bookim": bookim,
     "clear": clear,
     "colo": colo,
     "echo": echo,
@@ -952,5 +1059,8 @@ function helpMarkdown() {
     }
     console.log(output);
 }
+    
+
+
     
 

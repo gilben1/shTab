@@ -18,6 +18,7 @@
         "newtab": "html/tab.html"
     },
     "permissions": [
+        "bookmarks",
         "cookies",
         "history",
         "menus",
