@@ -240,16 +240,17 @@ const clear = {
     desc:       
 "Clears the console, or whatever is passed to it\n\
     arguments:\n\
+        aliases: clears aliases for the session\n\
         history: clears command history\n\
-        links: clears set links for the session\n\
+        links|dests: clears set links for the session\n\
         (none): clears command prompt",     
-    usage:      "clear [history|links]",
+    usage:      "clear [aliases|history|links|dests]",
     flags: [],
     optstring: {
         short: "",
         long: []
     },
-    args:       ["history", "links"],
+    args:       ["aliases", "history", "links"],
     /**
      * Clears a variety of things based on argument
      * No argument clears output
@@ -258,6 +259,10 @@ const clear = {
     func:
     function clear(args) {
         switch(args) {
+            case "aliases":
+                aliases = {};
+                updateOutput(`Cleared aliases.\n`);
+                break;
             case "history":
                 commandHistory = [];
                 updateOutput(`Cleared command history.\n`);
