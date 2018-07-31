@@ -675,17 +675,18 @@ const link = {
     desc:       
 "Links a name to a destination, used when running goto\n\
     flags:\n\
+        -c | --count: return the number of destinations\n\
         -r | --remove <del>: remove <del> as a name to a destination\n\
         -dl | --display | --list: display the current destinations\n\
         -h: Prepend link destination with https://\n\
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
-    usage:      "link [-h][-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
+    usage:      "link [-c][-h][-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
     flags: ["-d", "--display", "-h", "-l", "--list", "-r", "--remove"],
     optstring: {
-        short: "dhlr:",
-        long: ["display", "list", "remove="]
+        short: "cdhlr:",
+        long: ["count", "display", "list", "remove="]
     },
     args: [],
     /**
@@ -703,11 +704,15 @@ const link = {
         
         let mode = "add";
         let display = false;
+        let count = true;
         let prepend = false;
         let name = "";
 
         for (let option of flags) {
             switch(option[0]) {
+                case "-c": case "--display":
+                    count = true;
+                    break;
                 case "-l": case "--list":
                 case "-d": case "--display":
                     display = true;
@@ -753,9 +758,14 @@ const link = {
         }
         if (display) {
             updateOutput(`Current links:\n`);
-            for (let key in dests) {
+            let keys = Object.keys(dests);
+            keys.sort();
+            for (let key of keys) {
                 updateOutput(`${key} -> ${dests[key]}\n`);
             }
+        }
+        if (count) {
+            updateOutput(`${Object.keys(dests).length} links.\n`);
         }
     }
 }
