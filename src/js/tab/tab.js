@@ -71,7 +71,6 @@ prompt.addEventListener("keyup", function(evt){
     else if (key == "right" && promptContent.length > 0 && countMatches > 0) {
         if (countMatches == 1) { // only one, let's just complete it
             let autoComp = autoCompleteMatches[autoIndex];
-            autoIndex = (autoIndex + 1) % (autoCompleteMatches.length);
             let replace = commands[commands.length - 1].split(' ');
             replace[replace.length - 1] = autoComp;
             commands[commands.length - 1] = replace.join(' ');
@@ -79,7 +78,16 @@ prompt.addEventListener("keyup", function(evt){
             
             commands = processPrompt(promptContent);
         }
-        else {
+        else { // otherwise, complete up to common word and print rest below
+            let autoComp = findCommonFromStart(autoCompleteMatches);
+
+            let replace = commands[commands.length - 1].split(' ');
+            replace[replace.length - 1] = autoComp;
+            commands[commands.length - 1] = replace.join(' ');
+            promptContent = prompt.value = commands.join('; ');
+
+
+
             let out = "";
             autoCompleteMatches.reverse();
             for (let match of autoCompleteMatches) {
@@ -237,6 +245,30 @@ function removeBangs() {
     }
 }
 
+/**
+ * Returns the common characters from the start of each word for autocompletion
+ * @param {string[]} matches 
+ */
+function findCommonFromStart(matches) {
+    let common = "";
+    let index = 0;
+    while (index >= 0) {
+        let addToCommon = true;
+        for (let match of matches) {
+            if (addToCommon == true) {
+                common += match[index];
+                addToCommon = false;
+            }
+            if (!match.startsWith(common)) {
+                common = common.slice(0, -1);
+                index = -2;
+                break;
+            }
+        }
+        index++;
+    }
+    return common;
+}
 
 /**
  * Takes a command and splits it into first word followed by
@@ -369,6 +401,12 @@ function argCompletion(proc) {
                 } 
             }
             break;
+        case "setopt":
+            for (let key in defaultOptions) {
+                if (key.indexOf(compare) == 0) {
+                    autoCompleteMatches.unshift(key);
+                }
+            }
     }
 
 }
