@@ -334,8 +334,15 @@ function buildCompletion(input){
  * @param {{"command": string, "rest": string}} proc 
  */
 function argCompletion(proc) {
+    if (aliases[proc.command]) {
+        let aliasExpand = processFirstWord(aliases[proc.command]);
+        proc.command = aliasExpand.command;
+        proc.rest = aliasExpand.rest + " " + (proc.rest ? proc.rest : " ");
+    }
+
     let match = process[proc.command] ? proc.command :
                         alts[proc.command] ? alts[proc.command] : undefined;
+
     if (!match) {
         return;
     }
@@ -408,7 +415,7 @@ function argCompletion(proc) {
                 }
             }
     }
-
+    console.log(autoCompleteMatches);
 }
 
 /**
