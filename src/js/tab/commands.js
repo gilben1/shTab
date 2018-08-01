@@ -942,6 +942,54 @@ const save = {
     }
 }
 
+const setopt = { 
+    desc:       
+"Sets option to specificed value\n\
+    flags:\n\
+        -a|--apply: Apply the option to elements on the page\n\
+    arguments:\n\
+        <option>: option to set\n\
+        <value>: value to set to",
+    usage:      "setopt [-a|--apply] <option> <value>",
+    flags: ["-a", "--apply"],
+    optstring: {
+        short: "a",
+        long: ["apply"]
+    },
+    args: [],
+    /**
+     * Description for setopt
+     * 
+     * @param {string} args 
+     */
+    func:
+    function setopt(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+
+        let flags = opts.opts;
+        let optionArg = opts.args;
+        let apply = false;
+
+        for (let option of flags) {
+            switch(option[0]) {
+                case "-a": case "--apply":
+                    apply = true;
+                    break;
+            }
+        }
+
+        let optionToSet = optionArg[0];
+        let valueToSet = optionArg[1];
+        if(window[optionToSet] != undefined) {
+            window[optionToSet] = valueToSet;
+            updateOutput(`Set global option ${optionToSet} to ${valueToSet}\n`);
+            if(apply == true) {
+                applyCurrentOptions();
+            }
+        }
+    }
+}
+
 const type = { 
     desc:       
 "Displays what sort of thing a passed name is\n\
@@ -1000,6 +1048,7 @@ var process = {
     "reset": reset,
     "resize": resize,
     "save": save,
+    "setopt": setopt,
     "type": type
 };
 
@@ -1066,7 +1115,3 @@ function helpMarkdown() {
     console.log(output);
 }
     
-
-
-    
-
