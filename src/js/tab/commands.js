@@ -39,15 +39,16 @@ const alias = {
     flags:\n\
         -r | --remove <del>: remove <del> as an alias\n\
         -dl | --display | --list: display the current alias\n\
+        -n | --rename <name>=<newname>: assigns alias <name> with <newname>\n\
     arguments:\n\
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
         (none): displays the current aliases",
-    usage:      "alias [-d|-l|--display|--list] [-r|--remove <del>] <name>=\"<string>\"",
-    flags: ["-d", "--display", "-l", "--list", "-r", "--remove"],
+    usage:      "alias [-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] <name>=\"<string>\"",
+    flags: ["-d", "--display", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
-        short: "dlr:",
-        long: [ "display", "list", "remove=" ]
+        short: "dln:r:",
+        long: [ "display", "list", "remove=", "rename=" ]
     },
     args: [],
     /**
@@ -77,6 +78,10 @@ const alias = {
                     mode = "remove";
                     name = option[1];
                     break;
+                case "-n": case "--rename":
+                    mode = "rename";
+                    name = option[1];
+                    break;
                 case undefined:
                     break;
             }
@@ -102,6 +107,23 @@ const alias = {
                 }
                 else {
                     throw `Alias ${name} doen't exist.\n`;
+                }
+                break;
+            case "rename":
+                let split = name.split('=', 2);
+                if (split.length != 2) {
+                    throw "Name needs to be in the form <oldname>=<newname>.\n";
+                }
+                let oldName = split[0];
+                let newName = split[1];
+                if (aliases[oldName]) {
+                    aliases[newName] = aliases[oldName];
+                    delete aliases[oldName];
+                    browser.storage.local.set({aliases});
+                    updateOutput(`Changed ${oldName} to ${newName}.\n`);
+                }
+                else {
+                    throw `Alias ${name} doesn't exist.\n`;
                 }
                 break;
         }
@@ -686,14 +708,15 @@ const link = {
         -r | --remove <del>: remove <del> as a name to a destination\n\
         -dl | --display | --list: display the current destinations\n\
         -h: Prepend link destination with https://\n\
+        -n | --rename <name>=<newname>: assigns link <name> with <newname>\n\
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
-    usage:      "link [-c][-h][-d|-l|--display|--list] [-r|--remove <del>] [<name> <dest>]",
-    flags: ["-d", "--display", "-h", "-l", "--list", "-r", "--remove"],
+    usage:      "link [-c][-h][-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] [<name> <dest>]",
+    flags: ["-d", "--display", "-h", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
-        short: "cdhlr:",
-        long: ["count", "display", "list", "remove="]
+        short: "cdhln:r:",
+        long: ["count", "display", "list", "remove=", "rename="]
     },
     args: [],
     /**
@@ -731,6 +754,10 @@ const link = {
                     mode = "remove";
                     name = option[1];
                     break;
+                case "-n": case "--rename":
+                    mode = "rename";
+                    name = option[1];
+                    break;
                 case undefined:
                     break;
             }
@@ -759,7 +786,24 @@ const link = {
                     delete dests[name];
                 }
                 else {
-                    throw `Destination ${name} doen't exist.\n`;
+                    throw `Destination ${name} doesn't exist.\n`;
+                }
+                break;
+            case "rename":
+                let split = name.split('=', 2);
+                if (split.length != 2) {
+                    throw "Name needs to be in the form <oldname>=<newname>.\n";
+                }
+                let oldName = split[0];
+                let newName = split[1];
+                if (dests[oldName]) {
+                    dests[newName] = dests[oldName];
+                    delete dests[oldName];
+                    browser.storage.local.set({dests});
+                    updateOutput(`Changed ${oldName} to ${newName}.\n`);
+                }
+                else {
+                    throw `Destination ${name} doesn't exist.\n`;
                 }
                 break;
         }
