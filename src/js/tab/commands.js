@@ -13,6 +13,7 @@ const about = {
         long: []
     },
     args: [],
+    argscol: [],
     /**
      * Displays information about the extension
      * 
@@ -48,9 +49,10 @@ const alias = {
     flags: ["-d", "--display", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
         short: "dln:r:",
-        long: [ "display", "list", "remove=", "rename=" ]
+        long: [ "display", "list", "remove=", "rename=" ],
     },
     args: [],
+    argscol: [ "aliases" ],
     /**
      * Sets an alias from a word to command(s)
      * If empty, displays the aliases
@@ -152,6 +154,7 @@ const bookim = {
         long: ["all", "name=", "short="]
     },
     args: [],
+    argscol: [],
     /**
      * Description for bookim
      * 
@@ -272,7 +275,8 @@ const clear = {
         short: "",
         long: []
     },
-    args:       ["aliases", "history", "links"],
+    args:       ["aliases", "dests", "history", "links"],
+    argscol: [],
     /**
      * Clears a variety of things based on argument
      * No argument clears output
@@ -289,7 +293,7 @@ const clear = {
                 commandHistory = [];
                 updateOutput(`Cleared command history.\n`);
                 break;
-            case "links":
+            case "links": case "dests":
                 dests = {};
                 updateOutput(`Cleared links.\n`);
                 break;
@@ -314,6 +318,7 @@ const colo = {
         long: ["background=", "display", "foreground="]
     },
     args: [],
+    argscol: [],
     // Sets a color element to a specified value
     /**
      * Sets the color for a passed element to either a CSS color value or hex value
@@ -374,6 +379,7 @@ const echo = {
         long: []
     },
     args: [],
+    argscol: [],
     /**
      * Echoes the input to the output
      * @param {string} text 
@@ -396,6 +402,7 @@ const exportOpts = {
         long: []
     },
     args: [],
+    argscol: [],
     /**
      * Exports current options to a .json file
      * args currently aren't used
@@ -455,6 +462,7 @@ const goto = {
         long: ["new"]
     },
     args: [],
+    argscol: [ "dests" ],
     /**
      * Opens dest through set links or as a direct url
      * @param {string} args
@@ -528,6 +536,7 @@ const help = {
         long: []
     },
     args: [],
+    argscol: [ "commands" ],
     /**
      * Displays help information when given an command argument
      * Lists all commands when given no argument 
@@ -575,6 +584,7 @@ const history = {
         long: ["save="]
     },
     args: [],
+    argscol: [],
     func:
     function history(args) {
         let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
@@ -619,6 +629,7 @@ const importOpts = {
         long: []
     },
     args: [],
+    argscol: [],
     /**
      * Imports settings from a .json file into the current settings
      */
@@ -719,6 +730,7 @@ const link = {
         long: ["count", "display", "list", "remove=", "rename="]
     },
     args: [],
+    argscol: [ "dests" ],
     /**
      * Links a name to a dest
      * Given no parameters, displays all dests to the output
@@ -834,6 +846,7 @@ const reset = {
         long: ["save", "yes"]
     },
     args: [],
+    argscol: [],
     /**
      * Resets various elements and options to default values
      */
@@ -883,6 +896,7 @@ const resize = {
         long: ["bottom=", "display", "top="]
     },
     args: [],
+    argscol: [],
     // Resizes the output terminal to @size lines of text
     /**
      * Sets the number of lines in the output to the passed size
@@ -942,6 +956,7 @@ const save = {
         long: []
     },
     args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
+    argscol: [],
     /**
      * Saves options to local storage.
      * Args defines what is saved to local storage
@@ -1001,6 +1016,7 @@ const setopt = {
         long: ["apply"]
     },
     args: [],
+    argscol: [ "options" ],
     /**
      * Description for setopt
      * 
@@ -1046,6 +1062,7 @@ const type = {
         long: []
     },
     args: [],
+    argscol: ["aliases", "commands", "dests"],
     /**
      * Description for type
      * 
@@ -1056,19 +1073,24 @@ const type = {
         if (!args) {
             throw `Usage: ${this.usage}\n`;
         }
+        let hit = 0;
         if(process[args]) {
             updateOutput(`${args} is a command.\n`);
+            hit = 1;
         }
-        else if (alts[args]) {
+        if (alts[args]) {
             updateOutput(`${args} is a an alternative name for command ${alts[args]}.\n`);
+            hit = 1;
         }
-        else if (aliases[args]) {
+        if (aliases[args]) {
             updateOutput(`${args} is an alias for ${aliases[args]}.\n`);
+            hit = 1;
         }
-        else if (dests[args]) {
+        if (dests[args]) {
             updateOutput(`${args} is a destination name for ${dests[args]}.\n`);
+            hit = 1;
         }
-        else {
+        if (hit == 0) {
             updateOutput(`${args} is not anything right now.\n`);
         }
     }

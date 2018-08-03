@@ -387,34 +387,46 @@ function argCompletion(proc) {
         return true;
     }
 
-    // Special commands that use arguments based on other information
-    switch(match) {
-        case "help": // help searches based on existing commands
-            for (let key in process) {
-                if (key.indexOf(compare) == 0) {
-                    autoCompleteMatches.unshift(key);
-                } 
-            }
-            for (let key in alts) {
-                if (key.indexOf(compare) == 0) {
-                    autoCompleteMatches.unshift(key);
-                } 
-            }
-            break;
-        case "goto": // goto searches based on existing links
-            for (let key in dests) {
-                if (key.indexOf(compare) == 0) {
-                    autoCompleteMatches.unshift(key);
-                } 
-            }
-            break;
-        case "setopt":
-            for (let key in defaultOptions) {
-                if (key.indexOf(compare) == 0) {
-                    autoCompleteMatches.unshift(key);
+    // Process collection based arguments defined in each command
+    for (let col of process[match].argscol) {
+        switch(col) {
+            case "aliases":
+                for (let key in aliases) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
                 }
-            }
+                break;
+            case "commands":
+                for (let key in process) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                for (let key in alts) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                break;
+            case "dests":
+                for (let key in dests) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                break;
+            case "options":
+                for (let key in defaultOptions && !autoCompleteMatches.includes(key)) {
+                    if (key.indexOf(compare) == 0) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                break;
+        }
     }
+    autoCompleteMatches.sort();
+    autoCompleteMatches.reverse();
     console.log(autoCompleteMatches);
 }
 
