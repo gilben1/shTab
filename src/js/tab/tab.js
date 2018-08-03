@@ -356,6 +356,7 @@ function argCompletion(proc) {
         opt = undefined;
     }
     let compare = compareSplit[compareSplit.length - 1];
+    let prev = compareSplit.length > 1 ? compareSplit[compareSplit.length - 2] : undefined;
 
     for (let key in process[match].args) { // match based on command's arguments
         if (process[match].args[key].indexOf(compare) == 0) {
@@ -388,7 +389,13 @@ function argCompletion(proc) {
     }
 
     // Process collection based arguments defined in each command
-    for (let col of process[match].argscol) {
+    let matchcol = process[match].argscol;
+    console.log(prev);
+    console.log(matchcol);
+    for (let col in matchcol) {
+        if (matchcol[col].length != 0 && !matchcol[col].includes(prev)) {
+            continue;
+        }
         switch(col) {
             case "aliases":
                 for (let key in aliases) {

@@ -13,7 +13,7 @@ const about = {
         long: []
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Displays information about the extension
      * 
@@ -52,7 +52,7 @@ const alias = {
         long: [ "display", "list", "remove=", "rename=" ],
     },
     args: [],
-    argscol: [ "aliases" ],
+    argscol: { "aliases": ["-r", "--remove", "-n", "--rename"] },
     /**
      * Sets an alias from a word to command(s)
      * If empty, displays the aliases
@@ -154,7 +154,7 @@ const bookim = {
         long: ["all", "name=", "short="]
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Description for bookim
      * 
@@ -276,7 +276,7 @@ const clear = {
         long: []
     },
     args:       ["aliases", "dests", "history", "links"],
-    argscol: [],
+    argscol: {},
     /**
      * Clears a variety of things based on argument
      * No argument clears output
@@ -318,7 +318,7 @@ const colo = {
         long: ["background=", "display", "foreground="]
     },
     args: [],
-    argscol: [],
+    argscol: {},
     // Sets a color element to a specified value
     /**
      * Sets the color for a passed element to either a CSS color value or hex value
@@ -379,7 +379,7 @@ const echo = {
         long: []
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Echoes the input to the output
      * @param {string} text 
@@ -402,7 +402,7 @@ const exportOpts = {
         long: []
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Exports current options to a .json file
      * args currently aren't used
@@ -462,7 +462,7 @@ const goto = {
         long: ["new"]
     },
     args: [],
-    argscol: [ "dests" ],
+    argscol: { "dests": [] },
     /**
      * Opens dest through set links or as a direct url
      * @param {string} args
@@ -536,7 +536,7 @@ const help = {
         long: []
     },
     args: [],
-    argscol: [ "commands" ],
+    argscol: { "commands": [] },
     /**
      * Displays help information when given an command argument
      * Lists all commands when given no argument 
@@ -584,7 +584,7 @@ const history = {
         long: ["save="]
     },
     args: [],
-    argscol: [],
+    argscol: {},
     func:
     function history(args) {
         let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
@@ -629,7 +629,7 @@ const importOpts = {
         long: []
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Imports settings from a .json file into the current settings
      */
@@ -730,7 +730,7 @@ const link = {
         long: ["count", "display", "list", "remove=", "rename="]
     },
     args: [],
-    argscol: [ "dests" ],
+    argscol: { "dests": ["-r", "--remove", "-n", "--rename"] },
     /**
      * Links a name to a dest
      * Given no parameters, displays all dests to the output
@@ -846,7 +846,7 @@ const reset = {
         long: ["save", "yes"]
     },
     args: [],
-    argscol: [],
+    argscol: {},
     /**
      * Resets various elements and options to default values
      */
@@ -896,7 +896,7 @@ const resize = {
         long: ["bottom=", "display", "top="]
     },
     args: [],
-    argscol: [],
+    argscol: {},
     // Resizes the output terminal to @size lines of text
     /**
      * Sets the number of lines in the output to the passed size
@@ -956,7 +956,7 @@ const save = {
         long: []
     },
     args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
-    argscol: [],
+    argscol: {},
     /**
      * Saves options to local storage.
      * Args defines what is saved to local storage
@@ -1016,7 +1016,7 @@ const setopt = {
         long: ["apply"]
     },
     args: [],
-    argscol: [ "options" ],
+    argscol: { "options": [] },
     /**
      * Description for setopt
      * 
@@ -1062,7 +1062,7 @@ const type = {
         long: []
     },
     args: [],
-    argscol: ["aliases", "commands", "dests"],
+    argscol: {"aliases": [], "commands": [], "dests": []},
     /**
      * Description for type
      * 
