@@ -45,6 +45,7 @@ const $command = {
         long: [$longflags]
     },
     args: [],
+    argscol: {},
     /**
      * Description for $command
      * 
