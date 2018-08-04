@@ -7,6 +7,7 @@ var bgColor;
 var fgColor;
 var outputHeight;
 var btmHeight;
+var ps1fill;
 
 var commandHistory = [];
 var saveHistory;
@@ -16,6 +17,7 @@ const defaultOptions = {
     fgColor: "white",
     outputHeight: 9,
     btmHeight: 2,
+    ps1fill: ">",
     commandHistory: [],
     saveHistory: true,
     aliases: {
@@ -53,10 +55,15 @@ const optionsLoader = {
         commandIndex = commandHistory.length;
         saveHistory = grab("saveHistory");
 
+        ps1fill = grab("ps1fill");
+
         aliases = Object.assign({}, defaultOptions.aliases, grab("aliases"));        
         dests = Object.assign({}, defaultOptions.dests, grab("dests"));
 
         applyCurrentOptions();
+
+        let ps1info = prefix.getBoundingClientRect();
+        document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
 
         // Deletes the newtab page from history
         // Modified from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/newtab.js

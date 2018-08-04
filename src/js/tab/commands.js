@@ -833,6 +833,58 @@ const link = {
     }
 }
 
+const ps1 = { 
+    desc:       
+"Customizes the ps1\n\
+    flags:\n\
+        -r|--reset: resets the ps1 to default \n\
+        -s|--set <ps1>: Sets the ps1 to <ps1>\n\
+    ",
+    usage:      "ps1 [-r|--reset][-s|--set <ps1>]",
+    flags: ["-r", "--reset", "-s", "--set"],
+    optstring: {
+        short: "rs:",
+        long: ["reset", "set="]
+    },
+    args: [],
+    argscol: {},
+    /**
+     * Description for ps1
+     * 
+     * @param {string} args 
+     */
+    func:
+    function ps1(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+
+        let flags = opts.opts;
+    
+        for (let option of flags) {
+            switch(option[0]) {
+                case "-r": case "--reset": {
+                    ps1fill = defaultOptions.ps1fill;
+                    browser.storage.local.set({ps1fill});
+                    break;
+                }
+                case "-s": case "--set": {
+                    let string = option[1] + " " + opts.args.join(" ");
+                    ps1fill = string;
+                    browser.storage.local.set({ps1fill});
+                    break;
+                }
+            }
+        }
+        if (flags.length == 0) {
+            throw `Usage: ${this.usage}\n`;
+        }
+        else {
+            applyCurrentOptions();
+            let ps1info = prefix.getBoundingClientRect();
+            document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
+        }
+    }
+}
+
 const reset = {
     desc:
 "Resets all options to default\n\
@@ -1111,6 +1163,7 @@ var process = {
     "history": history,
     "import": importOpts,
     "link": link,
+    "ps1": ps1,
     "reset": reset,
     "resize": resize,
     "save": save,
@@ -1128,7 +1181,8 @@ var alts = {
     "man": "help",
     "color": "colo",
     "add": "link",
-    "info": "about"
+    "info": "about",
+    "prompt": "ps1"
 };
 /**
  * Applies the current options to the CSS style
@@ -1138,6 +1192,7 @@ function applyCurrentOptions() {
     document.documentElement.style.setProperty('--fg-color', fgColor);
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
     btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em');
+    prefix.innerText = ps1fill;
 }
 
 /**
@@ -1180,4 +1235,3 @@ function helpMarkdown() {
     }
     console.log(output);
 }
-    

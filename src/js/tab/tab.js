@@ -10,6 +10,7 @@ const body = document.querySelector('body');
 const prompt = document.querySelector('.prompt');
 const output = document.getElementById("output");
 const btmOut = document.getElementById("btmOutput");
+const prefix = document.getElementById("ps1");
 
 var promptContent = "";
 

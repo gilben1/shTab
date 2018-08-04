@@ -1,14 +1,28 @@
 /* Copyright (c) 2018 Nicholas Gilbert */
 
+@font-face {
+    font-family: 'scp';
+    src: url('../font/SourceCodePro-Black.otf');
+    font-style: normal;
+    font-weight: normal;
+}
+
+* {
+    font-family: 'scp';
+    font-weight: normal;
+}
+
 :root {
     --output-height: 9.9em;
     --btm-height: 2.2em;
     --bg-color: black;
     --fg-color: white;
+    --prompt-percent: 98.5%;
 }
 
 body {
     background-color: var(--bg-color);
+    font-size: 12px;
 }
 
 /* https://stackoverflow.com/questions/17242209/limiting-a-div-height-to-two-lines-of-text-inside-it */
@@ -29,7 +43,7 @@ div.btmlog {
 .prompt {
     background-color: var(--bg-color, black);
     color: var(--fg-color, white);
-    width: 98.5%;
+    width: var(--prompt-percent);
 }
 
 div.prefix {
