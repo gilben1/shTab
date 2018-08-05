@@ -1100,6 +1100,107 @@ const setopt = {
     }
 }
 
+const storage = { 
+    desc:       
+"Local storage statistics\n\
+    flags:\n\
+        -d|--diff: Shows the difference between the contents of local storage and current settings\n\
+        -s|--show: Displays the contents of local storage \n\
+        -l|--load: Load the contents of local storage to overwrite session",
+    usage:      "storage [-s|--show][-d|--diff][-l|--load]",
+    flags: ["-s", "--show", "-d", "--diff", "-l", "--load"],
+    optstring: {
+        short: "sdl",
+        long: ["show", "diff", "load"]
+    },
+    args: [],
+    argscol: {},
+    /**
+     * Description for storage
+     * 
+     * @param {string} args 
+     */
+    func:
+    function storage(args) {
+        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+
+        let flags = opts.opts;
+
+        let show = false;
+        let diff = false;
+        let load = false;
+
+        for (let option of flags) {
+            switch(option[0]) {
+                case "-s": case "--show":
+                    show = true; 
+                    break;
+                case "-d": case "--diff":
+                    diff = true;
+                    break;
+                case "-l": case "--load":
+                    optionsLoader.load();
+                    updateOutput(`Loaded options from local storage to session storage.\n`);
+                    return;
+            }
+        }
+        if (flags.length == 0) {
+            throw `Usage: ${this.usage}\n`;
+        }
+
+        let getStorage = browser.storage.local.get();
+        getStorage.then(onLoad, undefined);
+
+        function onLoad(data) {
+            if (show == true) {
+                for (let val in data) {
+                    if (val == "commandHistory"){
+                        updateOutput(`commandHistory: ${data[val].length} entries.\n`);
+                    }
+                    else if (val == "aliases" || val == "dests") {
+                        let output = `${val}:\n`;
+                        for (let key in data[val]) {
+                            output += `\t${key} -> ${data[val][key]}\n`;
+                        }
+                        updateOutput(`${output}\n`);
+                    }
+                    else {
+                        updateOutput(`${val} = ${data[val]}\n`);
+                    }
+                }
+            }
+            let diffcount = 0;
+            if (diff == true) {
+                for (let val in data) {
+                    if (val != "aliases" && val != "dests" && val != "commandHistory"){
+                        if (data[val] != window[val]) {
+                            updateOutput(`${val} is ${data[val]} in storage but ${window[val]} in session.\n`);
+                            diffcount++;
+                        }
+                    }
+                    else if (val != "commandHistory") {
+                        for (let key in window[val]) {
+                            if (!data[val][key]) {
+                                updateOutput(`${key} is in session but not local storage.\n`);
+                                diffcount++;
+                            }
+                        }
+                        for (let key in data[val]) {
+                            if (!window[val][key]) {
+                                updateOutput(`${key} is in local storage but not in session.\n`);
+                                diffcount++;
+                            }
+                        }
+                    }
+                }
+                if (diffcount == 0) {
+                    updateOutput(`Local storage and session are synced!\n`);
+                }
+            }
+        }
+    }
+}
+
 const type = { 
     desc:       
 "Displays what sort of thing a passed name is\n\
@@ -1166,6 +1267,7 @@ var process = {
     "resize": resize,
     "save": save,
     "setopt": setopt,
+    "storage": storage,
     "type": type
 };
 
@@ -1236,3 +1338,5 @@ function helpMarkdown() {
     }
     console.log(output);
 }
+    
+
