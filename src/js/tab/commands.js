@@ -104,7 +104,7 @@ const alias = {
                 break;
             case "remove":
                 if (aliases[name]) {
-                    updateOutput(`Removed ${name} -> ${aliases[name]} as an alias.\n`);
+                    updateOutput(`Removed ${name} -> ${dests[name]} as an alias. Still saved in local storage.\nUse 'save links' or 'save' to store\n`);
                     delete aliases[name];
                 }
                 else {
@@ -794,7 +794,7 @@ const link = {
                 break;
             case "remove":
                 if (dests[name]) {
-                    updateOutput(`Removed ${name} -> ${dests[name]} as a destination. Still saved in local storage.\n`);
+                    updateOutput(`Removed ${name} -> ${dests[name]} as a destination. Still saved in local storage.\nUse 'save links' or 'save' to store\n`);
                     delete dests[name];
                 }
                 else {
