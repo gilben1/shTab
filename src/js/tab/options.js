@@ -62,8 +62,8 @@ const optionsLoader = {
 
         applyCurrentOptions();
 
-        let ps1info = prefix.getBoundingClientRect();
-        document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
+        //let ps1info = prefix.getBoundingClientRect();
+        //document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
 
         // Deletes the newtab page from history
         // Modified from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/newtab.js

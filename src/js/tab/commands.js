@@ -879,8 +879,6 @@ const ps1 = {
         }
         else {
             applyCurrentOptions();
-            let ps1info = prefix.getBoundingClientRect();
-            document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
         }
     }
 }
@@ -1193,6 +1191,8 @@ function applyCurrentOptions() {
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
     btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em');
     prefix.innerText = ps1fill;
+    let ps1info = prefix.getBoundingClientRect();
+    document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
 }
 
 /**
@@ -1205,6 +1205,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({btmHeight});
     browser.storage.local.set({aliases});
     browser.storage.local.set({dests});
+    browser.storage.local.set({ps1fill});
 }
 
 /**
