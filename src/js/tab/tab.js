@@ -335,7 +335,7 @@ function buildCompletion(input){
  * @param {{"command": string, "rest": string}} proc 
  */
 function argCompletion(proc) {
-    if (aliases[proc.command]) {
+    if (aliases[proc.command]) { // expand the alias before trying to complete
         let aliasExpand = processFirstWord(aliases[proc.command]);
         proc.command = aliasExpand.command;
         proc.rest = aliasExpand.rest + " " + (proc.rest ? proc.rest : " ");
@@ -356,6 +356,7 @@ function argCompletion(proc) {
     catch(err) {
         opt = undefined;
     }
+
     let compare = compareSplit[compareSplit.length - 1];
     let prev = compareSplit.length > 1 ? compareSplit[compareSplit.length - 2] : undefined;
 
@@ -391,10 +392,8 @@ function argCompletion(proc) {
 
     // Process collection based arguments defined in each command
     let matchcol = process[match].argscol;
-    console.log(prev);
-    console.log(matchcol);
     for (let col in matchcol) {
-        if (matchcol[col].length != 0 && !matchcol[col].includes(prev)) {
+        if (matchcol[col].length != 0 && !matchcol[col].includes(prev)) { // if there's a restriction that's not met
             continue;
         }
         switch(col) {
@@ -425,17 +424,19 @@ function argCompletion(proc) {
                 }
                 break;
             case "options":
-                for (let key in defaultOptions && !autoCompleteMatches.includes(key)) {
-                    if (key.indexOf(compare) == 0) {
+                for (let key in defaultOptions) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
                         autoCompleteMatches.unshift(key);
                     }
                 }
                 break;
         }
     }
-    autoCompleteMatches.sort();
+    // Function for case-insensitive sort found at https://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-in-javascript
+    autoCompleteMatches.sort(function(a,b){
+        return a.localeCompare(b, 'en', {'sensitivity': 'base'});
+    });
     autoCompleteMatches.reverse();
-    console.log(autoCompleteMatches);
 }
 
 /**

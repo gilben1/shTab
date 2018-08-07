@@ -132,7 +132,9 @@ const alias = {
         if (display) {
             updateOutput(`Current aliases:\n`);
             let keys = Object.keys(aliases);
-            keys.sort();
+            keys.sort(function(a,b){
+                return a.localeCompare(b, 'en', {'sensitivity': 'base'});
+            });
             for (let key of keys) {
                 updateOutput(`${key} -> ${aliases[key]}\n`);
             }
@@ -822,7 +824,10 @@ const link = {
         if (display) {
             updateOutput(`Current links:\n`);
             let keys = Object.keys(dests);
-            keys.sort();
+            // Function for case-insensitive sort found at https://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-in-javascript
+            keys.sort(function(a,b){
+                return a.localeCompare(b, 'en', {'sensitivity': 'base'});
+            });
             for (let key of keys) {
                 updateOutput(`${key} -> ${dests[key]}\n`);
             }
