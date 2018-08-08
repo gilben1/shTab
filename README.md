@@ -19,9 +19,40 @@ The following Bash-like features are implemented:
 - [x] Argument Flags    
     Commands have flags that behave mostly like a shell command (-f, --flag argument)
  
+## Building Using `web-ext`
+
+Tested building on Mint and Ubuntu, but should work on any regular linux distro. The packages may differ and / or may not be in your distro's repositories.    
+
+### **If you don't intend on modifying the extension, it's easiest to install from the [next section](#Installing-from-Release)**
 
 
-## How to Install
+### Requirements:   
+
+`nodejs` - Nodejs from your distro's repo. Is needed to use npm's `web-ext` for running and building.    
+`npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos. Install with `apt install npm` on Ubuntu and similar distors.    
+`web-ext` - Command line tool for building and running the extension. Install with `npm install --global web-ext`. See more [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
+
+### Building
+
+1. Clone the repository    
+    `git clone git@gitlab.com:gilben/shTab.git`
+2. Testing    
+    You can run the extension in a test version of Firefox using `web-ext run` in the `src` directory of the repo (the same directory as `manifest.json`, which what `web-ext` looks at for extension information). You won't be able to load it in to your actual Firefox setup until:
+3. Building     
+    Modify the `gecko: id` field of `manifest.json` if you want to eventually sign it. The extension is already signed under the current id, and if a separate verision is to be created, needs to be modified.     
+    You can then package up the current extension using `web-ext build` in the `src` directory of the repo. A `.zip` is generated in the directory `web-ext-artifacts`, with the file being named off the verision in `manifest.json`. This file is used in the next step.
+4. Signing
+    You can temporarily load the `.zip` as is, but it will be removed after the session ends.     
+    For a persistent and actually installed extension, it needs to be signed by Mozilla.     
+    With this, you need to make a profile at [addons.mozilla.org](addons.mozilla.org).      
+    There are then two ways to create the signed file:    
+
+    a) Upload the `.zip` to [addons.mozilla.org](addons.mozilla.org) under `Submit A New Add-on`. Follow the prompts, and given no validation errors, download a `.xpi` file that can be opened with Firefox to install.    
+
+    b) Generate [an api key](https://addons.mozilla.org/en-US/developers/addon/api/key) on Mozilla's site. Run `web-ext sign --api-key=$JWTISSUER --api-secret=$JWTSECRET`.    
+    Both $JWTISSUER and $JWTSECRET are fields shown in the API key after generation.
+
+## Installing from Release
 
 1. Download the install file
     The install files are located with their associated release tag, found in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab. There you will find the `.xpi` install files. Download the `.xpi` to your machine.
