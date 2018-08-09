@@ -351,7 +351,7 @@ function argCompletion(proc) {
     let compareSplit = proc.rest.split(' ');
     let opt = {};
     try {
-        opt = getopt.getopt(compareSplit, process[match].optstring.short, process[match].optstring.long);
+        opt = getOpts(compareSplit, process[match].optstring, {noAliasPropagation: true});
     }
     catch(err) {
         opt = undefined;
@@ -379,11 +379,11 @@ function argCompletion(proc) {
      * @param {string} compare 
      */
     function canFlag(compare) {
-        if (opt.args[0] && opt.args[0] != "" && !opt.args[0].match(/^-/)) {
+        if (opt.argv[0] && opt.argv[0] != "" && !opt.argv[0].match(/^-/)) {
             return false;
         }
-        for (let option of opt.opts) {
-            if (compare == option[1]) {
+        for (let option in opt.options) {
+            if (compare == opt.options[option]) {
                 return false;
             }
         }

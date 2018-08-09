@@ -8,10 +8,7 @@ const about = {
     no flags or arguments",
     usage:      "about",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: {},
     /**
@@ -48,8 +45,10 @@ const alias = {
     usage:      "alias [-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] <name>=\"<string>\"",
     flags: ["-d", "--display", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
-        short: "dln:r:",
-        long: [ "display", "list", "remove=", "rename=" ],
+        "-d, --display": "",
+        "-l, --list": "",
+        "-r, --remove": "<del>",
+        "-n, --rename": "<val>"
     },
     args: [],
     argscol: { "aliases": ["-r", "--remove", "-n", "--rename"] },
@@ -61,28 +60,28 @@ const alias = {
      */
     func:
     function alias(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
-        let toAlias = opts.args.join(' ');
+        let flags = opts.options;
+        let toAlias = opts.argv.join(' ');
         
         let mode = "add";
         let display = false;
         let name = "";
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-l": case "--list":
-                case "-d": case "--display":
+        for (let option in flags) {
+            switch(option) {
+                case "l": case "list":
+                case "d": case "display":
                     display = true;
                     break;
-                case "-r": case "--remove":
+                case "r": case "remove":
                     mode = "remove";
-                    name = option[1];
+                    name = flags[option];
                     break;
-                case "-n": case "--rename":
+                case "n": case "rename":
                     mode = "rename";
-                    name = option[1];
+                    name = flags[option];
                     break;
                 case undefined:
                     break;
@@ -152,8 +151,9 @@ const bookim = {
     usage:      "bookim [-a|--all][-s|--short <num>][-n|--name <name>]",
     flags: ["-a", "--all", "-n", "--name", "-s", "--short"],
     optstring: {
-        short: "an:s:",
-        long: ["all", "name=", "short="]
+        "-a, --all": "",
+        "-n, --name": "<name>",
+        "-s, --short": "<short>"
     },
     args: [],
     argscol: {},
@@ -164,26 +164,26 @@ const bookim = {
      */
     func:
     function bookim(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
 
         let everything = false;
         let short = false;
         let length = 1;
         let names = [];
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-a": case "--all":
+        for (let option in flags) {
+            switch(option) {
+                case "a": case "all":
                     everything = true;
                     break;
-                case "-n": case "--name":
-                    names.push(option[1]);
+                case "n": case "name":
+                    names.push(flags[option]);
                     break;
-                case "-s": case "--short":
+                case "s": case "short":
                     short = true;
-                    length = parseInt(option[1]);
+                    length = parseInt(flags[option]);
                     break;
             }
         }
@@ -273,10 +273,7 @@ const clear = {
         (none): clears command prompt",     
     usage:      "clear [aliases|history|links|dests]",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args:       ["aliases", "dests", "history", "links"],
     argscol: {},
     /**
@@ -316,8 +313,9 @@ const colo = {
     usage:      "colo [-b|--background <color>] [-d|--display] [-f|--foreground <color>]",
     flags: ["-b", "--background", "-d", "--display", "-f", "--foreground"],
     optstring: {
-        short: "b:df:",
-        long: ["background=", "display", "foreground="]
+        "-b, --background": "<color>",
+        "-d, --display": "",
+        "-f, --foreground": "<color>"
     },
     args: [],
     argscol: {},
@@ -329,14 +327,14 @@ const colo = {
      */
     func:
     function colo(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-b": case "--background": {
-                    let color = option[1];
+        for (let option in flags) {
+            switch(option) {
+                case "b": case "background": {
+                    let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
                         throw "Invalid color!\n";
                     }
@@ -346,12 +344,12 @@ const colo = {
                     updateOutput(`Set background color to ${color}\n`);
                     break;
                 }
-                case "-d": case "--display":
+                case "d": case "display":
                     updateOutput(`Current background color: ${bgColor}\n`);
                     updateOutput(`Current foreground / text color: ${fgColor}\n`);
                     break;
-                case "-f": case "--foreground":{
-                    let color = option[1];
+                case "f": case "foreground":{
+                    let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
                         throw "Invalid color!\n";
                     }
@@ -376,10 +374,7 @@ const echo = {
         <string>: what to output",
     usage:      "echo <string>",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: {},
     /**
@@ -399,10 +394,7 @@ const exportOpts = {
     No arguments",
     usage:      "export",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: {},
     /**
@@ -461,8 +453,8 @@ const goto = {
     usage:      "goto [-h][-n|--new] <name>",
     flags: ["-h", "-n", "--new"],
     optstring: {
-        short: "hn",
-        long: ["new"]
+        "-n, --new": "",
+        "-h": ""
     },
     args: [],
     argscol: { "dests": [] },
@@ -472,10 +464,14 @@ const goto = {
      */
     func:       
     function goto(args) { // usage: goto [link]
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        //let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
-        let dest = opts.args.join(' ');
+        console.log(opts);
+        //return;
+
+        let flags = opts.options;
+        let dest = opts.argv.join(' ');
 
         // Grab the subpages separated by /
         let extra = dest.split('/');
@@ -488,12 +484,12 @@ const goto = {
         let target = "_self";
         let prepend = false;
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-h":
+        for (let option in flags) {
+            switch(option) {
+                case "h":
                     prepend = true;
                     break;
-                case "-n": case "--new":
+                case "n": case "new":
                     target = "_blank";
                     break;
             }
@@ -534,10 +530,7 @@ const help = {
         (none): list all commands",
     usage:      "help [<command>]",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: { "commands": [] },
     /**
@@ -583,20 +576,19 @@ const history = {
     usage: "history",
     flags: ["-s", "--save"],
     optstring: {
-        short: "s",
-        long: ["save="]
+        "-s, --save": "<truefalse>"
     },
     args: [],
     argscol: {},
     func:
     function history(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
-        let flags = opts.opts;
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let flags = opts.options;
 
-        for(let option of flags) {
-            switch(option[0]) {
-                case "-s": case "--save":
-                    if (/(t(rue)?)|(y(es)?)/i.test(option[1])) {
+        for(let option in flags) {
+            switch(option) {
+                case "s": case "save":
+                    if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
                         saveHistory = true;
                         browser.storage.local.set({saveHistory});
@@ -627,10 +619,7 @@ const importOpts = {
     No arguments",
     usage:      "import",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: {},
     /**
@@ -733,8 +722,11 @@ const link = {
     usage:      "link [-c][-h][-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] [<name> <dest>]",
     flags: ["-d", "--display", "-h", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
-        short: "cdhln:r:",
-        long: ["count", "display", "list", "remove=", "rename="]
+        "-c, --count": "",
+        "-d, --display": "",
+        "-l, --list": "",
+        "-r, --remove": "<del>",
+        "-n, --rename": "<rename>"
     },
     args: [],
     argscol: { "dests": ["-r", "--remove", "-n", "--rename"] },
@@ -746,10 +738,10 @@ const link = {
      */
     func:
     function link(args) { // usage: link [alias] [dest]
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
-        let toLink = opts.args.join(' ');
+        let flags = opts.options;
+        let toLink = opts.argv.join(' ');
         
         let mode = "add";
         let display = false;
@@ -757,25 +749,25 @@ const link = {
         let prepend = false;
         let name = "";
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-c": case "--display":
+        for (let option in flags) {
+            switch(option) {
+                case "c": case "display":
                     count = true;
                     break;
-                case "-l": case "--list":
-                case "-d": case "--display":
+                case "l": case "list":
+                case "d": case "display":
                     display = true;
                     break;
-                case "-h":
+                case "h":
                     prepend = true;
                     break;
-                case "-r": case "--remove":
+                case "r": case "remove":
                     mode = "remove";
-                    name = option[1];
+                    name = flags[option];
                     break;
-                case "-n": case "--rename":
+                case "n": case "rename":
                     mode = "rename";
-                    name = option[1];
+                    name = flags[option];
                     break;
                 case undefined:
                     break;
@@ -853,8 +845,8 @@ const ps1 = {
     usage:      "ps1 [-r|--reset][-s|--set <ps1>]",
     flags: ["-r", "--reset", "-s", "--set"],
     optstring: {
-        short: "rs:",
-        long: ["reset", "set="]
+        "-r, --reset": "",
+        "-s, --set": "<ps1>"
     },
     args: [],
     argscol: {},
@@ -865,19 +857,19 @@ const ps1 = {
      */
     func:
     function ps1(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
     
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-r": case "--reset": {
+        for (let option in flags) {
+            switch(option) {
+                case "r": case "reset": {
                     ps1fill = defaultOptions.ps1fill;
                     browser.storage.local.set({ps1fill});
                     break;
                 }
-                case "-s": case "--set": {
-                    let string = option[1] + " " + opts.args.join(" ");
+                case "s": case "set": {
+                    let string = flags[option] + " " + opts.args.join(" ");
                     ps1fill = string;
                     browser.storage.local.set({ps1fill});
                     break;
@@ -902,8 +894,8 @@ const reset = {
     usage:      "reset -y|--y [--s|--save]",
     flags: ["-s", "--save", "-y", "--yes"],
     optstring: {
-        short: "sy",
-        long: ["save", "yes"]
+        "-s, --save": "",
+        "y, --yes": ""
     },
     args: [],
     argscol: {},
@@ -912,18 +904,19 @@ const reset = {
      */
     func:
     function reset(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
-        let flags = opts.opts;
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+
+        let flags = opts.options;
 
         let confirm = false;
         let save = false;
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-s": case "--save":
+        for (let option in flags) {
+            switch(option) {
+                case "s": case "save":
                     save = true;
                     break;
-                case "-y": case "--yes":
+                case "y": case "yes":
                     confirm = true;
                     break;
             }
@@ -952,8 +945,9 @@ const resize = {
     usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
     flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
     optstring: {
-        short: "b:dt:",
-        long: ["bottom=", "display", "top="]
+        "-b, --bottom": "<value>",
+        "-d, --display": "",
+        "-t, --top": "<value>"
     },
     args: [],
     argscol: {},
@@ -965,26 +959,26 @@ const resize = {
      */
     func:
     function resizeOutput(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-b": case "--bottom": {
-                    let size = option[1];
+        for (let option in flags) {
+            switch(option) {
+                case "b": case "bottom": {
+                    let size = flags[option];
                     btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
                     btmHeight = size;
                     browser.storage.local.set({btmHeight});
                     updateOutput(`Resized bottom output to ${size} lines of text.\n`);
                     break;
                 }
-                case "-d": case "--display":
+                case "d": case "display":
                     updateOutput(`Current output height: ${outputHeight} lines.\n`);
                     updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
                     break;
-                case "-t": case "--top":{
-                    let size = option[1];
+                case "t": case "top":{
+                    let size = flags[option];
                     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
                     outputHeight = size;
                     browser.storage.local.set({outputHeight});
@@ -1012,10 +1006,7 @@ const save = {
         (none): if blank, saves all settings",
     usage:      "save [aliases] [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: ["aliases", "links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
     argscol: {},
     /**
@@ -1077,8 +1068,7 @@ const setopt = {
     usage:      "setopt [-a|--apply] <option> <value>",
     flags: ["-a", "--apply"],
     optstring: {
-        short: "a",
-        long: ["apply"]
+        "-a, --apply": ""
     },
     args: [],
     argscol: { "options": [] },
@@ -1089,14 +1079,14 @@ const setopt = {
      */
     func:
     function setopt(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
-        let optionArg = opts.args;
+        let flags = opts.options;
+        let optionArg = opts.argv;
         let apply = false;
 
-        for (let option of flags) {
-            switch(option[0]) {
+        for (let option in flags) {
+            switch(option) {
                 case "-a": case "--apply":
                     apply = true;
                     break;
@@ -1125,8 +1115,9 @@ const storage = {
     usage:      "storage [-s|--show][-d|--diff][-l|--load]",
     flags: ["-s", "--show", "-d", "--diff", "-l", "--load"],
     optstring: {
-        short: "sdl",
-        long: ["show", "diff", "load"]
+        "-s, --show": "",
+        "-d, --diff": "",
+        "-l, --load": ""
     },
     args: [],
     argscol: {},
@@ -1137,23 +1128,22 @@ const storage = {
      */
     func:
     function storage(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
 
         let show = false;
         let diff = false;
-        let load = false;
 
-        for (let option of flags) {
-            switch(option[0]) {
-                case "-s": case "--show":
+        for (let option in flags) {
+            switch(option) {
+                case "s": case "show":
                     show = true; 
                     break;
-                case "-d": case "--diff":
+                case "d": case "diff":
                     diff = true;
                     break;
-                case "-l": case "--load":
+                case "l": case "load":
                     optionsLoader.load();
                     updateOutput(`Loaded options from local storage to session storage.\n`);
                     return;
@@ -1223,10 +1213,7 @@ const type = {
         <name>: name to process",
     usage:      "type <name>",
     flags: [],
-    optstring: {
-        short: "",
-        long: []
-    },
+    optstring: {},
     args: [],
     argscol: {"aliases": [], "commands": [], "dests": []},
     /**
