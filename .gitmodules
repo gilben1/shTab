@@ -1,0 +1,3 @@
+[submodule "src/js/lib/GetOptions"]
+	path = src/js/lib/GetOptions
+	url = https://github.com/Alhadis/GetOptions
