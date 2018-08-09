@@ -998,19 +998,20 @@ const save = {
     desc:       
 "Stores the passed option to local storage\n\
     arguments:\n\
+        aliases: aliases\n\
         links: link to destination aliases\n\
         back: background color\n\
         text|fore: text / foreground color\n\
         colo|color: both color settings\n\
         output|size|height: output size setting\n\
         (none): if blank, saves all settings",
-    usage:      "save [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
+    usage:      "save [aliases] [links] [back] [text] [fore] [colo] [color] [output] [size] [height]",
     flags: [],
     optstring: {
         short: "",
         long: []
     },
-    args: ["links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
+    args: ["aliases", "links", "back", "text", "fore", "colo", "color", "output", "size", "height"],
     argscol: {},
     /**
      * Saves options to local storage.
@@ -1025,6 +1026,10 @@ const save = {
                 case undefined: // save everything
                     saveCurrentOptions();
                     updateOutput(`Saved all options to local storage\n`);
+                    break;
+                case "aliases":
+                    browser.storage.local.set({aliases});
+                    updateOutput(`Saved aliases to local storage.\n`);
                     break;
                 case "links":
                     browser.storage.local.set({dests});
