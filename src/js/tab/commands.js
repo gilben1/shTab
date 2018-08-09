@@ -418,6 +418,7 @@ const exportOpts = {
             outputHeight, 
             btmHeight,
             saveHistory,
+            ps1fill,
             dests,
             aliases
         }, null, 4)], "output.json", {type: "text/plain;charset=utf-8"});
@@ -666,6 +667,7 @@ const importOpts = {
             outputHeight = grab("outputHeight");
             btmHeight = grab("btmHeight");
             saveHistory = grab("saveHistory");
+            ps1fill = grab("ps1fill");
 
             dests = Object.assign({}, dests, importedOptions.dests);
             aliases = Object.assign({}, aliases, importedOptions.aliases);
@@ -684,6 +686,9 @@ const importOpts = {
             }
             if (importedOptions.savedHistory) {
                 updateOutput(`Updated saved history setting to ${importedOptions.savedHistory}\n`);
+            }
+            if (importedOptions.ps1fill) {
+                updateOutput(`Updated ps1 prompt setting to ${importedOptions.ps1fill}\n`);
             }
 
             if (importedOptions.dests) {
