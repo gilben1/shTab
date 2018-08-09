@@ -6,24 +6,23 @@ shTab is a replacement for the new tab page in Firefox that has shell-like funct
 
 ## Description
 
-A new tab replacement extension for Firefox 60+ that implements functionality that follows a shell environment like Bash. Implemented to mimic the shell functionality for use in a web browser environment.    
+A new tab replacement extension for Firefox 60+ that implements functionality that follows a shell environment like Bash. Implemented to mimic the shell functionality for use in a web browser environment. Contains a suite of a commands that facilitates customization, navigation, and shorthand alias creation.    
 
-The following Bash-like features are implemented:
-- [x] Aliases   
-    Alias command for creating and viewing aliases
-- [x] History    
-    `Up` and `Down` will populate the prompt with previously run commands     
-    ! history completion like in bash.
-- [x] Tab-completion    
-    `Right` will show possible commands, flags, arguments based on current input
-- [x] Argument Flags    
-    Commands have flags that behave mostly like a shell command (-f, --flag argument)
- 
+Developed for anyone that prefers keyboard navigation to frequently accessed sites over mouse-based navigation. Using aliases you can quickly create a packages of links that all open with a single command. Using your already existing bookmarks, you can import into the destination structure and rename them to be shorter and faster to type.
+
+Main Features:
+- [x] Alias System    
+- [x] Tab-Completion
+- [x] Persitent Options
+- [x] Importing to and Exporting from .json
+- [x] ! History Completion and Peristent History
+- [x] Bash-like syntax and usage
+
 ## Building Using `web-ext`
 
 Tested building on Mint and Ubuntu, but should work on any regular linux distro. The packages may differ and / or may not be in your distro's repositories.    
 
-### **If you don't intend on modifying the extension, it's easiest to install from the [next section](#Installing-from-Release)**
+### **If you don't intend on modifying the extension, it's easiest to install from the [Installing From Release](#Installing-from-Release) section.**
 
 
 ### Requirements:   
