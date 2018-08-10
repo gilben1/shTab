@@ -439,7 +439,7 @@ const exportOpts = {
     }
 }
 
-// url regex found from: https://github.com/cadeyrn/newtaboverride/src/js/core/utils.js
+// url regex found from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
 
 const goto = {
