@@ -33,8 +33,8 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
 
 ### Building
 
-1. Clone the repository    
-    `git clone git@gitlab.com:gilben/shTab.git`
+1. Clone the repository and submodule  
+    `git clone git@gitlab.com:gilben/shTab.git; cd shTab; git submodule init; git submodule update`
 2. Testing    
     You can run the extension in a test version of Firefox using `web-ext run` in the `src` directory of the repo (the same directory as `manifest.json`, which what `web-ext` looks at for extension information). You won't be able to load it in to your actual Firefox setup until:
 3. Building     
