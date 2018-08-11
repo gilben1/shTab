@@ -446,6 +446,38 @@ const exportOpts = {
     }
 }
 
+const getopt = { 
+    desc:       
+"Gets the current set options",
+    usage:      "getopt",
+    flags: [],
+    opstring: {},
+    args: [],
+    argscol: {},
+    /**
+     * Description for getopt
+     * 
+     * @param {string} args 
+     */
+    func:
+    function getopt(args) {
+        for (let val in defaultOptions) {
+            if (val == "commandHistory"){
+                updateOutput(`commandHistory: ${window[val].length} entries.\n`);
+            }
+            else if (val == "aliases" || val == "dests") {
+                let output = `${val}:\n`;
+                for (let key in window[val]) {
+                    output += `\t${key} -> ${window[val][key]}\n`;
+                }
+                updateOutput(`${output}\n`);
+            }
+            else {
+                updateOutput(`${val} = ${window[val]}\n`);
+            }
+        }
+    }
+}
 // url regex found from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/utils.js
 const URL_REGEX = /^https?:\/\//i;
 
@@ -1269,6 +1301,7 @@ var process = {
     "colo": colo,
     "echo": echo,
     "export": exportOpts,
+    "getopt": getopt,
     "goto": goto,
     "help": help,
     "history": history,
