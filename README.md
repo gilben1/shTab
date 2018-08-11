@@ -1,11 +1,9 @@
 # shTab
-
 Copyright © 2018 Nicholas Gilbert
 
 shTab is a replacement for the new tab page in Firefox that has shell-like functionality.
 
 ## Description
-
 A new tab replacement extension for Firefox 60+ that implements functionality that follows a shell environment like Bash. Implemented to mimic the shell functionality for use in a web browser environment. Contains a suite of a commands that facilitates customization, navigation, and shorthand alias creation.    
 
 Developed for anyone that prefers keyboard navigation to frequently accessed sites over mouse-based navigation. Using aliases you can quickly create a packages of links that all open with a single command. Using your already existing bookmarks, you can import into the destination structure and rename them to be shorter and faster to type.
@@ -19,20 +17,16 @@ Main Features:
 - [x] Bash-like syntax and usage
 
 ## Building Using `web-ext`
-
 Tested building on Mint and Ubuntu, but should work on any regular linux distro. The packages may differ and / or may not be in your distro's repositories.    
 
 ### **If you don't intend on modifying the extension, it's easiest to install from the [Installing From Release](#Installing-from-Release) section.**
 
-
 ### Requirements:   
-
 `nodejs` - Nodejs from your distro's repo. Is needed to use npm's `web-ext` for running and building.    
 `npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos. Install with `apt install npm` on Ubuntu and similar distors.    
 `web-ext` - Command line tool for building and running the extension. Install with `npm install --global web-ext`. See more [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
 
 ### Building
-
 1. Clone the repository and submodule  
     `git clone git@gitlab.com:gilben/shTab.git; cd shTab; git submodule init; git submodule update`
 2. Testing    
@@ -52,7 +46,6 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
     Both $JWTISSUER and $JWTSECRET are fields shown in the API key after generation.
 
 ## Installing from Release
-
 1. Download the install file
     The install files are located with their associated release tag, found in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab. There you will find the `.xpi` install files. Download the `.xpi` to your machine.
 
@@ -77,22 +70,22 @@ Current Keybinds (may be changeable in the future):
 - `Down arrow` Cycle down command history
 - `Ctrl-L` Jump to address bar (may be dependant on OS, operation known in Ubuntu and Windows 10)
 
-
 Some work-in-progress documentation is found on the wiki [here](https://gitlab.com/gilben/shTab/wikis/home).
 
 ## Contributing to the Project
-
 Follow the instructions and forms shown in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 This software is licensed under the [Mozilla Public License 2.0 (MPL-2.0).](./LICENSE)
 
 ## Release Notes
-
 Release notes for each version are in available in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab.
 
-## Contact
+## Included Submodules
+[GetOptions by Alhadis](https://github.com/Alhadis/GetOptions), see repository for licensing information.
 
+
+## Contact
 <nickgilbert2@gmail.com> / <gnick@pdx.edu>
 
 Join me on freenode at #shTab.
