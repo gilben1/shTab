@@ -2,14 +2,7 @@
 
 @font-face {
     font-family: 'scp';
-    src: url('../font/SourceCodePro-Black.otf');
-    font-style: normal;
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: 'scp';
-    src: url('../font/SourceCodePro-Medium.otf');
+    src: url('../font/SourceCodePro-Regular.otf');
     font-style: normal;
     font-weight: lighter;
 }
