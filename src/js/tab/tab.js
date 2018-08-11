@@ -261,6 +261,7 @@ function findCommonFromStart(matches) {
                 addToCommon = false;
             }
             if (!match.startsWith(common)) {
+                console.log(`not starts with => ${common}`);
                 common = common.slice(0, -1);
                 index = -2;
                 break;
@@ -327,6 +328,11 @@ function buildCompletion(input){
             argCompletion(processed);
             break;
     }
+    // Function for case-insensitive sort found at https://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-in-javascript
+    autoCompleteMatches.sort(function(a,b){
+        return a.localeCompare(b, 'en', {'sensitivity': 'base'});
+    });
+    autoCompleteMatches.reverse();
     return autoCompleteMatches.length;
 }
 
@@ -349,13 +355,6 @@ function argCompletion(proc) {
     }
     // The last word of the rest is what we're trying to complete
     let compareSplit = proc.rest.split(' ');
-    let opt = {};
-    try {
-        opt = getOpts(compareSplit, process[match].optstring, {noAliasPropagation: true});
-    }
-    catch(err) {
-        opt = undefined;
-    }
 
     let compare = compareSplit[compareSplit.length - 1];
     let prev = compareSplit.length > 1 ? compareSplit[compareSplit.length - 2] : undefined;
