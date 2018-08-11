@@ -366,28 +366,10 @@ function argCompletion(proc) {
         } 
     }
 
-    if (opt == undefined || canFlag(compare)) {
-        for (let key in process[match].flags) { // match based on command's flags
-            if (process[match].flags[key].indexOf(compare) == 0) {
-                autoCompleteMatches.unshift(process[match].flags[key]);
-            }
+    for (let key in process[match].flags) { // match based on command's flags
+        if (process[match].flags[key].indexOf(compare) == 0) {
+            autoCompleteMatches.unshift(process[match].flags[key]);
         }
-    }
-
-    /**
-     * returns true if the conditions are correct for flag completion 
-     * @param {string} compare 
-     */
-    function canFlag(compare) {
-        if (opt.argv[0] && opt.argv[0] != "" && !opt.argv[0].match(/^-/)) {
-            return false;
-        }
-        for (let option in opt.options) {
-            if (compare == opt.options[option]) {
-                return false;
-            }
-        }
-        return true;
     }
 
     // Process collection based arguments defined in each command
