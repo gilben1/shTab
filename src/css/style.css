@@ -7,10 +7,13 @@
     font-weight: normal;
 }
 
-* {
+@font-face {
     font-family: 'scp';
-    font-weight: normal;
+    src: url('../font/SourceCodePro-Medium.otf');
+    font-style: normal;
+    font-weight: lighter;
 }
+
 
 :root {
     --output-height: 9.9em;
@@ -18,6 +21,13 @@
     --bg-color: black;
     --fg-color: white;
     --prompt-percent: 98.5%;
+    --font-weight: lighter;
+    --font-family: 'scp';
+}
+
+* {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight);
 }
 
 body {
