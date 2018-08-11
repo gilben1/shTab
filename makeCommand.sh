@@ -43,7 +43,6 @@ else
     },"
 fi
 
-echo "$optstring"
 echo "
     
 
@@ -74,4 +73,4 @@ $optstring
             }
         }
     }
-}" #>> $outfile
+}" >> $outfile
