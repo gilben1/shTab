@@ -12,16 +12,23 @@ echo "Use the form \"flag\", \"flagwithassing=\", or blank for no flags"
 read longflags
 
 split=$(echo $longflags | tr "," "\n")
+optstring="    opstring: {"
+hasflag=0
 for flag in $split; do
-    short+=${flag:1:1}
-    
-    if [[ "${flag: -2:1}" == "=" ]]; then
-        short+=":"
+    curshort=${flag:1:1}
+    hasflag=1
+    arg=""
+    if [[ $flag = *"="* ]]; then
+        arg="<arg>"
     fi
     flag=${flag//\"}
+
+    optstring+="
+        \"-${curshort}, --${flag//=}\": \"${arg}\","
+
     flagnames+="\"-${flag:0:1}\", \"--${flag//=}\", "
     switchblock+="
-                case \"-${flag:0:1}\": case \"--${flag//=}\":
+                case \"${flag:0:1}\": case \"${flag//=}\":
     
                     break;"
     descflags+="
@@ -29,6 +36,14 @@ for flag in $split; do
 
 done
 flagnames=${flagnames::-2}
+if [ $hasflag -eq 0 ]; then
+    optstring+="},"
+else
+    optstring+="
+    },"
+fi
+
+echo "$optstring"
 echo "
     
 
@@ -40,10 +55,7 @@ const $command = {
     \",
     usage:      \"$command\",
     flags: [$flagnames],
-    optstring: {
-        short: \"$short\",
-        long: [$longflags]
-    },
+$optstring
     args: [],
     argscol: {},
     /**
@@ -53,13 +65,13 @@ const $command = {
      */
     func:
     function ${command}(args) {
-        let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
+        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
 
-        let flags = opts.opts;
+        let flags = opts.options;
 
-        for (let option of flags) {
-            switch(option[0]) {$switchblock
+        for (let option in flags) {
+            switch(option) {$switchblock
             }
         }
     }
-}" >> $outfile
+}" #>> $outfile
