@@ -68,6 +68,7 @@ const alias = {
         let mode = "add";
         let display = false;
         let name = "";
+        let performed = false;
 
         for (let option in flags) {
             switch(option) {
@@ -99,6 +100,7 @@ const alias = {
                     aliases[aliasSplit[0]] = aliasSplit[1];
                     browser.storage.local.set({aliases});
                     updateOutput(`Added an alias from ${aliasSplit[0]} to ${aliasSplit[1]}.\n`);
+                    performed = true;
                 }
                 break;
             case "remove":
@@ -109,6 +111,7 @@ const alias = {
                 else {
                     throw `Alias ${name} doen't exist.\n`;
                 }
+                performed = true;
                 break;
             case "rename":
                 let split = name.split('=', 2);
@@ -126,6 +129,7 @@ const alias = {
                 else {
                     throw `Alias ${name} doesn't exist.\n`;
                 }
+                performed = true;
                 break;
         }
         if (display) {
@@ -137,6 +141,9 @@ const alias = {
             for (let key of keys) {
                 updateOutput(`${key} -> ${aliases[key]}\n`);
             }
+        }
+        if (Object.keys(flags).length === 0 && performed == false) {
+            throw `Usage: ${this.usage}\n`;
         }
     }
 }
@@ -230,7 +237,7 @@ const bookim = {
                 throw `${error}\n`;
             }
         }
-        else if (flags.length > 0) {
+        else if (Object.keys(flags).length !== 0) {
             let importMark = browser.bookmarks.search({});
             importMark.then(onAccept, onReject);
 
@@ -257,7 +264,7 @@ const bookim = {
                 throw `${error}\n`;
             }
         }
-        if (flags.length == 0) {
+        if (Object.keys(flags).length === 0) {
             throw `Usage: ${this.usage}.\n`;
         }
     }
@@ -361,7 +368,7 @@ const colo = {
                 }
             }
         }
-        if (flags.length == 0) {
+        if (Object.keys(flags).length === 0) {
             throw `Usage: ${this.usage}\n`;
         }
     },
@@ -464,11 +471,7 @@ const goto = {
      */
     func:       
     function goto(args) { // usage: goto [link]
-        //let opts = getopt.getopt(args ? args.split(' ') : [], this.optstring.short, this.optstring.long);
         let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
-
-        console.log(opts);
-        //return;
 
         let flags = opts.options;
         let dest = opts.argv.join(' ');
@@ -748,6 +751,7 @@ const link = {
         let count = false;
         let prepend = false;
         let name = "";
+        let performed = false;
 
         for (let option in flags) {
             switch(option) {
@@ -789,6 +793,7 @@ const link = {
                     dests[alias] = dest;
                     browser.storage.local.set({dests});
                     updateOutput(`Added link from ${alias} to ${dest}.\n`)
+                    performed = true;
                 }
                 break;
             case "remove":
@@ -799,6 +804,7 @@ const link = {
                 else {
                     throw `Destination ${name} doesn't exist.\n`;
                 }
+                performed = true;
                 break;
             case "rename":
                 let split = name.split('=', 2);
@@ -816,6 +822,7 @@ const link = {
                 else {
                     throw `Destination ${name} doesn't exist.\n`;
                 }
+                performed = true;
                 break;
         }
         if (display) {
@@ -831,6 +838,9 @@ const link = {
         }
         if (count) {
             updateOutput(`${Object.keys(dests).length} links.\n`);
+        }
+        if (Object.keys(flags).length === 0 && performed == false) {
+            throw `Usage: ${this.usage}\n`;
         }
     }
 }
@@ -876,7 +886,7 @@ const ps1 = {
                 }
             }
         }
-        if (flags.length == 0) {
+        if (Object.keys(flags).length === 0) {
             throw `Usage: ${this.usage}\n`;
         }
         else {
@@ -987,7 +997,7 @@ const resize = {
                 }
             }
         }
-        if (flags.length == 0) {
+        if (Object.keys(flags).length === 0) {
             throw `Usage: ${this.usage}\n`;
         }
     }
@@ -1149,7 +1159,7 @@ const storage = {
                     return;
             }
         }
-        if (flags.length == 0) {
+        if (Object.keys(flags).length === 0) {
             throw `Usage: ${this.usage}\n`;
         }
 
