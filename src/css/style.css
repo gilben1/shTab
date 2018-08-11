@@ -44,6 +44,7 @@ div.btmlog {
     background-color: var(--bg-color, black);
     color: var(--fg-color, white);
     width: var(--prompt-percent);
+    border: 0;
 }
 
 div.prefix {
