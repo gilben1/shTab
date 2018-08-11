@@ -75,6 +75,19 @@ Some work-in-progress documentation is found on the wiki [here](https://gitlab.c
 ## Contributing to the Project
 Follow the instructions and forms shown in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Permissions
+The extension requires the following browser permissions to function properly:
+
+- bookmarks    
+    Needed for the importing of bookmarks into destinations
+- downloads    
+    Needed for the downloading of the exported settings json
+- history
+    Needed to remove the new tab page itself from history
+- storage    
+    Needed to save persistent settings into local storage
+
+
 ## License
 This software is licensed under the [Mozilla Public License 2.0 (MPL-2.0).](./LICENSE)
 

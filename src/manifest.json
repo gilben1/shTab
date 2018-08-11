@@ -19,12 +19,9 @@
     },
     "permissions": [
         "bookmarks",
-        "cookies",
+        "downloads",
         "history",
-        "menus",
-        "storage",
-        "tabs",
-        "downloads"
+        "storage"
     ],
     "applications": {
         "gecko": {
