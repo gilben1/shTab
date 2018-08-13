@@ -911,7 +911,7 @@ const ps1 = {
                     break;
                 }
                 case "s": case "set": {
-                    let string = flags[option] + " " + opts.args.join(" ");
+                    let string = flags[option] + " " + opts.argv.join(" ");
                     ps1fill = string;
                     browser.storage.local.set({ps1fill});
                     break;
