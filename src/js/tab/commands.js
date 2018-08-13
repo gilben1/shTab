@@ -754,8 +754,8 @@ const link = {
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
-    usage:      "link [-c][-h][-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] [<name> <dest>]",
-    flags: ["-d", "--display", "-h", "-l", "--list", "-n", "--rename", "-r", "--remove"],
+    usage:      "link [-c|--count][-h][-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] [<name> <dest>]",
+    flags: ["-c", "--count", "-d", "--display", "-h", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
         "-c, --count": "",
         "-d, --display": "",
