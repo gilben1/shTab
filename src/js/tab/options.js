@@ -17,7 +17,7 @@ const defaultOptions = {
     fgColor: "white",
     outputHeight: 9,
     btmHeight: 2,
-    ps1fill: ">",
+    ps1fill: "> ",
     commandHistory: [],
     saveHistory: true,
     aliases: {

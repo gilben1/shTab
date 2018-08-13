@@ -27,6 +27,7 @@ prompt.addEventListener("keyup", function(evt){
     let key = keyCodes[evt.keyCode];
 
     if (key == "enter") { // enter: process command
+        updateOutput(`${ps1fill}${promptContent}\n`);
         let promptCopy = promptContent;
         commands.forEach(function(elem){
             processCommand(elem);
