@@ -3,7 +3,7 @@
 
     "name": "shTab",
     "description": "A shell-like new tab page replacement",
-    "version": "0.6.2a",
+    "version": "0.6.2b",
 
     "developer": {
         "name": "Nicholas Gilbert",
