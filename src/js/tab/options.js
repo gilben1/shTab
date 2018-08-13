@@ -47,8 +47,8 @@ const optionsLoader = {
         // Calculate default height
         defaultOptions.outputHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
         defaultOptions.btmHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
-        console.log(defaultOptions.outputHeight);
-        console.log(defaultOptions.btmHeight);
+        totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
+
         let getStorage = await browser.storage.local.get();
 
         console.log(getStorage);
@@ -56,7 +56,6 @@ const optionsLoader = {
         // Assign the local variables to loaded value if it exists, or the defult otherwise
         outputHeight = grab("outputHeight");
         btmHeight = grab("btmHeight");
-        totalLines = outputHeight + btmHeight;
         bgColor = grab("bgColor");
         fgColor = grab("fgColor");
 

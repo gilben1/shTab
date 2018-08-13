@@ -983,13 +983,15 @@ const resize = {
     flags:\n\
         -t|--top <value>: sets top output height to <value>\n \
         -b|--bottom <value>: sets bottom output height to <value>\n\
-        -d|--display: outputs the current height for both outputs",
-    usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>]",
-    flags: ["-b", "--bottom", "-d", "--display", "-t", "--top"],
+        -d|--display: outputs the current height for both outputs\n\
+        -s|--shift (up|down) <value>: Shifts <dir> prompt <value> lines",
+    usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>] [-s|--shift (up|down) <value>]",
+    flags: ["-b", "--bottom", "-d", "--display", "-s", "--shift", "-t", "--top"],
     optstring: {
         "-b, --bottom": "<value>",
         "-d, --display": "",
-        "-t, --top": "<value>"
+        "-t, --top": "<value>",
+        "-s, --shift": "<dir> <value>"
     },
     args: [],
     argscol: {},
@@ -1008,7 +1010,10 @@ const resize = {
         for (let option in flags) {
             switch(option) {
                 case "b": case "bottom": {
-                    let size = flags[option];
+                    let size = parseInt(flags[option]);
+                    if (size + outputHeight > totalLines || size <= 0) {
+                        throw `Can't set top height to ${size}, outside bounds\n`;
+                    }
                     btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
                     btmHeight = size;
                     browser.storage.local.set({btmHeight});
@@ -1018,13 +1023,44 @@ const resize = {
                 case "d": case "display":
                     updateOutput(`Current output height: ${outputHeight} lines.\n`);
                     updateOutput(`Current bottom output height: ${btmHeight} lines.\n`);
+                    updateOutput(`Current total lines available: ${totalLines} lines.\n`);
                     break;
                 case "t": case "top":{
-                    let size = flags[option];
+                    let size = parseInt(flags[option]);
+                    if (size + btmHeight > totalLines || size <= 0) {
+                        throw `Can't set top height to ${size}, outside bounds\n`;
+                    }
                     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
                     outputHeight = size;
                     browser.storage.local.set({outputHeight});
                     updateOutput(`Resized output to ${size} lines of text.\n`);
+                    break;
+                }
+                case "s": case "shift":{
+                    let dir = flags[option][0];
+                    let diff = parseInt(flags[option][1]);
+                    let oldTop = outputHeight;
+                    let oldBtm = btmHeight;
+                    if (dir == "down") {
+                        outputHeight += diff;
+                        btmHeight -= diff;
+                    }
+                    else {
+                        outputHeight -= diff;
+                        btmHeight += diff;
+                    }
+                    if (outputHeight + btmHeight > totalLines || outputHeight <= 0 || btmHeight <= 0) {
+                        outputHeight = oldTop;
+                        btmHeight = oldBtm;
+                        throw `Bounds reached! Couldn't shift ${dir} by ${diff} lines.`;
+                    }
+                    else {
+                        updateOutput(`Shifted prompt ${dir} by ${diff} lines.\n`);
+                    }
+                    output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
+                    browser.storage.local.set({outputHeight});
+                    btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em'); 
+                    browser.storage.local.set({btmHeight});
                     break;
                 }
             }
