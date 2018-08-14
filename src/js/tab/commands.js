@@ -60,7 +60,7 @@ const alias = {
      */
     func:
     function alias(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
         let toAlias = opts.argv.join(' ');
@@ -171,7 +171,7 @@ const bookim = {
      */
     func:
     function bookim(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
 
@@ -334,7 +334,7 @@ const colo = {
      */
     func:
     function colo(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
 
@@ -503,7 +503,7 @@ const goto = {
      */
     func:       
     function goto(args) { // usage: goto [link]
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
         let dest = opts.argv.join(' ');
@@ -617,7 +617,7 @@ const history = {
     argscol: {},
     func:
     function history(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
         let flags = opts.options;
 
         for(let option in flags) {
@@ -773,7 +773,7 @@ const link = {
      */
     func:
     function link(args) { // usage: link [alias] [dest]
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
         let toLink = opts.argv.join(' ');
@@ -899,7 +899,7 @@ const ps1 = {
      */
     func:
     function ps1(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
     
@@ -1005,7 +1005,7 @@ const resize = {
      */
     func:
     function resizeOutput(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
 
@@ -1170,7 +1170,7 @@ const setopt = {
      */
     func:
     function setopt(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
         let optionArg = opts.argv;
@@ -1219,7 +1219,7 @@ const storage = {
      */
     func:
     function storage(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
 
@@ -1432,5 +1432,20 @@ function helpMarkdown() {
     }
     console.log(output);
 }
-    
+
+
+/**
+ * Wrapper for getOpts that checks for arguments expected but not received
+ * @param {string[]} args 
+ * @param {*} optstring 
+ */
+function parseOpts(args, optstring) {
+    let opts = getOpts(args ? args.split(' ') : [], optstring, {noAliasPropagation: true});
+    for (let flag in opts.options) {
+        if (opts.options[flag] == undefined) {
+            throw `Flag ${flag} expected an argument!\n`;
+        }
+    }
+    return opts;
+}
 
