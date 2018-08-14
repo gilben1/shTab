@@ -82,6 +82,7 @@ const optionsLoader = {
         function grab(field) {
             return getStorage[field] ? getStorage[field] : defaultOptions[field];
         }
+        window.focus();
     }
 };
 
