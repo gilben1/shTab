@@ -984,11 +984,13 @@ const resize = {
         -t|--top <value>: sets top output height to <value>\n \
         -b|--bottom <value>: sets bottom output height to <value>\n\
         -d|--display: outputs the current height for both outputs\n\
-        -s|--shift (up|down) <value>: Shifts <dir> prompt <value> lines",
+        -s|--shift (up|down) <value>: Shifts <dir> prompt <value> lines\n\
+        -c|--center: puts prompt in the center of the window",
     usage:      "resize [-b|--bottom <value>] [-d|--display] [-t|--top <value>] [-s|--shift (up|down) <value>]",
-    flags: ["-b", "--bottom", "-d", "--display", "-s", "--shift", "-t", "--top"],
+    flags: ["-b", "--bottom", "-c", "--center", "-d", "--display", "-s", "--shift", "-t", "--top"],
     optstring: {
         "-b, --bottom": "<value>",
+        "-c, --center": "",
         "-d, --display": "",
         "-t, --top": "<value>",
         "-s, --shift": "<dir> <value>"
@@ -1012,12 +1014,23 @@ const resize = {
                 case "b": case "bottom": {
                     let size = parseInt(flags[option]);
                     if (size + outputHeight > totalLines || size <= 0) {
-                        throw `Can't set top height to ${size}, outside bounds\n`;
+                        throw `Can't set bottom height to ${size}, outside bounds\n`;
                     }
                     btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
                     btmHeight = size;
                     browser.storage.local.set({btmHeight});
                     updateOutput(`Resized bottom output to ${size} lines of text.\n`);
+                    break;
+                }
+                case "c": case "center": {
+                    outputHeight = defaultOptions.outputHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
+                    btmHeight = defaultOptions.btmHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
+                    totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
+                    output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
+                    browser.storage.local.set({outputHeight});
+                    btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em'); 
+                    browser.storage.local.set({btmHeight});
+                    updateOutput(`Centered prompt!\n`);
                     break;
                 }
                 case "d": case "display":
