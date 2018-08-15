@@ -4,8 +4,7 @@
 
 const about = { 
     desc:       
-"Displays information about shTab\n\
-    no flags or arguments",
+"Displays information about shTab",
     usage:      "about",
     flags: [],
     optstring: {},
@@ -35,9 +34,9 @@ const alias = {
     desc:
 "Aliases a shorthand keyword to map to another command\n\
     flags:\n\
-        -r | --remove <del>: remove <del> as an alias\n\
-        -dl | --display | --list: display the current alias\n\
-        -n | --rename <name>=<newname>: assigns alias <name> with <newname>\n\
+        -r|--remove <del>: remove <del> as an alias\n\
+        -dl|--display|--list: display the current alias\n\
+        -n|--rename <name>=<newname>: assigns alias <name> with <newname>\n\
     arguments:\n\
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
@@ -411,8 +410,7 @@ const echo = {
 var objectURL;
 const exportOpts = {
     desc:
-"Exports current options and links to a .json file for later import\n\
-    No arguments",
+"Exports current options and links to a .json file for later import",
     usage:      "export",
     flags: [],
     optstring: {},
@@ -499,7 +497,7 @@ const goto = {
     desc:       
 "Opens a specified link or url\n\
     flags:\n\
-        -n | --new: opens link in new tab / window (dependant on browser settings)\n\
+        -n|--new: opens link in new tab / window (dependant on browser settings)\n\
         -h: prepends destination with https:// if it doesn't already contain https://\n\
     arguments:\n\
         <name>: the link to navigate to",
@@ -621,7 +619,8 @@ const help = {
 const history = {
     desc:
 "Displays the current history of entered commands\n\
-    No arguments or flags",
+    flags:\n\
+        -s|--save (yes|true|no): Toggles saving of command history between sessions",
     usage: "history",
     flags: ["-s", "--save"],
     optstring: {
@@ -664,8 +663,7 @@ const history = {
 
 const importOpts = {
     desc:
-"Imports options and links from a selected .json file\n\
-    No arguments",
+"Imports options and links from a selected .json file",
     usage:      "import",
     flags: [],
     optstring: {},
@@ -760,11 +758,11 @@ const link = {
     desc:       
 "Links a name to a destination, used when running goto\n\
     flags:\n\
-        -c | --count: return the number of destinations\n\
-        -r | --remove <del>: remove <del> as a name to a destination\n\
-        -dl | --display | --list: display the current destinations\n\
+        -c|--count: return the number of destinations\n\
+        -r|--remove <del>: remove <del> as a name to a destination\n\
+        -dl|--display|--list: display the current destinations\n\
         -h: Prepend link destination with https://\n\
-        -n | --rename <name>=<newname>: assigns link <name> with <newname>\n\
+        -n|--rename <name>=<newname>: assigns link <name> with <newname>\n\
     arguments:\n\
         <name>: name to set\n\
         <dest>: destination to go to",
