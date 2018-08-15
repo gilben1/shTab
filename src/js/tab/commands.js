@@ -41,8 +41,11 @@ const alias = {
     arguments:\n\
         <name>: the name of the alias\n\
         <string>: string you want to replace when <name> is entered\n\
-        (none): displays the current aliases",
-    usage:      "alias [-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>] <name>=\"<string>\"",
+        (none): displays the current aliases\n\
+    notes:\n\
+        No flags can be used when adding an alias due to a limitation in a library function",
+    usage:      "alias [-d|-l|--display|--list] [-n|--rename <name>=<newname>] [-r|--remove <del>]\n\
+       alias <name>=\"<string>\"",
     flags: ["-d", "--display", "-l", "--list", "-n", "--rename", "-r", "--remove"],
     optstring: {
         "-d, --display": "",
@@ -61,39 +64,50 @@ const alias = {
     func:
     function alias(args) {
         let opts = parseOpts(args, this.optstring);
+        
+        let aliasSet = args ? args.match(/^[a-z0-9\-\_]+=".*"/i) : null;
 
         let flags = opts.options;
-        let toAlias = opts.argv.join(' ');
-        
+        let toAlias = aliasSet ? aliasSet[0] : null;
+
         let mode = "add";
         let display = false;
         let name = "";
         let performed = false;
+        let op = false;
 
-        for (let option in flags) {
-            switch(option) {
-                case "l": case "list":
-                case "d": case "display":
-                    display = true;
+        if (aliasSet == null) {
+            for (let option in flags) {
+                switch(option) {
+                    case "l": case "list":
+                    case "d": case "display":
+                        display = true;
+                        mode = "display";
+                        break;
+                    case "r": case "remove":
+                        mode = "remove";
+                        name = flags[option];
+                        op = true;
+                        break;
+                    case "n": case "rename":
+                        mode = "rename";
+                        name = flags[option];
+                        op = true;
+                        break;
+                    case undefined:
+                        break;
+                }
+                if (op == true) {
                     break;
-                case "r": case "remove":
-                    mode = "remove";
-                    name = flags[option];
-                    break;
-                case "n": case "rename":
-                    mode = "rename";
-                    name = flags[option];
-                    break;
-                case undefined:
-                    break;
+                }
             }
         }
 
         switch(mode) {
             case "add":
-                if (toAlias != "") {
+                if (toAlias != "" || toAlias != null) {
                     if (/^[a-z0-9\-\_]+=".*"/i.test(toAlias) == false) { // regex for WORD="WORD" form
-                        throw "Not right form for alias!\n";
+                        throw "Not right form for adding an alias!\nCorrect form: alias name=\"<string>\"";
                     }
                     let aliasSplit = toAlias.split('\"', 2);
                     aliasSplit[0] = aliasSplit[0].slice(0, -1);
@@ -105,7 +119,7 @@ const alias = {
                 break;
             case "remove":
                 if (aliases[name]) {
-                    updateOutput(`Removed ${name} -> ${dests[name]} as an alias. Still saved in local storage.\nUse 'save aliases' or 'save' to store\n`);
+                    updateOutput(`Removed ${name} -> ${aliases[name]} as an alias. Still saved in local storage.\nUse 'save aliases' or 'save' to store\n`);
                     delete aliases[name];
                 }
                 else {
