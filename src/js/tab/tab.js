@@ -28,17 +28,19 @@ prompt.addEventListener("keyup", function(evt){
 
     if (key == "enter") { // enter: process command
         updateOutput(`${ps1fill}${promptContent}\n`);
-        let promptCopy = promptContent;
-        commands.forEach(function(elem){
-            processCommand(elem);
-        });
-        commandHistory.push(promptCopy);
-        commandIndex = commandHistory.length;
-        removeBangs();
-        if (saveHistory == true) {
-            browser.storage.local.set({commandHistory});
+        if (promptContent != "") {
+            let promptCopy = promptContent;
+            commands.forEach(function(elem){
+                processCommand(elem);
+            });
+            commandHistory.push(promptCopy);
+            commandIndex = commandHistory.length;
+            removeBangs();
+            if (saveHistory == true) {
+                browser.storage.local.set({commandHistory});
+            }
+            btmOut.innerText = "";
         }
-        btmOut.innerText = "";
     }
     else if (key == "up") {
         commandIndex = (commandIndex - 1 < 0) ? 0 : commandIndex - 1;
