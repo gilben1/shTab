@@ -66,7 +66,7 @@ $optstring
      */
     func:
     function ${command}(args) {
-        let opts = getOpts(args ? args.split(' ') : [], this.optstring, {noAliasPropagation: true});
+        let opts = parseOpts(args, this.optstring);
 
         let flags = opts.options;
 
