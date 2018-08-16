@@ -19,7 +19,7 @@ Main Features:
 ## Building Using `web-ext`
 Tested building on Mint and Ubuntu, but should work on any regular linux distro. The packages may differ and / or may not be in your distro's repositories.    
 
-### **If you don't intend on modifying the extension, it's easiest to install from the [Installing From Release](#Installing-from-Release) section.**
+### **If you don't intend on modifying the extension, it's easiest to install from the [install](#Installing-from-Release) section.**
 
 ### Requirements:   
 `nodejs` - Nodejs from your distro's repo. Is needed to use npm's `web-ext` for running and building.    
@@ -58,7 +58,7 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
     The same can be achieved through a file browser (Window, Linux, maybe MacOS) by right-clicking on the `.xpi` file and selecting "Open with..." and choosing firefox.
 
 ## How To Use
-Install the extension (see above).
+Install the extension (see [above](#Installing-from-Release)).
 
 All commands have an associated `help` or `man` page that can be ran by entering `help $command` or `man $command` in the shTab prompt.
 You can list all commands with `help` or `man` with no arguments.
