@@ -1,4 +1,7 @@
 // Copyright (c) 2018 Nicholas Gilbert
+// Licensed under the Mozilla Public License Version 2.0
+// See LICENSE in the root of the repository for details
+
 // The script that controls the tab functionality in tab.html
 
 // Ever thanksful to bobspace who gave this nice handy array of the 140 valid css named colors to compare against

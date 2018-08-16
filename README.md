@@ -89,7 +89,7 @@ The extension requires the following browser permissions to function properly:
 
 
 ## License
-This software is licensed under the [Mozilla Public License 2.0 (MPL-2.0).](./LICENSE)
+This software is licensed under the [Mozilla Public License Version 2.0 (MPL-2.0).](./LICENSE)
 
 ## Release Notes
 Release notes for each version are in available in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab.
