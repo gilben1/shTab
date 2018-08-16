@@ -42,8 +42,9 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
 
     a) Upload the `.zip` to [addons.mozilla.org](addons.mozilla.org) under `Submit A New Add-on`. Follow the prompts, and given no validation errors, download a `.xpi` file that can be opened with Firefox to install.    
 
-    b) Generate [an api key](https://addons.mozilla.org/en-US/developers/addon/api/key) on Mozilla's site. Run `web-ext sign --api-key=$JWTISSUER --api-secret=$JWTSECRET`.    
-    Both $JWTISSUER and $JWTSECRET are fields shown in the API key after generation.
+    b) Generate [an api key](https://addons.mozilla.org/en-US/developers/addon/api/key) on Mozilla's site. Run `web-ext sign --api-key=$JWTISSUER --api-secret=$JWTSECRET`.  
+    Both $JWTISSUER and $JWTSECRET are fields shown in the API key after generation.    
+    The file gets generated in the `web-ext-artifacts` directory.
 
 ## Installing from Release
 1. Download the install file
