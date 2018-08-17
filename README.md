@@ -22,8 +22,8 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
 ### **If you don't intend on modifying the extension, it's easiest to install from the [Installing from Release](#installing-from-release) section.**
 
 ### Requirements:   
-`nodejs` - Is needed to use npm's `web-ext` for running and building. In most standard distro repos.
-`npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos. 
+`nodejs` - Is needed to use npm's `web-ext` for running and building. In most standard distro repos.    
+`npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos.     
 `web-ext` - Command line tool for building and running the extension. Install with `npm install --global web-ext`. Depending on permission setup, may need to be run as root or through `sudo`. See more [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
 
 ### Building
