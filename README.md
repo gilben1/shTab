@@ -19,12 +19,12 @@ Main Features:
 ## Building Using `web-ext`
 Tested building on Mint and Ubuntu, but should work on any regular linux distro. The packages may differ and / or may not be in your distro's repositories.    
 
-### **If you don't intend on modifying the extension, it's easiest to install from the [Installing from Release](##Installing-from-Release) section.**
+### **If you don't intend on modifying the extension, it's easiest to install from the [Installing from Release](#installing-from-release) section.**
 
 ### Requirements:   
-`nodejs` - Nodejs from your distro's repo. Is needed to use npm's `web-ext` for running and building.    
-`npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos. Install with `apt install npm` on Ubuntu and similar distors.    
-`web-ext` - Command line tool for building and running the extension. Install with `npm install --global web-ext`. See more [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
+`nodejs` - Is needed to use npm's `web-ext` for running and building. In most standard distro repos.
+`npm` - Node.js package manager, needed to install the next requirement. In most standard distro repos. 
+`web-ext` - Command line tool for building and running the extension. Install with `npm install --global web-ext`. Depending on permission setup, may need to be run as root or through `sudo`. See more [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
 
 ### Building
 1. Clone the repository and submodule  
@@ -48,7 +48,7 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
 
 ## Installing from Release
 1. Download the install file
-    The install files are located with their associated release tag, found in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab. There you will find the `.xpi` install files. Download the `.xpi` to your machine.
+    The install files are located with their associated release tag, found in the [Tags](https://gitlab.com/gilben/shTab/tags) section. There you will find the `.xpi` install files. Download the `.xpi` to your machine.
 
 2. Navigate to where you downloaded the install file
 
@@ -59,7 +59,7 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
     The same can be achieved through a file browser (Window, Linux, maybe MacOS) by right-clicking on the `.xpi` file and selecting "Open with..." and choosing firefox.
 
 ## How To Use
-Install the extension (see [above](##Installing-from-Release)).
+Install the extension (see [above](#installing-from-release)).
 
 All commands have an associated `help` or `man` page that can be ran by entering `help $command` or `man $command` in the shTab prompt.
 You can list all commands with `help` or `man` with no arguments.
@@ -90,7 +90,7 @@ The extension requires the following browser permissions to function properly:
 
 
 ## License
-This software is licensed under the [Mozilla Public License Version 2.0 (MPL-2.0).](./LICENSE)
+This software is licensed under the [Mozilla Public License Version 2.0 (MPL-2.0)](./LICENSE).
 
 ## Release Notes
 Release notes for each version are in available in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab.
@@ -103,3 +103,5 @@ Release notes for each version are in available in the [Tags](https://gitlab.com
 <nickgilbert2@gmail.com> / <gnick@pdx.edu>
 
 Join me on freenode at #shTab.
+
+Find a bug? Add it to the [Issue tracker](https://gitlab.com/gilben/shTab/issues).
