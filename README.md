@@ -61,6 +61,8 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
 ## How To Use
 Install the extension (see [above](#installing-from-release)).
 
+When installed, this extension replaces the new tab page with the shTab prompt, which allows you to enter commands to perform actions.
+
 All commands have an associated `help` or `man` page that can be ran by entering `help $command` or `man $command` in the shTab prompt.
 You can list all commands with `help` or `man` with no arguments.
 
@@ -93,7 +95,7 @@ The extension requires the following browser permissions to function properly:
 This software is licensed under the [Mozilla Public License Version 2.0 (MPL-2.0)](./LICENSE).
 
 ## Release Notes
-Release notes for each version are in available in the [Tags](https://gitlab.com/gilben/shTab/tags) section of Gitlab.
+Release notes for each version are available in the [Tags](https://gitlab.com/gilben/shTab/tags) section.
 
 ## Included Submodules
 [GetOptions by Alhadis](https://github.com/Alhadis/GetOptions), see repository for licensing information.

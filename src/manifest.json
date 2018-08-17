@@ -3,15 +3,11 @@
 
     "name": "shTab",
     "description": "A shell-like new tab page replacement",
-    "version": "0.6.3c",
+    "version": "0.6.4",
 
     "developer": {
         "name": "Nicholas Gilbert",
         "url": "https://gitlab.com/gilben/shTab"
-    },
-
-    "background": {
-        "scripts": ["js/tab/background.js"]
     },
 
     "chrome_url_overrides" : {
