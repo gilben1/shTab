@@ -165,14 +165,19 @@ function joinMatchingQuotes(input) {
  */
 function processCommand(command) {
     let processed = processFirstWord(command);
-    let error = false;        
     console.log(`0: ${processed.command}, 1-end ${processed.rest}`);
     try {
         let old = processed.command; // pre-expansion
         if (processed.command[0] == '!') {
             processed.command = expandHistory(processed.command);
         }
-        processed.command = expandAlias(processed.command); // Expand alias if it exists
+        else if (processed.command[0] != '\\') { // first letter is a \ ==> escape the alias like in bash
+            processed.command = expandAlias(processed.command); // Expand alias if it exists
+        }
+        else {
+            processed.command = processed.command.substr(1);
+            old = processed.command;
+        }
 
         if (process[processed.command]) { // try and process as a command
             process[processed.command].func(processed.rest);
@@ -201,7 +206,7 @@ function processCommand(command) {
             return false;
         }
     }
-    catch(err){
+    catch(err){ // catch all errors thrown by processing command, spit them out to the user
         updateOutput(`!! ${err}\n`);
         promptContent = prompt.value = "";
         return false;
@@ -387,12 +392,10 @@ function argCompletion(proc) {
      */
     function canFlag(compare) {
         if (opt.argv[0] && opt.argv[0] != "" && !opt.argv[0].match(/^-/)) {
-            console.log("arg bad");
             return false;
         }
         for (let option in opt.options) {
             if (compare == opt.options[option]) {
-                console.log("bad");
                 return false;
             }
         }
