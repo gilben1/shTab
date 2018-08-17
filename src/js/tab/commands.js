@@ -553,6 +553,10 @@ const goto = {
                 window.open(dest, target);
                 return;
             }
+            else if (prepend == true) {
+                window.open('https://' + dest, target);
+                return;
+            }
             else if (dest){
                 throw `${dest} is not a valid destination!\n`;
             }
@@ -773,6 +777,7 @@ const link = {
     optstring: {
         "-c, --count": "",
         "-d, --display": "",
+        "-h": "",
         "-l, --list": "",
         "-r, --remove": "<del>",
         "-n, --rename": "<rename>"
