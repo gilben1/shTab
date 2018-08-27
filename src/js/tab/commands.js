@@ -1230,6 +1230,29 @@ const setopt = {
     }
 }
 
+const splash = { 
+    desc:       
+"Displays an information splash",
+    usage:      "splash",
+    flags: [],
+    opstring: {},
+    args: [],
+    argscol: {},
+    /**
+     * Description for splash
+     * 
+     * @param {string} args 
+     */
+    func:
+    function splash(args) {
+        updateOutput(`Thank you for installing shTab!\n`);
+        updateOutput(`List all the commands by typing \`help\`\n`);
+        updateOutput(`See help information for an individual command by typing \`help <command>\`\n`);
+        updateOutput(`Found a bug? Enter \`new-issue\` to add it to the issue tracker in the repository!\n\n\n`);
+        about.func();
+    }
+}
+
 const storage = { 
     desc:       
 "Local storage statistics\n\
@@ -1395,6 +1418,7 @@ var process = {
     "resize": resize,
     "save": save,
     "setopt": setopt,
+    "splash": splash,
     "storage": storage,
     "type": type
 };

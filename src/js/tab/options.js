@@ -14,6 +14,8 @@ var ps1fill;
 var commandHistory = [];
 var saveHistory;
 
+var firstLoad;
+
 var totalLines = 11;
 
 var defaultOptions = {
@@ -24,6 +26,7 @@ var defaultOptions = {
     ps1fill: "> ",
     commandHistory: [],
     saveHistory: true,
+    firstLoad: true,
     aliases: {
         "issue": "go -n issue",
         "new-issue": "go -n nissue",
@@ -66,6 +69,8 @@ const optionsLoader = {
         saveHistory = grab("saveHistory");
 
         ps1fill = grab("ps1fill");
+
+        firstLoad = grab("firstLoad");
 
         aliases = Object.assign({}, defaultOptions.aliases, grab("aliases"));        
         dests = Object.assign({}, defaultOptions.dests, grab("dests"));
