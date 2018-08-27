@@ -460,6 +460,53 @@ const exportOpts = {
     }
 }
 
+const font = { 
+    desc:       
+"Command for controlling the font\n\
+    flags:\n\
+        -d|--display: Displays current font information\n\
+        -s|--size <value>: Sets to font to <value> pt font size\n\
+    arguments:\n\
+    ",
+    usage:      "font [-d|--display] [-s|--size <value>]",
+    flags: ["-d", "--display", "-s", "--size"],
+    optstring: {
+        "-d, --display": "",
+        "-s, --size": "<arg>",
+    },
+    args: [],
+    argscol: {},
+    /**
+     * Description for font
+     * 
+     * @param {string} args 
+     */
+    func:
+    function font(args) {
+        let opts = parseOpts(args, this.optstring);
+
+        let flags = opts.options;
+
+        for (let option in flags) {
+            switch(option) {
+                case "d": case "display":
+                    updateOutput(`Font: Source Code Pro ${fontSize}pt.\n`);
+                    break;
+                case "s": case "size":
+                    console.log(flags[option]);
+                    if (!/^[0-9]+$/.test(flags[option])) {
+                        throw "Invalid size! Requires an integer value\n";
+                    }
+                    fontSize = flags[option];
+                    browser.storage.local.set({fontSize});
+                    applyCurrentOptions();
+                    resize.func("-c");
+                    break;
+            }
+        }
+    }
+}
+
 const getopt = { 
     desc:       
 "Gets the current set options",
@@ -1407,6 +1454,7 @@ var process = {
     "colo": colo,
     "echo": echo,
     "export": exportOpts,
+    "font": font,
     "getopt": getopt,
     "goto": goto,
     "help": help,
