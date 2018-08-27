@@ -626,10 +626,12 @@ const history = {
     desc:
 "Displays the current history of entered commands\n\
     flags:\n\
+        -f|--filter <word>: returns history that contains <word>\
         -s|--save (yes|true|no): Toggles saving of command history between sessions",
-    usage: "history",
-    flags: ["-s", "--save"],
+    usage: "history [-f|--filter <word>][-s|--save (yes|true|no)]",
+    flags: ["-f", "--filter", "-s", "--save"],
     optstring: {
+        "-f, --filter": "<word>",
         "-s, --save": "<truefalse>"
     },
     args: [],
@@ -639,8 +641,12 @@ const history = {
         let opts = parseOpts(args, this.optstring);
         let flags = opts.options;
 
+        let filter = "";
         for(let option in flags) {
             switch(option) {
+                case "f": case "filter":
+                    filter = flags[option];
+                    break;
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
@@ -658,12 +664,21 @@ const history = {
             }
         }
 
-        updateOutput(`Command History:\n`);
+        if (filter != "") {
+            updateOutput(`Commands that matched ${filter}:\n`);
+        }
+        else {
+            updateOutput(`Command History:\n`);
+        }
         for(var index in commandHistory) {
-            updateOutput(`${index}: ${commandHistory[index]}\n`);
+            if (filter == "" || commandHistory[index].includes(filter)) {
+                updateOutput(`${index}: ${commandHistory[index]}\n`);
+            }
         }
         let fakeIndex = parseInt(index) + 1;
-        updateOutput(`${fakeIndex}: ${promptContent}\n`);
+        if (filter == "" || promptContent.includes(filter)) {
+            updateOutput(`${fakeIndex}: ${promptContent}\n`);
+        }
     }
 }
 
