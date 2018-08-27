@@ -25,7 +25,7 @@ var defaultOptions = {
     btmHeight: 2,
     ps1fill: "> ",
     commandHistory: [],
-    saveHistory: true,
+    saveHistory: "save",
     firstLoad: "not loaded",
     aliases: {
         "issue": "go -n issue",

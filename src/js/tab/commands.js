@@ -650,12 +650,12 @@ const history = {
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
-                        saveHistory = true;
+                        saveHistory = "save";
                         browser.storage.local.set({saveHistory});
                     }
                     else {
                         updateOutput(`Local history set to not save to local storage (Volatile history)\n`);
-                        saveHistory = false;
+                        saveHistory = "no save";
                         browser.storage.local.set({saveHistory});
                         let commandHistory = [];
                         browser.storage.local.set({commandHistory});

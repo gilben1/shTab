@@ -39,7 +39,7 @@ prompt.addEventListener("keyup", function(evt){
             commandHistory.push(promptCopy);
             commandIndex = commandHistory.length;
             removeBangs();
-            if (saveHistory == true) {
+            if (saveHistory == "save") {
                 browser.storage.local.set({commandHistory});
             }
             btmOut.innerText = "";
