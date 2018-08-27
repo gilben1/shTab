@@ -14,6 +14,8 @@ var ps1fill;
 var commandHistory = [];
 var saveHistory;
 
+var firstLoad;
+
 var totalLines = 11;
 
 var defaultOptions = {
@@ -24,6 +26,7 @@ var defaultOptions = {
     ps1fill: "> ",
     commandHistory: [],
     saveHistory: true,
+    firstLoad: "not loaded",
     aliases: {
         "issue": "go -n issue",
         "new-issue": "go -n nissue",
@@ -67,6 +70,8 @@ const optionsLoader = {
 
         ps1fill = grab("ps1fill");
 
+        firstLoad = grab("firstLoad");
+
         aliases = Object.assign({}, defaultOptions.aliases, grab("aliases"));        
         dests = Object.assign({}, defaultOptions.dests, grab("dests"));
 
@@ -75,6 +80,11 @@ const optionsLoader = {
         // Deletes the newtab page from history
         // Modified from: https://github.com/cadeyrn/newtaboverride/blob/master/src/js/core/newtab.js
         browser.history.deleteUrl({ url : browser.extension.getURL('../html/tab.html') });
+        if (firstLoad == "not loaded") {
+            splash.func();
+            firstLoad = "loaded";
+            browser.storage.local.set({firstLoad});
+        }
 
         /**
          * Returns either the loaded field or the default value for that field
