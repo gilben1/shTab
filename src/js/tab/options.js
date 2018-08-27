@@ -10,6 +10,7 @@ var fgColor;
 var outputHeight;
 var btmHeight;
 var ps1fill;
+var fontSize;
 
 var commandHistory = [];
 var saveHistory;
@@ -24,6 +25,7 @@ var defaultOptions = {
     outputHeight: 9,
     btmHeight: 2,
     ps1fill: "> ",
+    fontSize: 12,
     commandHistory: [],
     saveHistory: "save",
     firstLoad: "not loaded",
@@ -49,14 +51,16 @@ const optionsLoader = {
      */
     async load() {
 
-        // Calculate default height
-        defaultOptions.outputHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
-        defaultOptions.btmHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
-        totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
 
         let getStorage = await browser.storage.local.get();
 
         console.log(getStorage);
+
+        fontSize = grab("fontSize");
+        // Calculate default height
+        defaultOptions.outputHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
+        defaultOptions.btmHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
+        totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
 
         // Assign the local variables to loaded value if it exists, or the defult otherwise
         outputHeight = grab("outputHeight");
@@ -69,6 +73,7 @@ const optionsLoader = {
         saveHistory = grab("saveHistory");
 
         ps1fill = grab("ps1fill");
+
 
         firstLoad = grab("firstLoad");
 
