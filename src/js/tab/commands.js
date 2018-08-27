@@ -1212,7 +1212,7 @@ const setopt = {
 
         for (let option in flags) {
             switch(option) {
-                case "-a": case "--apply":
+                case "a": case "apply":
                     apply = true;
                     break;
             }
