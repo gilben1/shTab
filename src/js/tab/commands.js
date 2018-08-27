@@ -1057,8 +1057,8 @@ const resize = {
                     break;
                 }
                 case "c": case "center": {
-                    outputHeight = defaultOptions.outputHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
-                    btmHeight = defaultOptions.btmHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
+                    outputHeight = defaultOptions.outputHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
+                    btmHeight = defaultOptions.btmHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
                     totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
                     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
                     browser.storage.local.set({outputHeight});
@@ -1444,6 +1444,7 @@ function applyCurrentOptions() {
     document.documentElement.style.setProperty('--fg-color', fgColor);
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
     btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em');
+    document.documentElement.style.setProperty('--font-size', (fontSize) + 'px');
     prefix.innerText = ps1fill;
     let ps1info = prefix.getBoundingClientRect();
     document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
@@ -1460,6 +1461,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({aliases});
     browser.storage.local.set({dests});
     browser.storage.local.set({ps1fill});
+    browser.storage.local.set({fontSize});
 }
 
 /**

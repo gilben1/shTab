@@ -18,6 +18,7 @@
     --prompt-percent: 98.5%;
     --font-weight: lighter;
     --font-family: 'scp';
+    --font-size: 20px;
 }
 
 * {
@@ -27,7 +28,7 @@
 
 body {
     background-color: var(--bg-color);
-    font-size: 12px;
+    font-size: var(--font-size);
 }
 
 /* https://stackoverflow.com/questions/17242209/limiting-a-div-height-to-two-lines-of-text-inside-it */
