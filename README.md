@@ -3,6 +3,10 @@ Copyright © 2018 Nicholas Gilbert
 
 shTab is a replacement for the new tab page in Firefox that has shell-like functionality.
 
+## Most Recent Version
+
+Installable from the listing on [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/shtab/).
+
 ## Description
 A new tab replacement extension for Firefox 60+ that implements functionality that follows a shell environment like Bash. Implemented to mimic the shell functionality for use in a web browser environment. Contains a suite of a commands that facilitates customization, navigation, and shorthand alias creation.    
 
