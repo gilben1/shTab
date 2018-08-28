@@ -3,7 +3,7 @@ Copyright © 2018 Nicholas Gilbert
 
 shTab is a replacement for the new tab page in Firefox that has shell-like functionality.
 
-## Most Recent Version
+## Get the Extension
 
 Installable from the listing on [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/shtab/).
 
@@ -51,6 +51,9 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
     The file gets generated in the `web-ext-artifacts` directory.
 
 ## Installing from Release
+
+These instructions only apply to versions prior to 0.6.4a. 0.6.4a is the first version released on the [Mozilla Addons Store](https://addons.mozilla.org/en-US/firefox/addon/shtab/)
+
 1. Download the install file
     The install files are located with their associated release tag, found in the [Tags](https://gitlab.com/gilben/shTab/tags) section. There you will find the `.xpi` install files. Download the `.xpi` to your machine.
 
@@ -63,7 +66,7 @@ Tested building on Mint and Ubuntu, but should work on any regular linux distro.
     The same can be achieved through a file browser (Window, Linux, maybe MacOS) by right-clicking on the `.xpi` file and selecting "Open with..." and choosing firefox.
 
 ## How To Use
-Install the extension (see [above](#installing-from-release)).
+Install the extension (see [above](#installing-from-release), or the [Mozilla Addons Store](https://addons.mozilla.org/en-US/firefox/addon/shtab/)).
 
 When installed, this extension replaces the new tab page with the shTab prompt, which allows you to enter commands to perform actions.
 
