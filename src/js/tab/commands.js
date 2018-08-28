@@ -340,7 +340,7 @@ const colo = {
         "-f, --foreground": "<color>"
     },
     args: [],
-    argscol: {},
+    argscol: {"colors": ["-b", "--background", "-f", "--foreground"]},
     // Sets a color element to a specified value
     /**
      * Sets the color for a passed element to either a CSS color value or hex value
@@ -358,7 +358,7 @@ const colo = {
                 case "b": case "background": {
                     let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
-                        throw "Invalid color!\n";
+                        throw "Invalid color! Must be a CSS color or in 3 / 6 digit hex form!\nExample: Black, #333, #ffffff\n";
                     }
                     bgColor = color;
                     browser.storage.local.set({bgColor});
@@ -373,7 +373,7 @@ const colo = {
                 case "f": case "foreground":{
                     let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
-                        throw "Invalid color!\n";
+                        throw "Invalid color! Must be a CSS color or in 3 / 6 digit hex form!\nExample: Black, #333, #ffffff\n";
                     }
                     fgColor = color;
                     browser.storage.local.set({fgColor});

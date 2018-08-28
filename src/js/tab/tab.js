@@ -416,6 +416,13 @@ function argCompletion(proc) {
                     }
                 }
                 break;
+            case "colors":
+                for (let key of CSS_COLOR_NAMES) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                break;
             case "commands":
                 for (let key in process) {
                     if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
