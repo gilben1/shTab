@@ -2,8 +2,8 @@
     "manifest_version": 2,
 
     "name": "shTab",
-    "description": "A shell-like new tab page replacement",
-    "version": "0.6.4a",
+    "description": "A shell-like new tab page replacement. Navigation, interaction, and customization using a command line interface.",
+    "version": "0.6.5",
 
     "developer": {
         "name": "Nicholas Gilbert",

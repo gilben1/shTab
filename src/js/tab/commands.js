@@ -340,7 +340,7 @@ const colo = {
         "-f, --foreground": "<color>"
     },
     args: [],
-    argscol: {},
+    argscol: {"colors": ["-b", "--background", "-f", "--foreground"]},
     // Sets a color element to a specified value
     /**
      * Sets the color for a passed element to either a CSS color value or hex value
@@ -358,7 +358,7 @@ const colo = {
                 case "b": case "background": {
                     let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
-                        throw "Invalid color!\n";
+                        throw "Invalid color! Must be a CSS color or in 3 / 6 digit hex form!\nExample: Black, #333, #ffffff\n";
                     }
                     bgColor = color;
                     browser.storage.local.set({bgColor});
@@ -373,7 +373,7 @@ const colo = {
                 case "f": case "foreground":{
                     let color = flags[option];
                     if (!isColor(color)) { // Test to see if the color is a valid named color or is in 3 or 6 digit hex form
-                        throw "Invalid color!\n";
+                        throw "Invalid color! Must be a CSS color or in 3 / 6 digit hex form!\nExample: Black, #333, #ffffff\n";
                     }
                     fgColor = color;
                     browser.storage.local.set({fgColor});
@@ -457,6 +457,53 @@ const exportOpts = {
         }
         
         browser.downloads.onChanged.addListener(handleChanged); 
+    }
+}
+
+const font = { 
+    desc:       
+"Command for controlling the font\n\
+    flags:\n\
+        -d|--display: Displays current font information\n\
+        -s|--size <value>: Sets to font to <value> pt font size\n\
+    arguments:\n\
+    ",
+    usage:      "font [-d|--display] [-s|--size <value>]",
+    flags: ["-d", "--display", "-s", "--size"],
+    optstring: {
+        "-d, --display": "",
+        "-s, --size": "<arg>",
+    },
+    args: [],
+    argscol: {},
+    /**
+     * Description for font
+     * 
+     * @param {string} args 
+     */
+    func:
+    function font(args) {
+        let opts = parseOpts(args, this.optstring);
+
+        let flags = opts.options;
+
+        for (let option in flags) {
+            switch(option) {
+                case "d": case "display":
+                    updateOutput(`Font: Source Code Pro ${fontSize}pt.\n`);
+                    break;
+                case "s": case "size":
+                    console.log(flags[option]);
+                    if (!/^[0-9]+$/.test(flags[option])) {
+                        throw "Invalid size! Requires an integer value\n";
+                    }
+                    fontSize = flags[option];
+                    browser.storage.local.set({fontSize});
+                    applyCurrentOptions();
+                    resize.func("-c");
+                    break;
+            }
+        }
     }
 }
 
@@ -650,12 +697,12 @@ const history = {
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
-                        saveHistory = true;
+                        saveHistory = "save";
                         browser.storage.local.set({saveHistory});
                     }
                     else {
                         updateOutput(`Local history set to not save to local storage (Volatile history)\n`);
-                        saveHistory = false;
+                        saveHistory = "no save";
                         browser.storage.local.set({saveHistory});
                         let commandHistory = [];
                         browser.storage.local.set({commandHistory});
@@ -1057,8 +1104,8 @@ const resize = {
                     break;
                 }
                 case "c": case "center": {
-                    outputHeight = defaultOptions.outputHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
-                    btmHeight = defaultOptions.btmHeight = Math.floor(window.innerHeight / (13.2) / 2.25);
+                    outputHeight = defaultOptions.outputHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
+                    btmHeight = defaultOptions.btmHeight = Math.floor(window.innerHeight / (fontSize * 1.1) / 2.25);
                     totalLines = defaultOptions.outputHeight + defaultOptions.btmHeight;
                     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
                     browser.storage.local.set({outputHeight});
@@ -1212,7 +1259,7 @@ const setopt = {
 
         for (let option in flags) {
             switch(option) {
-                case "-a": case "--apply":
+                case "a": case "apply":
                     apply = true;
                     break;
             }
@@ -1227,6 +1274,29 @@ const setopt = {
                 applyCurrentOptions();
             }
         }
+    }
+}
+
+const splash = { 
+    desc:       
+"Displays an information splash",
+    usage:      "splash",
+    flags: [],
+    opstring: {},
+    args: [],
+    argscol: {},
+    /**
+     * Description for splash
+     * 
+     * @param {string} args 
+     */
+    func:
+    function splash(args) {
+        updateOutput(`Thank you for installing shTab!\n`);
+        updateOutput(`List all the commands by typing \`help\`\n`);
+        updateOutput(`See help information for an individual command by typing \`help <command>\`\n`);
+        updateOutput(`Found a bug? Enter \`new-issue\` to add it to the issue tracker in the repository!\n\n\n`);
+        about.func();
     }
 }
 
@@ -1384,6 +1454,7 @@ var process = {
     "colo": colo,
     "echo": echo,
     "export": exportOpts,
+    "font": font,
     "getopt": getopt,
     "goto": goto,
     "help": help,
@@ -1395,6 +1466,7 @@ var process = {
     "resize": resize,
     "save": save,
     "setopt": setopt,
+    "splash": splash,
     "storage": storage,
     "type": type
 };
@@ -1420,6 +1492,7 @@ function applyCurrentOptions() {
     document.documentElement.style.setProperty('--fg-color', fgColor);
     output.style.setProperty('--output-height', (outputHeight * 1.1) + 'em'); 
     btmOut.style.setProperty('--btm-height', (btmHeight * 1.1) + 'em');
+    document.documentElement.style.setProperty('--font-size', (fontSize) + 'px');
     prefix.innerText = ps1fill;
     let ps1info = prefix.getBoundingClientRect();
     document.documentElement.style.setProperty('--prompt-percent', (((window.innerWidth - ps1info.width - 10) / window.innerWidth) * 100) + '%');
@@ -1436,6 +1509,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({aliases});
     browser.storage.local.set({dests});
     browser.storage.local.set({ps1fill});
+    browser.storage.local.set({fontSize});
 }
 
 /**

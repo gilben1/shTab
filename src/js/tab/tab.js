@@ -39,7 +39,7 @@ prompt.addEventListener("keyup", function(evt){
             commandHistory.push(promptCopy);
             commandIndex = commandHistory.length;
             removeBangs();
-            if (saveHistory == true) {
+            if (saveHistory == "save") {
                 browser.storage.local.set({commandHistory});
             }
             btmOut.innerText = "";
@@ -411,6 +411,13 @@ function argCompletion(proc) {
         switch(col) {
             case "aliases":
                 for (let key in aliases) {
+                    if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
+                        autoCompleteMatches.unshift(key);
+                    }
+                }
+                break;
+            case "colors":
+                for (let key of CSS_COLOR_NAMES) {
                     if (key.indexOf(compare) == 0 && !autoCompleteMatches.includes(key)) {
                         autoCompleteMatches.unshift(key);
                     }
