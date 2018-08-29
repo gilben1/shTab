@@ -39,10 +39,7 @@ prompt.addEventListener("keyup", function(evt){
             commandIndex = commandHistory.push(promptCopy);
             removeBangs();
             commandIndex = commandHistory.length;
-            while (commandIndex > historyLimit) { // trim history to be below the limit
-                commandHistory.shift()
-                commandIndex = commandHistory.length;
-            }
+            trimHistory();
             if (saveHistory == "save") {
                 browser.storage.local.set({commandHistory});
             }
@@ -119,6 +116,16 @@ prompt.addEventListener("keyup", function(evt){
         btmOut.innerText = "";
     }
 });
+
+/**
+ * Trims the history down to the history limit
+ */
+function trimHistory() {
+    while (commandIndex > historyLimit) { // trim history to be below the limit
+        commandHistory.shift();
+        commandIndex = commandHistory.length;
+    }
+}
 
 /**
  * Processes the content of the prompt
