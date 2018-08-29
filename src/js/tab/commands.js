@@ -1545,7 +1545,7 @@ function setToDefaultOptions() {
 
     function setDefault(name) {
         window[name] = defaultOptions[name];
-        console.log(`${name} set back to ${defaultOptions[name]}\n`);
+        updateOutput(`${name} set back to ${defaultOptions[name]}\n`);
     }
 }
 
