@@ -14,6 +14,7 @@ var fontSize;
 
 var commandHistory = [];
 var saveHistory;
+var historyLimit;
 
 var firstLoad;
 
@@ -28,6 +29,7 @@ var defaultOptions = {
     fontSize: 12,
     commandHistory: [],
     saveHistory: "save",
+    historyLimit: 100,
     firstLoad: "not loaded",
     aliases: {
         "issue": "go -n issue",
@@ -71,6 +73,7 @@ const optionsLoader = {
         commandHistory = grab("commandHistory");
         commandIndex = commandHistory.length;
         saveHistory = grab("saveHistory");
+        historyLimit = grab("historyLimit");
 
         ps1fill = grab("ps1fill");
 

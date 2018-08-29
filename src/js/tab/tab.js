@@ -36,9 +36,13 @@ prompt.addEventListener("keyup", function(evt){
             commands.forEach(function(elem){
                 processCommand(elem);
             });
-            commandHistory.push(promptCopy);
-            commandIndex = commandHistory.length;
+            commandIndex = commandHistory.push(promptCopy);
             removeBangs();
+            commandIndex = commandHistory.length;
+            while (commandIndex > historyLimit) { // trim history to be below the limit
+                commandHistory.shift()
+                commandIndex = commandHistory.length;
+            }
             if (saveHistory == "save") {
                 browser.storage.local.set({commandHistory});
             }
