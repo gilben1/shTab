@@ -1522,6 +1522,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({dests});
     browser.storage.local.set({ps1fill});
     browser.storage.local.set({fontSize});
+    browser.storage.local.set({historyLimit});
 }
 
 /**
