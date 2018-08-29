@@ -206,6 +206,9 @@ const bookim = {
                 case "s": case "short":
                     short = true;
                     length = parseInt(flags[option]);
+                    if (isNaN(length)) {
+                        throw "Number value expected for flag short!\n"
+                    }
                     break;
             }
         }
@@ -493,11 +496,11 @@ const font = {
                     updateOutput(`Font: Source Code Pro ${fontSize}pt.\n`);
                     break;
                 case "s": case "size":
-                    console.log(flags[option]);
-                    if (!/^[0-9]+$/.test(flags[option])) {
-                        throw "Invalid size! Requires an integer value\n";
+                    let size = parseInt(flags[option]);
+                    if (isNaN(size) || size <= 0) {
+                        throw "Invalid size! Requires a positive integer value\n";
                     }
-                    fontSize = flags[option];
+                    fontSize = size;
                     browser.storage.local.set({fontSize});
                     applyCurrentOptions();
                     resize.func("-c");
@@ -697,11 +700,13 @@ const history = {
                     filter = flags[option];
                     break;
                 case "l": case "limit":
-                    if (!/^[0-9]+$/.test(flags[option])) {
+                    let value = parseInt(flags[option])
+                    if (isNaN(value) || value <= 0) {
                         throw "Limit needs to be a positive number value!\n";
                     }
-                    historyLimit = flags[option];
+                    historyLimit = value;
                     trimHistory();
+                    updateOutput(`Updated limit on history to ${historyLimit} entries!\n`);
                     return;
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
@@ -1106,7 +1111,7 @@ const resize = {
             switch(option) {
                 case "b": case "bottom": {
                     let size = parseInt(flags[option]);
-                    if (size + outputHeight > totalLines || size <= 0) {
+                    if (isNaN(size) || size + outputHeight > totalLines || size <= 0) {
                         throw `Can't set bottom height to ${size}, outside bounds\n`;
                     }
                     btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
@@ -1133,7 +1138,7 @@ const resize = {
                     break;
                 case "t": case "top":{
                     let size = parseInt(flags[option]);
-                    if (size + btmHeight > totalLines || size <= 0) {
+                    if (isNaN(size) || size + btmHeight > totalLines || size <= 0) {
                         throw `Can't set top height to ${size}, outside bounds\n`;
                     }
                     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
@@ -1145,6 +1150,9 @@ const resize = {
                 case "s": case "shift":{
                     let dir = flags[option][0];
                     let diff = parseInt(flags[option][1]);
+                    if (isNaN(diff)) {
+                        throw "Need to shift by a number value!\n"
+                    }
                     let oldTop = outputHeight;
                     let oldBtm = btmHeight;
                     if (dir == "down") {
@@ -1455,6 +1463,7 @@ const type = {
         }
     }
 }
+
 /**
  * Jump table for running commands based on strings
  */
@@ -1496,6 +1505,7 @@ var alts = {
     "info": "about",
     "prompt": "ps1"
 };
+
 /**
  * Applies the current options to the CSS style
  */
