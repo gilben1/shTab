@@ -612,7 +612,7 @@ const goto = {
             }
         }
 
-        let url = dests[shortdest] + '/' + extra;
+        let url = extra ? dests[shortdest] + '/' + extra : dests[shortdest];
         if(url.match(URL_REGEX) || prepend == false) {
             window.open(url, target);
         }
