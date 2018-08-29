@@ -673,12 +673,14 @@ const history = {
     desc:
 "Displays the current history of entered commands\n\
     flags:\n\
-        -f|--filter <word>: returns history that contains <word>\
+        -f|--filter <word>: returns history that contains <word>\n\
+        -l|--limit <value>: limits the command history to <value> commands\n\
         -s|--save (yes|true|no): Toggles saving of command history between sessions",
-    usage: "history [-f|--filter <word>][-s|--save (yes|true|no)]",
-    flags: ["-f", "--filter", "-s", "--save"],
+    usage: "history [-f|--filter <word>][-l|--limit <value>][-s|--save (yes|true|no)]",
+    flags: ["-f", "--filter", "-l", "--limit", "-s", "--save"],
     optstring: {
         "-f, --filter": "<word>",
+        "-l, --limit": "<value>",
         "-s, --save": "<truefalse>"
     },
     args: [],
@@ -694,6 +696,13 @@ const history = {
                 case "f": case "filter":
                     filter = flags[option];
                     break;
+                case "l": case "limit":
+                    if (!/^[0-9]+$/.test(flags[option])) {
+                        throw "Limit needs to be a positive number value!\n";
+                    }
+                    historyLimit = flags[option];
+                    trimHistory();
+                    return;
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
@@ -715,12 +724,15 @@ const history = {
             updateOutput(`Commands that matched ${filter}:\n`);
         }
         else {
-            updateOutput(`Command History:\n`);
+            updateOutput(`Command History (limited to ${historyLimit} entries):\n`);
         }
         for(var index in commandHistory) {
             if (filter == "" || commandHistory[index].includes(filter)) {
                 updateOutput(`${index}: ${commandHistory[index]}\n`);
             }
+        }
+        if (index == undefined) {
+            index = -1;
         }
         let fakeIndex = parseInt(index) + 1;
         if (filter == "" || promptContent.includes(filter)) {
@@ -1510,6 +1522,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({dests});
     browser.storage.local.set({ps1fill});
     browser.storage.local.set({fontSize});
+    browser.storage.local.set({historyLimit});
 }
 
 /**
@@ -1553,7 +1566,7 @@ function parseOpts(args, optstring) {
     let opts = getOpts(args ? args.split(' ') : [], optstring, {noAliasPropagation: true});
     for (let flag in opts.options) {
         if (opts.options[flag] == undefined) {
-            throw `Flag ${flag} expected an argument!\n`;
+            throw `Flag \'${flag}\' expected an argument!\n`;
         }
     }
     return opts;
