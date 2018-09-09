@@ -14,7 +14,7 @@ echo "Use the form \"flag\", \"flagwithassing=\", or blank for no flags"
 read longflags
 
 split=$(echo $longflags | tr "," "\n")
-optstring="    opstring: {"
+optstring="    optstring: {"
 hasflag=0
 for flag in $split; do
     curshort=${flag:1:1}

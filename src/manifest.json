@@ -3,7 +3,7 @@
 
     "name": "shTab",
     "description": "A shell-like new tab page replacement. Navigation, interaction, and customization using a command line interface.",
-    "version": "0.6.5",
+    "version": "0.6.5a",
 
     "developer": {
         "name": "Nicholas Gilbert",

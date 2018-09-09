@@ -25,8 +25,8 @@ var autoIndex = 0;
 
 var commands = [];
 
+// Event listener that repsonds to keypress inside of the prompt
 prompt.addEventListener("keyup", function(evt){
-    let keyNum = evt.keyCode;
     let key = keyCodes[evt.keyCode];
 
     if (key == "enter") { // enter: process command
@@ -36,16 +36,17 @@ prompt.addEventListener("keyup", function(evt){
             commands.forEach(function(elem){
                 processCommand(elem);
             });
-            commandHistory.push(promptCopy);
-            commandIndex = commandHistory.length;
+            commandIndex = commandHistory.push(promptCopy);
             removeBangs();
+            commandIndex = commandHistory.length;
+            trimHistory();
             if (saveHistory == "save") {
                 browser.storage.local.set({commandHistory});
             }
             btmOut.innerText = "";
         }
     }
-    else if (key == "up") {
+    else if (key == "up") { // up arrow: scroll through history up by one
         commandIndex = (commandIndex - 1 < 0) ? 0 : commandIndex - 1;
         let lastCommand = commandHistory[commandIndex];
         if (lastCommand != undefined) {
@@ -60,7 +61,7 @@ prompt.addEventListener("keyup", function(evt){
             promptContent = prompt.value = "";
         }
     }
-    else if (key == "down") {
+    else if (key == "down") { // down arrow: scroll through history down by one
         commandIndex = (commandIndex + 1 > commandHistory.length) ? commandHistory.length : commandIndex + 1;
         let lastCommand = commandHistory[commandIndex];
         if (lastCommand != undefined) {
@@ -75,7 +76,7 @@ prompt.addEventListener("keyup", function(evt){
             promptContent = prompt.value = "";
         }
     }
-    else if (key == "right" && promptContent.length > 0 && countMatches > 0) {
+    else if (key == "right" && promptContent.length > 0 && countMatches > 0) { // right arrow: tab complete
         if (countMatches == 1) { // only one, let's just complete it
             let autoComp = autoCompleteMatches[autoIndex];
             let replace = commands[commands.length - 1].split(' ');
@@ -117,6 +118,16 @@ prompt.addEventListener("keyup", function(evt){
 });
 
 /**
+ * Trims the history down to the history limit
+ */
+function trimHistory() {
+    while (commandIndex > historyLimit) { // trim history to be below the limit
+        commandHistory.shift();
+        commandIndex = commandHistory.length;
+    }
+}
+
+/**
  * Processes the content of the prompt
  * Includes allowing multiple commands separated by semi-colons
  * @param {string} promptString 
@@ -139,7 +150,6 @@ function joinMatchingQuotes(input) {
         if (countQuote > 0 && countQuote % 2 != 0) { // odd non-zero number of quotes in string
             // look for a matching quote in subsequent strings
             let built = input[i];
-            let foundQuotes = 0;
             for (let j = i + 1; j < input.length; ++j) {
                 built = built + "; " + input[j];
                 let findQuote = input[j].split('\"').length - 1;
@@ -171,10 +181,10 @@ function processCommand(command) {
         if (processed.command[0] == '!') {
             processed.command = expandHistory(processed.command);
         }
-        else if (processed.command[0] != '\\') { // first letter is a \ ==> escape the alias like in bash
+        else if (processed.command[0] != '\\') {  // first letter is not a \ ==> try and expand alias
             processed.command = expandAlias(processed.command); // Expand alias if it exists
         }
-        else {
+        else { // first letter is a \ ==> escape the alias like in bash
             processed.command = processed.command.substr(1);
             old = processed.command;
         }
@@ -222,8 +232,7 @@ function processCommand(command) {
  * @return {string} expanded alias command
  */
 function expandAlias(alias) {
-    let expanded = aliases[alias] || alias;
-    return expanded;
+    return aliases[alias] || alias;
 }
 
 /**

@@ -206,6 +206,9 @@ const bookim = {
                 case "s": case "short":
                     short = true;
                     length = parseInt(flags[option]);
+                    if (isNaN(length)) {
+                        throw "Number value expected for flag short!\n"
+                    }
                     break;
             }
         }
@@ -493,11 +496,11 @@ const font = {
                     updateOutput(`Font: Source Code Pro ${fontSize}pt.\n`);
                     break;
                 case "s": case "size":
-                    console.log(flags[option]);
-                    if (!/^[0-9]+$/.test(flags[option])) {
-                        throw "Invalid size! Requires an integer value\n";
+                    let size = parseInt(flags[option]);
+                    if (isNaN(size) || size <= 0) {
+                        throw "Invalid size! Requires a positive integer value\n";
                     }
-                    fontSize = flags[option];
+                    fontSize = size;
                     browser.storage.local.set({fontSize});
                     applyCurrentOptions();
                     resize.func("-c");
@@ -612,7 +615,7 @@ const goto = {
             }
         }
 
-        let url = dests[shortdest] + '/' + extra;
+        let url = extra ? dests[shortdest] + '/' + extra : dests[shortdest];
         if(url.match(URL_REGEX) || prepend == false) {
             window.open(url, target);
         }
@@ -673,12 +676,14 @@ const history = {
     desc:
 "Displays the current history of entered commands\n\
     flags:\n\
-        -f|--filter <word>: returns history that contains <word>\
+        -f|--filter <word>: returns history that contains <word>\n\
+        -l|--limit <value>: limits the command history to <value> commands\n\
         -s|--save (yes|true|no): Toggles saving of command history between sessions",
-    usage: "history [-f|--filter <word>][-s|--save (yes|true|no)]",
-    flags: ["-f", "--filter", "-s", "--save"],
+    usage: "history [-f|--filter <word>][-l|--limit <value>][-s|--save (yes|true|no)]",
+    flags: ["-f", "--filter", "-l", "--limit", "-s", "--save"],
     optstring: {
         "-f, --filter": "<word>",
+        "-l, --limit": "<value>",
         "-s, --save": "<truefalse>"
     },
     args: [],
@@ -694,6 +699,15 @@ const history = {
                 case "f": case "filter":
                     filter = flags[option];
                     break;
+                case "l": case "limit":
+                    let value = parseInt(flags[option])
+                    if (isNaN(value) || value <= 0) {
+                        throw "Limit needs to be a positive number value!\n";
+                    }
+                    historyLimit = value;
+                    trimHistory();
+                    updateOutput(`Updated limit on history to ${historyLimit} entries!\n`);
+                    return;
                 case "s": case "save":
                     if (/(t(rue)?)|(y(es)?)/i.test(flags[option])) {
                         updateOutput(`Local history set to save to local storage (Persistent history)\n`);
@@ -715,12 +729,15 @@ const history = {
             updateOutput(`Commands that matched ${filter}:\n`);
         }
         else {
-            updateOutput(`Command History:\n`);
+            updateOutput(`Command History (limited to ${historyLimit} entries):\n`);
         }
         for(var index in commandHistory) {
             if (filter == "" || commandHistory[index].includes(filter)) {
                 updateOutput(`${index}: ${commandHistory[index]}\n`);
             }
+        }
+        if (index == undefined) {
+            index = -1;
         }
         let fakeIndex = parseInt(index) + 1;
         if (filter == "" || promptContent.includes(filter)) {
@@ -1094,7 +1111,7 @@ const resize = {
             switch(option) {
                 case "b": case "bottom": {
                     let size = parseInt(flags[option]);
-                    if (size + outputHeight > totalLines || size <= 0) {
+                    if (isNaN(size) || size + outputHeight > totalLines || size <= 0) {
                         throw `Can't set bottom height to ${size}, outside bounds\n`;
                     }
                     btmOut.style.setProperty('--btm-height', (size * 1.1) + 'em'); 
@@ -1121,7 +1138,7 @@ const resize = {
                     break;
                 case "t": case "top":{
                     let size = parseInt(flags[option]);
-                    if (size + btmHeight > totalLines || size <= 0) {
+                    if (isNaN(size) || size + btmHeight > totalLines || size <= 0) {
                         throw `Can't set top height to ${size}, outside bounds\n`;
                     }
                     output.style.setProperty('--output-height', (size * 1.1) + 'em'); 
@@ -1133,6 +1150,9 @@ const resize = {
                 case "s": case "shift":{
                     let dir = flags[option][0];
                     let diff = parseInt(flags[option][1]);
+                    if (isNaN(diff)) {
+                        throw "Need to shift by a number value!\n"
+                    }
                     let oldTop = outputHeight;
                     let oldBtm = btmHeight;
                     if (dir == "down") {
@@ -1443,6 +1463,7 @@ const type = {
         }
     }
 }
+
 /**
  * Jump table for running commands based on strings
  */
@@ -1484,6 +1505,7 @@ var alts = {
     "info": "about",
     "prompt": "ps1"
 };
+
 /**
  * Applies the current options to the CSS style
  */
@@ -1510,6 +1532,7 @@ function saveCurrentOptions() {
     browser.storage.local.set({dests});
     browser.storage.local.set({ps1fill});
     browser.storage.local.set({fontSize});
+    browser.storage.local.set({historyLimit});
 }
 
 /**
@@ -1522,7 +1545,7 @@ function setToDefaultOptions() {
 
     function setDefault(name) {
         window[name] = defaultOptions[name];
-        console.log(`${name} set back to ${defaultOptions[name]}\n`);
+        updateOutput(`${name} set back to ${defaultOptions[name]}\n`);
     }
 }
 
@@ -1553,7 +1576,7 @@ function parseOpts(args, optstring) {
     let opts = getOpts(args ? args.split(' ') : [], optstring, {noAliasPropagation: true});
     for (let flag in opts.options) {
         if (opts.options[flag] == undefined) {
-            throw `Flag ${flag} expected an argument!\n`;
+            throw `Flag \'${flag}\' expected an argument!\n`;
         }
     }
     return opts;
